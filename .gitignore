@@ -40,4 +40,3 @@ build/
 .idea
 pom.xml
 .gitignore
-out
