@@ -18,7 +18,7 @@ public class Main {
             System.out.println("수현 테스트");
             System.out.println("push test");
             System.out.println("test");
-            System.out.println("test1dddd");
+            System.out.println("test1daaaddd");
 
         }
     }
