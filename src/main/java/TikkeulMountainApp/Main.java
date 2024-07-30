@@ -16,10 +16,10 @@ public class Main {
             // for you, but you can always add more by pressing Cmd+F8.
             System.out.println("i = " + i);
             System.out.println("수현 테스트");
-            System.out.println("push test");
+            System.out.println("pushasdasd test");
             System.out.println("test");
             System.out.println("test1daaaddd");
-            System.out.println("test222");
+            System.out.println("testsd3ddddasdasdasdaszdd 222");
             System.out.println("test333");
             System.out.println("test4444");
         }
