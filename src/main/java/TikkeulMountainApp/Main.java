@@ -19,6 +19,7 @@ public class Main {
             System.out.println("push test");
             System.out.println("test");
             System.out.println("test1daaaddd");
+            System.out.println("test222");
 
         }
     }
