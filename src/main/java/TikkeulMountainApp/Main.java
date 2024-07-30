@@ -17,7 +17,7 @@ public class Main {
             System.out.println("i = " + i);
             System.out.println("수현 테스트");
             System.out.println("pushasdasd test");
-            System.out.println("test");
+            System.out.println("testkkk"),;
             System.out.println("test1daaaddd");
             System.out.println("testsd3ddddasdasdasdaszdd 222");
             System.out.println("test333");
