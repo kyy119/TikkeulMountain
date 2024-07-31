@@ -12,13 +12,16 @@ public class MySqlConnect {
     public static String password = "1234";
 
     public static Connection MySqlConnect() {
-        try (Connection conn = DriverManager.getConnection(url, user, password)) {
+        Connection conn = null;
+        try {
+            conn = DriverManager.getConnection(url,user,password);
             if (conn != null) {
                 System.out.println("연결 성공");
                 return conn;
             }
-        } catch (SQLException e) {
+        } catch(SQLException e){
             e.printStackTrace();
         }
+        return conn;
     }
 }
