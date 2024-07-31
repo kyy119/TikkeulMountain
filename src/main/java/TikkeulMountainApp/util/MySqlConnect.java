@@ -7,9 +7,9 @@ import java.sql.SQLException;
 
 public class MySqlConnect {
 
-    public static String url = "jdbc:mysql://localhost:3306/prac?useSSL=false";
+    public static String url = "jdbc:mysql://localhost:3306/TikkeulMountain?useSSL=false";
     public static String user = "root";
-    public static String password = "duddbs";
+    public static String password = "1234";
 
     public static void MySqlConnct() {
         try (Connection conn = DriverManager.getConnection(url, user, password)) {
