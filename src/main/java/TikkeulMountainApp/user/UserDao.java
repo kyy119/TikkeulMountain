@@ -9,12 +9,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class UserDao {
-    Connection conn = null;
     // 회원가입 메서드
     public static void registerUser(User user) {
+        Connection conn = null;
         String sql = "INSERT INTO USER (user_id, user_name, user_password, user_phone, user_account, user_account_balance) VALUES (?, ?, ?, ?, ?, ?)";
-        try ( conn = MySqlConnect.MySqlConnect();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        try {
+            conn = MySqlConnect.MySqlConnect();
+            PreparedStatement pstmt = conn.prepareStatement(sql);
 
             pstmt.setString(1, user.getUser_id());
             pstmt.setString(2, user.getUser_name());
@@ -31,6 +32,10 @@ public class UserDao {
             e.printStackTrace();
         }
     }
+
+
+
+}
 
 //    // 로그인 메서드
 //    public static boolean loginUser(String userId, String userPassword) {
@@ -87,10 +92,6 @@ public class UserDao {
 //            e.printStackTrace();
 //        }
 //    }
-//
-//    public static void main(String[] args) {
-//        // 예시: 회원가입
-//        registerUser("user1", "홍길동", "password123", "010-1234-5678", "account1", 10000);
 //
 //
 //
