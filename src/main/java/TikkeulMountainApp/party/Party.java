@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class Party {
-
+    private int party_id;
     private String party_name;
     private int daily_pay;
     private String party_account;
