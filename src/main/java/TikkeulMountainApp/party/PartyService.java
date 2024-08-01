@@ -25,7 +25,8 @@ public class PartyService {
                 +
                 "VALUES (?, ?, ?, ?, ?, ?, ?)";
 
-            Party party = new Party("김나나", 200, "3333-10-1231234", "1313", 1000, "2024-07-01", "목돈");
+            Party party = new Party("김나나", 200, "3333-10-1231234", "1313", 1000, "2024-07-01",
+                "목돈");
             //PreparedStatement 얻기 및 값 지정
             PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             pstmt.setString(1, party.getParty_name());
@@ -36,8 +37,6 @@ public class PartyService {
             pstmt.setString(6, party.getParty_account_created_at());
             pstmt.setString(7, party.getCategory());
 
-
-
             System.out.println(party.getParty_name());
             party.getDaily_pay();
             party.getParty_account();
@@ -45,12 +44,6 @@ public class PartyService {
             party.getParty_account_balance();
             party.getParty_account_created_at();
             party.getCategory();
-
-
-
-
-
-
 
             //SQL 문 실행
             int rows = pstmt.executeUpdate();
@@ -82,4 +75,74 @@ public class PartyService {
             }
         }
     }
+
+    public void updatePartyBalance(int partyId, int amount) {
+        Connection conn = null;
+
+        try {
+            conn = MySqlConnect.MySqlConnect();
+            String sql = " " +
+                "update party set party_account_balance = ? where party_id = ?";
+
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, amount);
+            pstmt.setInt(2, partyId);
+
+            pstmt.executeUpdate();
+
+            pstmt.close();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+        } finally {
+
+            if (conn != null) {
+                try {
+                    //연결 끊기
+                    conn.close();
+                } catch (SQLException e) {
+                }
+            }
+        }
+
+    }
+
+
+    public int getPartyBalance(int partyId) {
+        Connection conn = null;
+
+        try {
+            conn = MySqlConnect.MySqlConnect();
+            String sql = " " +
+                "select party_account_balance from party where party_id = ?";
+
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, partyId);
+
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("party_account_balance");
+            }
+
+            pstmt.close();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+        } finally {
+
+            if (conn != null) {
+                try {
+                    //연결 끊기
+                    conn.close();
+                } catch (SQLException e) {
+                }
+            }
+        }
+        return 0;
+
+    }
+
 }
+
