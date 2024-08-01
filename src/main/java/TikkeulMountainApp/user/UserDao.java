@@ -33,9 +33,53 @@ public class UserDao {
         }
     }
 
+    public static void updateUserBalance(String userId, int amount) {
+        Connection conn = null; // Connection 객체 선언
+        String sql = "UPDATE USER SET user_account_balance = ? WHERE user_id = ?";
+        try {
+            conn = MySqlConnect.MySqlConnect();
+            PreparedStatement pstmt = conn.prepareStatement(sql);
 
+            pstmt.setInt(1, amount); // 잔액
+            pstmt.setString(2, userId); // 아이디
 
+            int rowsUpdated = pstmt.executeUpdate();
+            if (rowsUpdated > 0) {
+                System.out.println("계좌 잔액이 성공적으로 수정되었습니다!");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public static int getUserBalance(String userId) {
+        Connection conn = null;
+        String sql = "SELECT user_account_balance FROM user WHERE user_id = ?";
+        try {
+            conn = MySqlConnect.MySqlConnect();
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+
+            pstmt.setString(1, userId); // 아이디
+
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                int balance = rs.getInt("user_account_balance");
+                return balance;
+            }
+            System.out.println("조회가 완료되었습니다!");
+
+            pstmt.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
 }
+
+
+//user_account_balance 메서드
+
 
 //    // 로그인 메서드
 //    public static boolean loginUser(String userId, String userPassword) {
