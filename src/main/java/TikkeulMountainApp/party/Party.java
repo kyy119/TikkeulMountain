@@ -4,6 +4,7 @@ import lombok.Data;
 
 @Data
 public class Party {
+    private String user_id;
     private int party_id;
     private String party_name;
     private int daily_pay;
@@ -23,5 +24,15 @@ public class Party {
         this.party_account_balance = party_account_balance;
         this.party_account_created_at = party_account_created_at;
         this.category = category;
+    }
+
+    public Party() {
+    }
+    public Party(String user_id, String party_name, String category, String party_account, String party_account_created_at) {
+        this.user_id = user_id;
+        this.party_name = party_name;
+        this.category = category;
+        this.party_account = party_account;
+        this.party_account_created_at = party_account_created_at;
     }
 }
