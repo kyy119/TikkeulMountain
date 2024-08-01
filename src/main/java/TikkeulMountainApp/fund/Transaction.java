@@ -13,10 +13,10 @@ class Transaction {
     String transferIndex; //입금,출금 구분자'1': 개인통장->모임통장'2': 모임통장->개인통장
     String transferMemo;
     String userId;
-    String partyId;
+    int partyId;
 
     public Transaction(int transferAmount, int transferBalance, String transferIndex,
-        String transferMemo, String userId, String partyId) {
+        String transferMemo, String userId, int partyId) {
         this.transferDate = new Timestamp(System.currentTimeMillis());
         this.transferAmount = transferAmount;
         this.transferBalance = transferBalance;
