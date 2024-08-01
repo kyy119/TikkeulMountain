@@ -12,7 +12,7 @@ public class UserDao {
     // 회원가입 메서드
     public static void registerUser(User user) {
         Connection conn = null;
-        String sql = "INSERT INTO USER (user_id, user_name, user_password, user_phone, user_account, user_account_balance) VALUES (?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO USER (user_id, user_name, user_password, user_phone, user_account, user_account_balance, user_active) VALUES (?, ?, ?, ?, ?, ?,?)";
         try {
             conn = MySqlConnect.MySqlConnect();
             PreparedStatement pstmt = conn.prepareStatement(sql);
@@ -23,6 +23,7 @@ public class UserDao {
             pstmt.setString(4, user.getUser_phone());
             pstmt.setString(5, user.getUser_account());
             pstmt.setInt(6, user.getUser_account_balance());
+            pstmt.setString(7, user.getUser_active());
 
             int rowsInserted = pstmt.executeUpdate();
             if (rowsInserted > 0) {
@@ -74,6 +75,25 @@ public class UserDao {
             e.printStackTrace();
         }
         return 0;
+    }
+
+    public static void updateUserActive(String userId, String useractive) {
+        Connection conn = null; // Connection 객체 선언
+        String sql = "UPDATE USER SET user_active = ? WHERE user_id = ?";
+        try {
+            conn = MySqlConnect.MySqlConnect();
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+
+            pstmt.setString(1, useractive); // 활성화 0 or 1
+            pstmt.setString(2, userId); // 사용자 ID 설정
+
+            int rowsUpdated = pstmt.executeUpdate();
+            if (rowsUpdated > 0) {
+                System.out.println("비활성화 계정입니다!");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }
 

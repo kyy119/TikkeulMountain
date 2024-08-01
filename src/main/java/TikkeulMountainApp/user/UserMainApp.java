@@ -4,12 +4,14 @@ public class UserMainApp {
     public static void main(String[] args) {
 
         //scanner
+     //   User user = new User("pk999","박성진","1111","010-1111-1111","1234-1234-1234",5000, "0");
 
-        User user = new User("pk999","박성진","1111","010-1111-1111","1234-1234-1234",5000);
-        UserDao.registerUser(user);
+       // UserDao.registerUser(user);
 
         UserDao.updateUserBalance("user1",20000);
         System.out.println(UserDao.getUserBalance("user1"));
+
+        UserDao.updateUserActive("pk999","1");
     }
 //        public static void main(String[] args) {
 //            // 테스트용 예제 사용자 생성
