@@ -10,9 +10,12 @@ public class PartyApp {
             MySqlConnect.url + " \nuser : " + MySqlConnect.user + "\npw : "
                 + MySqlConnect.password);
 
+
+
+
         PartyService.createParty();
 
-        ps.updatePartyBalance(3,316513210);
+        ps.updatePartyBalance(3,55500);
 
         int balance = ps.getPartyBalance(3);
         System.out.println(balance);

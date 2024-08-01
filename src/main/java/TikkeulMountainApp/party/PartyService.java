@@ -21,12 +21,12 @@ public class PartyService {
         try {
             conn = MySqlConnect.MySqlConnect();
             String sql = " " +
-                "INSERT INTO party (party_name, daily_pay, party_account, party_account_password, party_account_balance, party_account_created_at, category) "
+                "INSERT INTO party (party_name, daily_pay, party_account, party_account_password, party_account_balance, party_account_created_at, category, party_active) "
                 +
-                "VALUES (?, ?, ?, ?, ?, ?, ?)";
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
             Party party = new Party("김나나", 200, "3333-10-1231234", "1313", 1000, "2024-07-01",
-                "목돈");
+                "목돈","1");
             //PreparedStatement 얻기 및 값 지정
             PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             pstmt.setString(1, party.getParty_name());
@@ -36,6 +36,7 @@ public class PartyService {
             pstmt.setInt(5, party.getParty_account_balance()); //10만
             pstmt.setString(6, party.getParty_account_created_at());
             pstmt.setString(7, party.getCategory());
+            pstmt.setString(8, party.getParty_active());
 
             System.out.println(party.getParty_name());
             party.getDaily_pay();
@@ -76,7 +77,7 @@ public class PartyService {
         }
     }
 
-    public void updatePartyBalance(int partyId, int amount) {
+    public static void updatePartyBalance(int partyId, int amount) {
         Connection conn = null;
 
         try {
@@ -109,7 +110,7 @@ public class PartyService {
     }
 
 
-    public int getPartyBalance(int partyId) {
+    public static int getPartyBalance(int partyId) {
         Connection conn = null;
 
         try {
