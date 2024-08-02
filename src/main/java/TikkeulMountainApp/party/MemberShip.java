@@ -21,11 +21,12 @@ public class MemberShip {
     }
 
     public MemberShip(String role, String userId, int partyId, String userActive,
-        String partyActive) {
+        String partyActive, int dailyPay) {
         this.role = role;
         this.userId = userId;
         this.partyId = partyId;
         this.userActive = userActive;
         this.partyActive = partyActive;
+        this.dailyPay = dailyPay;
     }
 }
