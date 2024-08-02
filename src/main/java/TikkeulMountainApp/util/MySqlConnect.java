@@ -9,14 +9,13 @@ public class MySqlConnect {
 
     public static String url = "jdbc:mysql://localhost:3306/TikkeulMountain?useSSL=false";
     public static String user = "root";
-    public static String password = "duddbs";
+    public static String password = "1234";
 
     public static Connection MySqlConnect() {
         Connection conn = null;
         try {
             conn = DriverManager.getConnection(url,user,password);
             if (conn != null) {
-//b                System.out.println("연결 성공");
                 return conn;
             }
         } catch(SQLException e){
