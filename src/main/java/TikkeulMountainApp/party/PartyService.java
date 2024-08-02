@@ -1,9 +1,13 @@
 package TikkeulMountainApp.party;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.sql.PreparedStatement;
 import TikkeulMountainApp.util.MySqlConnect;
 import java.sql.SQLException;
 import java.sql.Connection;
+import java.sql.SQLWarning;
 import java.sql.Statement;
 import java.sql.ResultSet;
 import java.text.SimpleDateFormat;
@@ -23,7 +27,7 @@ public class PartyService {
                 "INSERT INTO party (party_name, daily_pay, party_account, party_account_password, party_account_balance, party_account_created_at, category, party_active) "
                 +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-            String pa = createPartyAccount();
+            String pa = checkAccount();
             String ad = partyAccountDate();
             Party party = new Party(name, dailyPay, pa, pw, 0, ad,
                 cate, "1");
@@ -77,11 +81,57 @@ public class PartyService {
             }
         }
     }
+    public static String checkDailyPay(String dailyPay)throws IOException{
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        while (Integer.parseInt(dailyPay) > 1000 || Integer.parseInt(dailyPay) <= 0){
+            System.out.println("매일 납부 금액은 1 ~ 1000원 사이로 지정 가능합니다.");
+            System.out.print("납부 금액 입력 : ");
+            dailyPay = br.readLine();
+        }
+        return dailyPay;
+    }
 
-    public static String checkAccount(){
+    public static String checkPw(String pw)throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        while (pw.length() != 4) {
+            System.out.println("계좌 비밀 번호는 4자리로 입력해주세요.");
+            System.out.print("계좌 비밀 번호 입력: ");
+            pw = br.readLine();
+        }
+        System.out.print("계좌 비밀 번호 확인 : ");
+        String cpw = br.readLine();
+        while (!pw.equals(cpw)) {
+            System.out.print("비밀 번호 동일 하게 입력 :");
+            cpw = br.readLine();
+        }
+        System.out.println("비밀번호가 확인되었습니다.");
+        return cpw;
+    }
+
+    public static String checkAccount() throws SQLException {
         Connection conn = MySqlConnect.MySqlConnect();
-        String str = partyAccountDate();
-        String sql = "";
+        String str = createPartyAccount();
+        String sql = "SELECT party_account FROM PARTY";
+        PreparedStatement pstmt = conn.prepareStatement(sql);
+        ArrayList<String> arr = new ArrayList<>();
+        ResultSet rs = pstmt.executeQuery();
+        while (rs.next()){
+            arr.add(rs.getString("party_account"));
+        }
+        int index = 0;
+        while (true){
+            index = 0;
+            for(String str1 : arr){
+                if(str1.equals(str)){
+                    str = createPartyAccount();
+                    index = 1;
+                    break;
+                }
+            }
+            if(index == 0){
+                break;
+            }
+        }
         return str;
     }
 
@@ -144,7 +194,7 @@ public class PartyService {
         }
     }
 
-    public static ArrayList<String> showCategory() {///////////////////카테고리 만드는 중
+    public static ArrayList<String> showCategory() {
         Connection conn = null;
         ArrayList<String> arr = new ArrayList<>();
         try {
@@ -332,23 +382,20 @@ public class PartyService {
         return true;
     }
 
-    public static void showParty(int id) throws SQLException {
+    public static Party showParty(int id) throws SQLException {
         Connection conn = MySqlConnect.MySqlConnect();
         String sql = "SELECT party_name, party_account, party_account_balance FROM PARTY WHERE party_id = ?";
 
         PreparedStatement pstmt = conn.prepareStatement(sql);
         pstmt.setInt(1, id);
         ResultSet rs = pstmt.executeQuery();
-        ArrayList<String> arr = new ArrayList<>();
+        Party party = new Party();
         while (rs.next()) {
-            arr.add(rs.getString("party_name"));
-            arr.add(rs.getString("party_account"));
-            arr.add(Integer.toString(rs.getInt("party_account_balance")));
+            party.setPartyName(rs.getString("party_name"));
+            party.setPartyAccount(rs.getString("party_account"));
+            party.setPartyAccountBalance(rs.getInt("party_account_balance"));
         }
-
-        System.out.println(arr.get(0));
-        System.out.println(arr.get(1));
-        System.out.println(arr.get(2));
+        return party;
     }
 
     public static ArrayList<MemberShip> getMemberList() throws SQLException {
