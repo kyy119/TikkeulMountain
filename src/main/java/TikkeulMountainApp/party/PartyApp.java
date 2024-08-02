@@ -24,8 +24,11 @@ public class PartyApp {
         String name = br.readLine();
         System.out.print("dailypay : ");
         String dailypay = br.readLine();
+        dailypay = PartyService.checkDailyPay(dailypay);
         System.out.print("계좌 비밀 번호 : ");
         String pw = br.readLine();
+        pw = PartyService.checkPw(pw);
+
 
         PartyService.createParty(arr.get(cate-1), name, Integer.parseInt(dailypay), pw);
 //        PartyService.createParty("여행","중국여행", 400, "1211");
