@@ -1,9 +1,13 @@
 package TikkeulMountainApp.party;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.sql.PreparedStatement;
 import TikkeulMountainApp.util.MySqlConnect;
 import java.sql.SQLException;
 import java.sql.Connection;
+import java.sql.SQLWarning;
 import java.sql.Statement;
 import java.sql.ResultSet;
 import java.text.SimpleDateFormat;
@@ -14,7 +18,7 @@ public class PartyService {
 
 
     //모임 생성 메소드
-    public static void createParty(String name, String pw, String cate) {
+    public static void createParty(String cate, String name, int dailyPay, String pw) {
         Connection conn = null;
 
         try {
@@ -23,10 +27,10 @@ public class PartyService {
                 "INSERT INTO party (party_name, daily_pay, party_account, party_account_password, party_account_balance, party_account_created_at, category, party_active) "
                 +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-            String pa = createPartyAccount();
+            String pa = checkAccount();
             String ad = partyAccountDate();
-            Party party = new Party(name, 200, pa, pw, 0, ad,
-                cate,"1");
+            Party party = new Party(name, dailyPay, pa, pw, 0, ad,
+                cate, "1");
             //PreparedStatement 얻기 및 값 지정
             PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             pstmt.setString(1, party.getPartyName());
@@ -59,7 +63,7 @@ public class PartyService {
                 }
                 rs.close();
             }
-            insertMemberShip(party.getPartyId());
+            insertMemberShip(party.getPartyId(),dailyPay);
             //PreparedStatement 닫기
             pstmt.close();
 
@@ -77,32 +81,87 @@ public class PartyService {
             }
         }
     }
+    public static String checkDailyPay(String dailyPay)throws IOException{
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        while (Integer.parseInt(dailyPay) > 1000 || Integer.parseInt(dailyPay) <= 0){
+            System.out.println("매일 납부 금액은 1 ~ 1000원 사이로 지정 가능합니다.");
+            System.out.print("납부 금액 입력 : ");
+            dailyPay = br.readLine();
+        }
+        return dailyPay;
+    }
+
+    public static String checkPw(String pw)throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        while (pw.length() != 4) {
+            System.out.println("계좌 비밀 번호는 4자리로 입력해주세요.");
+            System.out.print("계좌 비밀 번호 입력: ");
+            pw = br.readLine();
+        }
+        System.out.print("계좌 비밀 번호 확인 : ");
+        String cpw = br.readLine();
+        while (!pw.equals(cpw)) {
+            System.out.print("비밀 번호 동일 하게 입력 :");
+            cpw = br.readLine();
+        }
+        System.out.println("비밀번호가 확인되었습니다.");
+        return cpw;
+    }
+
+    public static String checkAccount() throws SQLException {
+        Connection conn = MySqlConnect.MySqlConnect();
+        String str = createPartyAccount();
+        String sql = "SELECT party_account FROM PARTY";
+        PreparedStatement pstmt = conn.prepareStatement(sql);
+        ArrayList<String> arr = new ArrayList<>();
+        ResultSet rs = pstmt.executeQuery();
+        while (rs.next()){
+            arr.add(rs.getString("party_account"));
+        }
+        int index = 0;
+        while (true){
+            index = 0;
+            for(String str1 : arr){
+                if(str1.equals(str)){
+                    str = createPartyAccount();
+                    index = 1;
+                    break;
+                }
+            }
+            if(index == 0){
+                break;
+            }
+        }
+        return str;
+    }
 
     public static String createPartyAccount() {
         String str = "3333-10-388";
-        int a = (int)(Math.random() * 8999) + 1000;
+        int a = (int) (Math.random() * 8999) + 1000;
         str += Integer.toString(a);
         return str;
     }
- public static String partyAccountDate(){
-     Date now = new Date();
-     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-     String str = simpleDateFormat.format(now);
-     return str;
- }
 
-public static void insertMemberShip(int id) {
+    public static String partyAccountDate() {
+        Date now = new Date();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String str = simpleDateFormat.format(now);
+        return str;
+    }
+
+    public static void insertMemberShip(int id, int dailyPay) {
         Connection conn = null;
         try {
             conn = MySqlConnect.MySqlConnect();
-            String sql= "insert into MEMBERSHIP ( role, user_id, party_id, user_active, party_active) values ( ? , ? , ? ,? ,?)" ;
-            MemberShip memberShip = new MemberShip("방장","duddbs",id, "1","1");
+            String sql = "insert into MEMBERSHIP ( role, user_id, party_id, user_active, party_active, daily_pay) values ( ? , ? , ? ,? ,?, ?)";
+            MemberShip memberShip = new MemberShip("방장", "duddbs", id, "1", "1",dailyPay);
             PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             pstmt.setString(1, memberShip.getRole());
             pstmt.setString(2, memberShip.getUserId());
             pstmt.setInt(3, memberShip.getPartyId());
             pstmt.setString(4, memberShip.getUserActive()); //10만
             pstmt.setString(5, memberShip.getPartyActive());
+            pstmt.setInt(6,memberShip.getDailyPay());
 
             //SQL 문 실행
             int rows = pstmt.executeUpdate();
@@ -133,7 +192,25 @@ public static void insertMemberShip(int id) {
                 }
             }
         }
-}
+    }
+
+    public static ArrayList<String> showCategory() {
+        Connection conn = null;
+        ArrayList<String> arr = new ArrayList<>();
+        try {
+            conn = MySqlConnect.MySqlConnect();
+            String sql = "select category from PARTY_CATEGORY ";
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                arr.add(rs.getString("category"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return arr;
+    }
+
 
     public static void updatePartyBalance(int partyId, int amount) {
         Connection conn = null;
@@ -164,9 +241,7 @@ public static void insertMemberShip(int id) {
                 }
             }
         }
-
     }
-
 
     public static int getPartyBalance(int partyId) {
         Connection conn = null;
@@ -203,8 +278,6 @@ public static void insertMemberShip(int id) {
 
     }
 
-
-
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public static ArrayList<Party> showPartyList(String userId) throws SQLException {
         Connection conn = MySqlConnect.MySqlConnect();
@@ -230,6 +303,7 @@ public static void insertMemberShip(int id) {
         }
         return arr;
     }
+
     public static void searchParty(String userId, String str) throws SQLException {
         Connection conn = MySqlConnect.MySqlConnect();
         ArrayList<Party> arr = showPartyList(userId);
@@ -247,6 +321,7 @@ public static void insertMemberShip(int id) {
             }
         }
     }
+
     public static void showPartyDetail(int partyId) throws SQLException {
         Connection conn = MySqlConnect.MySqlConnect();
         String sql = "SELECT a.user_id, "
@@ -276,6 +351,7 @@ public static void insertMemberShip(int id) {
         System.out.println(arrayList.get(0).getPartyAccount());
         System.out.println(arrayList.get(0).getPartyAccountCreatedAt());
     }
+
     public static void deleteParty(String account) throws SQLException {
         Connection conn = MySqlConnect.MySqlConnect();
         if (checkZero(account)) {
@@ -288,6 +364,7 @@ public static void insertMemberShip(int id) {
         pstmt.executeUpdate();
         System.out.println("삭제 완료");
     }
+
     public static boolean checkZero(String account) throws SQLException {
         Connection conn = MySqlConnect.MySqlConnect();
         //select party_account_balance from party where party_name = '김나나';
@@ -304,23 +381,37 @@ public static void insertMemberShip(int id) {
         }
         return true;
     }
-    public static void showParty(int id) throws SQLException {
+
+    public static Party showParty(int id) throws SQLException {
         Connection conn = MySqlConnect.MySqlConnect();
         String sql = "SELECT party_name, party_account, party_account_balance FROM PARTY WHERE party_id = ?";
 
         PreparedStatement pstmt = conn.prepareStatement(sql);
         pstmt.setInt(1, id);
         ResultSet rs = pstmt.executeQuery();
-        ArrayList<String> arr = new ArrayList<>();
+        Party party = new Party();
         while (rs.next()) {
-            arr.add(rs.getString("party_name"));
-            arr.add(rs.getString("party_account"));
-            arr.add(Integer.toString(rs.getInt("party_account_balance")));
+            party.setPartyName(rs.getString("party_name"));
+            party.setPartyAccount(rs.getString("party_account"));
+            party.setPartyAccountBalance(rs.getInt("party_account_balance"));
         }
+        return party;
+    }
 
-        System.out.println(arr.get(0));
-        System.out.println(arr.get(1));
-        System.out.println(arr.get(2));
+    public static ArrayList<MemberShip> getMemberList() throws SQLException {
+        Connection conn = MySqlConnect.MySqlConnect();
+        String sql = "SELECT user_id, party_id, daily_pay FROM MEMBERSHIP WHERE user_active = '1' AND party_active = '1'";
+        PreparedStatement pstmt = conn.prepareStatement(sql);
+        ResultSet rs = pstmt.executeQuery();
+        ArrayList<MemberShip> arr = new ArrayList<>();
+        while (rs.next()) {
+            MemberShip memberShip = new MemberShip();
+            memberShip.setUserId(rs.getString("user_id"));
+            memberShip.setPartyId(rs.getInt("party_id"));
+            memberShip.setDailyPay(rs.getInt("daily_pay"));
+            arr.add(memberShip);
+        }
+        return arr;
     }
 }
 

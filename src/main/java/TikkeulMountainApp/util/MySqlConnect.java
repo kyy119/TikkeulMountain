@@ -16,7 +16,6 @@ public class MySqlConnect {
         try {
             conn = DriverManager.getConnection(url,user,password);
             if (conn != null) {
-                System.out.println("연결 성공");
                 return conn;
             }
         } catch(SQLException e){

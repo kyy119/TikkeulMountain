@@ -16,16 +16,17 @@ public class MemberShip {
     private int partyId;
     private String userActive;
     private String partyActive;
-
+    private int dailyPay;
     public MemberShip() {
     }
 
     public MemberShip(String role, String userId, int partyId, String userActive,
-        String partyActive) {
+        String partyActive, int dailyPay) {
         this.role = role;
         this.userId = userId;
         this.partyId = partyId;
         this.userActive = userActive;
         this.partyActive = partyActive;
+        this.dailyPay = dailyPay;
     }
 }
