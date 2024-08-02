@@ -9,7 +9,7 @@ public class MySqlConnect {
 
     public static String url = "jdbc:mysql://localhost:3306/TikkeulMountain?useSSL=false";
     public static String user = "root";
-    public static String password = "1234";
+    public static String password = "duddbs";
 
     public static Connection MySqlConnect() {
         Connection conn = null;

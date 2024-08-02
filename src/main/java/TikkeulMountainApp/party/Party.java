@@ -4,24 +4,37 @@ import lombok.Data;
 
 @Data
 public class Party {
-    private int party_id;
-    private String party_name;
-    private int daily_pay;
-    private String party_account;
-    private String party_account_password;
-    private int party_account_balance;
-    private String party_account_created_at;
+    private String userId;
+    private int partyId;
+    private String partyName;
+    private int dailyPay;
+    private String partyAccount;
+    private String partyAccountPassword;
+    private int partyAccountBalance;
+    private String partyAccountCreatedAt;
     private String category;
+    private String partyActive;
 
-    public Party(String party_name, int daily_pay, String party_account,
-        String party_account_password,
-        int party_account_balance, String party_account_created_at, String category) {
-        this.party_name = party_name;
-        this.daily_pay = daily_pay;
-        this.party_account = party_account;
-        this.party_account_password = party_account_password;
-        this.party_account_balance = party_account_balance;
-        this.party_account_created_at = party_account_created_at;
+    public Party(String partyName, int dailyPay, String partyAccount,
+        String partyAccountPassword,
+        int partyAccountBalance, String partyAccountCreatedAt, String category, String partyActive) {
+        this.partyName = partyName;
+        this.dailyPay = dailyPay;
+        this.partyAccount = partyAccount;
+        this.partyAccountPassword = partyAccountPassword;
+        this.partyAccountBalance = partyAccountBalance;
+        this.partyAccountCreatedAt = partyAccountCreatedAt;
         this.category = category;
+        this.partyActive = partyActive;
+    }
+
+    public Party() {
+    }
+    public Party(String userId, String partyName, String category, String partyAccount, String partyAccountCreatedAt) {
+        this.userId = userId;
+        this.partyName = partyName;
+        this.category = category;
+        this.partyAccount = partyAccount;
+        this.partyAccountCreatedAt = partyAccountCreatedAt;
     }
 }
