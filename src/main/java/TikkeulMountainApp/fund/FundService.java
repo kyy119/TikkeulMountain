@@ -71,33 +71,28 @@ public class FundService {
 
     }
 
-    public static void deposit(String userId, int partyId,int amount) { //자동이체용 메소드
+    public static void deposit(String userId, int partyId, int amount) { //자동이체용 메소드
 
         int userBalance = UserDao.getUserBalance(userId);
-        while (true) {
-            if (userBalance - amount < 0) { //개인계좌잔액이 입금할 금액보다 적으면 거래 x
-                System.out.println("개인계좌의 잔액이 부족합니다.");
-            } else if (amount < 0) {
-                System.out.println("양수를 입력해주세요.");
-            } else if (amount == 0) {
-                return;
-            } else {
-                break;
-            }
+        if (userBalance - amount < 0) { //개인계좌잔액이 입금할 금액보다 적으면 거래 x
+            System.out.println("개인계좌의 잔액이 부족합니다.");
+        } else if (amount < 0) {
+            System.out.println("음수 입니다.");
+        } else {
+            int newPartyBalance = PartyService.getPartyBalance(partyId) + amount;
+            int newUserBalance = userBalance - amount;
+            UserDao.updateUserBalance(userId, newUserBalance);
+            PartyService.updatePartyBalance(partyId, newPartyBalance);
+            Transaction transaction = new Transaction(amount, newPartyBalance, "1", null, userId,
+                partyId);
+            TransactionDao.addTransaction(transaction);
         }
-        int newPartyBalance = PartyService.getPartyBalance(partyId) + amount;
-        int newUserBalance = userBalance - amount;
-        UserDao.updateUserBalance(userId, newUserBalance);
-        PartyService.updatePartyBalance(partyId, newPartyBalance);
-        Transaction transaction = new Transaction(amount, newPartyBalance, "1", null, userId,
-            partyId);
-        TransactionDao.addTransaction(transaction);
 
     }
-
 
     public static void depositAtOnce() throws SQLException {
         List<MemberShip> memberShipList = PartyService.getMemberList();
-        memberShipList.stream().forEach(n->deposit(n.getUserId(),n.getPartyId(),n.getDailyPay()) );
+        memberShipList.forEach(n -> deposit(n.getUserId(), n.getPartyId(), n.getDailyPay()));
     }
+
 }

@@ -6,6 +6,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.HashMap;
+import java.util.Map;
 
 public class TransactionDao {
 
@@ -47,4 +49,37 @@ public class TransactionDao {
         }
     }
 
+    public static Map<String, Integer> getMemberContributions(int partyId){
+        Connection conn = null;
+        String sql = "SELECT user_id,SUM(transfer_amount) FROM ACCOUNT_HISTORY WHERE PARTY_ID = ? GROUP BY user_id";
+
+        try{
+            conn = MySqlConnect.MySqlConnect();
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+
+            pstmt.setInt(1,partyId);
+
+            ResultSet rs = pstmt.executeQuery();
+
+            Map<String, Integer> map = new HashMap<>();
+            while(rs.next()){
+                map.put(rs.getString("user_id"),rs.getInt("SUM(transfer_amount)"));
+
+            }
+
+            return map;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                }
+            }
+        }
+        return null;
+
+    }
 }
