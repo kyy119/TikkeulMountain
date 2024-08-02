@@ -159,15 +159,15 @@ public class UserDao {
 
     }
 
-    //Delete -> Update 활성화유무를 확인할 수 있는 메서드
+    //Delete -> Update | User, Membership 활성화유무를 확인할 수 있는 메서드
     public static void updateUserActive(String userId, String userActive) {
         Connection conn = null; // Connection 객체 선언
         String sql1 = "UPDATE USER SET user_active = ? WHERE user_id = ?";
         String sql2 = "UPDATE MEMBERSHIP SET user_active = ? WHERE user_id = ?";
         try {
             conn = MySqlConnect.MySqlConnect();
-            PreparedStatement pstmt1 = conn.prepareStatement(sql);
-            PreparedStatement pstmt2 = conn.prepareStatement(sql);
+            PreparedStatement pstmt1 = conn.prepareStatement(sql1);
+            PreparedStatement pstmt2 = conn.prepareStatement(sql2);
 
             pstmt1.setString(1, userActive); // 활성화 0 or 1
             pstmt1.setString(2, userId); // 사용자 ID 설정
@@ -175,20 +175,31 @@ public class UserDao {
             pstmt2.setString(1, userActive);
             pstmt2.setString(2, userId);
 
-            pstmt1.executeUpdate();
+           pstmt1.executeUpdate();
             pstmt2.executeUpdate();
 
+           // conn.commit();
+            System.out.println("사용자와 멤버십의 활성화 상태가 성공적으로 수정되었습니다!");
 
-            int rowsUpdated = pstmt.executeUpdate();
-            if (rowsUpdated > 0) {
-                System.out.println("비활성화 계정입니다!");
-            }
         } catch (SQLException e) {
             e.printStackTrace();
-
-
+        } finally {
+            // 리소스 정리
+            if (conn != null) {
+                try {
+                    conn.setAutoCommit(true); // 자동 커밋 모드로 되돌리기
+                    conn.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 
 
-}
+
+
+        }
+
+
+

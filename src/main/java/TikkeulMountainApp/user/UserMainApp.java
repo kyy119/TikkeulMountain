@@ -39,11 +39,15 @@ public class UserMainApp {
 
         //  System.out.println(UserDao.getUserBalance("pk999")); // 잔액 조회 출력
 //
-        UserDao.updateUserActive("pk999", "0");// 활성화 유무
+        //UserDao.updateUserActive("pk999", "0");// 활성화 유무
 
         //  UserDao.loginUser("pk999","1111");
         // UserDao.updateUserPassword("jhc5555","회찬");
         //  UserDao.getUser("jhc5555");
+
+
+      //  UserDao.updateUserActive("jhc5555","0");
+UserDao.loginUser("jhc5555","회찬");
 
     }
 }
