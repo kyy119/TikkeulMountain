@@ -63,7 +63,7 @@ public class PartyService {
                 }
                 rs.close();
             }
-            insertMemberShip(party.getPartyId(),dailyPay);
+            insertMemberShip(party.getPartyId(), dailyPay);
             //PreparedStatement 닫기
             pstmt.close();
 
@@ -81,9 +81,10 @@ public class PartyService {
             }
         }
     }
-    public static String checkDailyPay(String dailyPay)throws IOException{
+
+    public static String checkDailyPay(String dailyPay) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        while (Integer.parseInt(dailyPay) > 1000 || Integer.parseInt(dailyPay) <= 0){
+        while (Integer.parseInt(dailyPay) > 1000 || Integer.parseInt(dailyPay) <= 0) {
             System.out.println("매일 납부 금액은 1 ~ 1000원 사이로 지정 가능합니다.");
             System.out.print("납부 금액 입력 : ");
             dailyPay = br.readLine();
@@ -91,7 +92,7 @@ public class PartyService {
         return dailyPay;
     }
 
-    public static String checkPw(String pw)throws IOException {
+    public static String checkPw(String pw) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         while (pw.length() != 4) {
             System.out.println("계좌 비밀 번호는 4자리로 입력해주세요.");
@@ -115,20 +116,20 @@ public class PartyService {
         PreparedStatement pstmt = conn.prepareStatement(sql);
         ArrayList<String> arr = new ArrayList<>();
         ResultSet rs = pstmt.executeQuery();
-        while (rs.next()){
+        while (rs.next()) {
             arr.add(rs.getString("party_account"));
         }
         int index = 0;
-        while (true){
+        while (true) {
             index = 0;
-            for(String str1 : arr){
-                if(str1.equals(str)){
+            for (String str1 : arr) {
+                if (str1.equals(str)) {
                     str = createPartyAccount();
                     index = 1;
                     break;
                 }
             }
-            if(index == 0){
+            if (index == 0) {
                 break;
             }
         }
@@ -154,14 +155,14 @@ public class PartyService {
         try {
             conn = MySqlConnect.MySqlConnect();
             String sql = "insert into MEMBERSHIP ( role, user_id, party_id, user_active, party_active, daily_pay) values ( ? , ? , ? ,? ,?, ?)";
-            MemberShip memberShip = new MemberShip("방장", "duddbs", id, "1", "1",dailyPay);
+            MemberShip memberShip = new MemberShip("방장", "duddbs", id, "1", "1", dailyPay);
             PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             pstmt.setString(1, memberShip.getRole());
             pstmt.setString(2, memberShip.getUserId());
             pstmt.setInt(3, memberShip.getPartyId());
             pstmt.setString(4, memberShip.getUserActive()); //10만
             pstmt.setString(5, memberShip.getPartyActive());
-            pstmt.setInt(6,memberShip.getDailyPay());
+            pstmt.setInt(6, memberShip.getDailyPay());
 
             //SQL 문 실행
             int rows = pstmt.executeUpdate();
@@ -283,8 +284,7 @@ public class PartyService {
         Connection conn = MySqlConnect.MySqlConnect();
         String sql = "SELECT party_id, party_name, party_active " + "FROM PARTY " +
             "WHERE party_id IN " +
-            "(SELECT party_id FROM MEMBERSHIP WHERE user_id IN " +
-            "(SELECT user_id FROM `USER` WHERE user_id = ?))";
+            "(SELECT party_id FROM MEMBERSHIP WHERE user_id = ?)";
         PreparedStatement pstmt = conn.prepareStatement(sql);
         pstmt.setString(1, userId);
         ResultSet rs = pstmt.executeQuery();
@@ -352,37 +352,43 @@ public class PartyService {
         System.out.println(arrayList.get(0).getPartyAccountCreatedAt());
     }
 
-    public static void deleteParty(String account) throws SQLException {
-        Connection conn = MySqlConnect.MySqlConnect();
-        if (checkZero(account)) {
-            System.out.println("잔액이 있습니다. 삭제 불가");
+    public static void deleteParty(int id) throws SQLException {
+        int price = checkZero(id);
+        if (price == -1) {
+            System.out.println("비정상적인 접근.");
+            return;
+        } else if (price > 0) {
+            System.out.println("잔액이 있습니다");
             return;
         }
-        String sql = "DELETE FROM PARTY WHERE party_account = ?";
+        Connection conn = MySqlConnect.MySqlConnect();
+        String sql = "UPDATE MEMBERSHIP SET party_active = '0' WHERE party_id = ?";
         PreparedStatement pstmt = conn.prepareStatement(sql);
-        pstmt.setString(1, account);
+        pstmt.setInt(1, id);
         pstmt.executeUpdate();
-        System.out.println("삭제 완료");
+        sql = "UPDATE PARTY SET party_active = '0' WHERE party_id = ?";
+        pstmt = conn.prepareStatement(sql);
+        pstmt.setInt(1, id);
+        pstmt.executeUpdate();
+        pstmt.close();
     }
 
-    public static boolean checkZero(String account) throws SQLException {
+    public static int checkZero(int id) throws SQLException {
         Connection conn = MySqlConnect.MySqlConnect();
         //select party_account_balance from party where party_name = '김나나';
-        String sql = "SELECT party_account_balance FROM party WHERE party_account = ?";
+        String sql = "SELECT party_account_balance FROM party WHERE party_id = ?";
         PreparedStatement pstmt = conn.prepareStatement(sql);
-        pstmt.setString(1, account);
-        int price = 0;
+        pstmt.setInt(1, id);
+        int price = -1;
         ResultSet rs = pstmt.executeQuery();
         if (rs.next()) {
             price = rs.getInt("party_account_balance");
         }
-        if (price == 0) {
-            return false;
-        }
-        return true;
+        return price;
     }
 
-    public static Party showParty(int id) throws SQLException {
+
+    public static Party getParty(int id) throws SQLException {
         Connection conn = MySqlConnect.MySqlConnect();
         String sql = "SELECT party_name, party_account, party_account_balance FROM PARTY WHERE party_id = ?";
 
