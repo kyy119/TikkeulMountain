@@ -29,6 +29,7 @@ public class PartyApp {
         String pw = br.readLine();
         pw = PartyService.checkPw(pw);
 
+
         PartyService.createParty(arr.get(cate-1), name, Integer.parseInt(dailypay), pw);
 //        PartyService.createParty("여행","중국여행", 400, "1211");
  //       ps.updatePartyBalance(3,55500);
