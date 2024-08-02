@@ -59,7 +59,7 @@ public class PartyService {
                 }
                 rs.close();
             }
-            insertMemberShip(party.getPartyId());
+            insertMemberShip(party.getPartyId(),dailyPay);
             //PreparedStatement 닫기
             pstmt.close();
 
@@ -76,6 +76,13 @@ public class PartyService {
                 }
             }
         }
+    }
+
+    public static String checkAccount(){
+        Connection conn = MySqlConnect.MySqlConnect();
+        String str = partyAccountDate();
+        String sql = "";
+        return str;
     }
 
     public static String createPartyAccount() {
@@ -92,18 +99,19 @@ public class PartyService {
         return str;
     }
 
-    public static void insertMemberShip(int id) {
+    public static void insertMemberShip(int id, int dailyPay) {
         Connection conn = null;
         try {
             conn = MySqlConnect.MySqlConnect();
-            String sql = "insert into MEMBERSHIP ( role, user_id, party_id, user_active, party_active) values ( ? , ? , ? ,? ,?)";
-            MemberShip memberShip = new MemberShip("방장", "duddbs", id, "1", "1");
+            String sql = "insert into MEMBERSHIP ( role, user_id, party_id, user_active, party_active, daily_pay) values ( ? , ? , ? ,? ,?, ?)";
+            MemberShip memberShip = new MemberShip("방장", "duddbs", id, "1", "1",dailyPay);
             PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             pstmt.setString(1, memberShip.getRole());
             pstmt.setString(2, memberShip.getUserId());
             pstmt.setInt(3, memberShip.getPartyId());
             pstmt.setString(4, memberShip.getUserActive()); //10만
             pstmt.setString(5, memberShip.getPartyActive());
+            pstmt.setInt(6,memberShip.getDailyPay());
 
             //SQL 문 실행
             int rows = pstmt.executeUpdate();
@@ -136,43 +144,21 @@ public class PartyService {
         }
     }
 
-    public static void showCategory() {///////////////////카테고리 만드는 중
+    public static ArrayList<String> showCategory() {///////////////////카테고리 만드는 중
         Connection conn = null;
+        ArrayList<String> arr = new ArrayList<>();
         try {
             conn = MySqlConnect.MySqlConnect();
             String sql = "select category from PARTY_CATEGORY ";
-            PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            //pstmt.setString(1,);//////////////////// ???????????????????????????????????????
-
-            //SQL 문 실행
-            int rows = pstmt.executeUpdate();
-            System.out.println("저장된 행 수: " + rows);
-
-            if (rows == 1) {
-                ResultSet rs = pstmt.getGeneratedKeys();
-                if (rs.next()) {
-                    int bno = rs.getInt(1);
-                    System.out.println("저장된 bno: " + bno);
-                }
-                rs.close();
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                arr.add(rs.getString("category"));
             }
-
-            //PreparedStatement 닫기
-            pstmt.close();
-
         } catch (SQLException e) {
             e.printStackTrace();
-
-        } finally {
-
-            if (conn != null) {
-                try {
-                    //연결 끊기
-                    conn.close();
-                } catch (SQLException e) {
-                }
-            }
         }
+        return arr;
     }
 
 
@@ -364,13 +350,14 @@ public class PartyService {
         System.out.println(arr.get(1));
         System.out.println(arr.get(2));
     }
-    public static ArrayList<MemberShip> getMemberList() throws SQLException{
+
+    public static ArrayList<MemberShip> getMemberList() throws SQLException {
         Connection conn = MySqlConnect.MySqlConnect();
         String sql = "SELECT user_id, party_id, daily_pay FROM MEMBERSHIP WHERE user_active = '1' AND party_active = '1'";
         PreparedStatement pstmt = conn.prepareStatement(sql);
         ResultSet rs = pstmt.executeQuery();
         ArrayList<MemberShip> arr = new ArrayList<>();
-        while (rs.next()){
+        while (rs.next()) {
             MemberShip memberShip = new MemberShip();
             memberShip.setUserId(rs.getString("user_id"));
             memberShip.setPartyId(rs.getInt("party_id"));
