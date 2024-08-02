@@ -1,7 +1,10 @@
 package TikkeulMountainApp.fund;
 
+import TikkeulMountainApp.party.MemberShip;
 import TikkeulMountainApp.party.PartyService;
 import TikkeulMountainApp.user.UserDao;
+import java.sql.SQLException;
+import java.util.List;
 import java.util.Scanner;
 
 public class FundService {
@@ -67,4 +70,29 @@ public class FundService {
         TransactionDao.addTransaction(transaction);
 
     }
+
+    public static void deposit(String userId, int partyId, int amount) { //자동이체용 메소드
+
+        int userBalance = UserDao.getUserBalance(userId);
+        if (userBalance - amount < 0) { //개인계좌잔액이 입금할 금액보다 적으면 거래 x
+            System.out.println("개인계좌의 잔액이 부족합니다.");
+        } else if (amount < 0) {
+            System.out.println("음수 입니다.");
+        } else {
+            int newPartyBalance = PartyService.getPartyBalance(partyId) + amount;
+            int newUserBalance = userBalance - amount;
+            UserDao.updateUserBalance(userId, newUserBalance);
+            PartyService.updatePartyBalance(partyId, newPartyBalance);
+            Transaction transaction = new Transaction(amount, newPartyBalance, "1", null, userId,
+                partyId);
+            TransactionDao.addTransaction(transaction);
+        }
+
+    }
+
+    public static void depositAtOnce() throws SQLException {
+        List<MemberShip> memberShipList = PartyService.getMemberList();
+        memberShipList.forEach(n -> deposit(n.getUserId(), n.getPartyId(), n.getDailyPay()));
+    }
+
 }
