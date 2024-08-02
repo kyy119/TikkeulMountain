@@ -16,7 +16,7 @@ public class MemberShip {
     private int partyId;
     private String userActive;
     private String partyActive;
-
+    private int dailyPay;
     public MemberShip() {
     }
 
