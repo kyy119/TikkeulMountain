@@ -37,4 +37,20 @@ public class Party {
         this.partyAccount = partyAccount;
         this.partyAccountCreatedAt = partyAccountCreatedAt;
     }
+
+    public void printParty() {
+
+   //    private String partyActive;
+
+        System.out.println("userId : " + userId);
+        System.out.println("partyId : " + partyId);
+        System.out.println("partyName : " + partyName);
+        System.out.println("dailyPay : " + dailyPay);
+        System.out.println("partyAccount : " + partyAccount);
+        System.out.println("partyAccountPassword : " + partyAccountPassword);
+        System.out.println("partyAccountBalance : " + partyAccountBalance);
+        System.out.println("partyAccountCreatedAt : " + partyAccountCreatedAt);
+        System.out.println("category : " + category);
+
+    }
 }

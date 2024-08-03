@@ -16,6 +16,25 @@ import java.util.Date;
 
 public class PartyService {
 
+    public static int checkCate(String cate) throws IOException{
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        try {
+            cate = br.readLine();
+            while (Integer.parseInt(cate) < 1 || Integer.parseInt(cate) >= 5) {
+                System.out.println("1 ~ 4 숫자만 입력하세요");
+                System.out.print("카테고리 선택 : ");
+                cate = br.readLine();
+            }
+
+        } catch (NumberFormatException e) {
+            System.out.println("1 ~ 4 숫자만 입력하세요");
+            System.out.print("카테고리 선택 : ");
+            cate = br.readLine();
+
+        }
+        return Integer.parseInt(cate);
+
+    }
 
     //모임 생성 메소드
     public static void createParty(String cate, String name, int dailyPay, String pw) {
