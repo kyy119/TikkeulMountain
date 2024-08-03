@@ -5,6 +5,7 @@ import static TikkeulMountainApp.party.PartyService.showPartyList;
 import TikkeulMountainApp.fund.FundService;
 import TikkeulMountainApp.fund.Transaction;
 import TikkeulMountainApp.fund.TransactionDao;
+import TikkeulMountainApp.party.ASCII;
 import TikkeulMountainApp.party.Party;
 import TikkeulMountainApp.party.PartyChecker;
 import TikkeulMountainApp.party.PartyService;
@@ -20,10 +21,13 @@ public class PrintPage {
 
     static Scanner sc = new Scanner(System.in);
 
-    public static int logInPage() { //로그인 페이지, page=1
-        System.out.println("======================== 로그인 화면 ========================");
+    public static int logInPage() throws InterruptedException { //로그인 페이지, page=1
+
+        ASCII.printTikkeulMountain();
+        System.out.println("============================ 로그인 화면 ============================");
         System.out.println("(1)로그인");
         System.out.println("(2)회원가입");
+        System.out.println("=====================================================================");
         System.out.print("원하는 메뉴키를 입력하세요:");
         String in = sc.nextLine();
         switch (in) {
