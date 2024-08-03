@@ -21,6 +21,7 @@ public class PrintPage {
     static Scanner sc = new Scanner(System.in);
 
     public static int logInPage() { //로그인 페이지, page=1
+        System.out.println("======================== 로그인 화면 ========================");
         System.out.println("(1)로그인");
         System.out.println("(2)회원가입");
         System.out.print("원하는 메뉴키를 입력하세요:");
@@ -28,6 +29,7 @@ public class PrintPage {
         switch (in) {
             case "1": //로그인
                 while (true) {
+                 //   System.out.println("UserDao");
                     System.out.println("(B)뒤로가기");
                     System.out.print("아이디를 입력하세요: ");
                     String id = sc.nextLine();
@@ -57,10 +59,10 @@ public class PrintPage {
         ArrayList<Party> partyArrayList = showPartyList(LoginChecker.getUser().getUser_id());
         partyArrayList.stream().forEach(
             n -> System.out.println(n.getPartyId() + n.getPartyName() + n.getPartyActive()));
-
-        System.out.println("                       (C) 모임생성");
+        System.out.println("======================== 모임 메뉴 ========================");
+        System.out.println("                      (C) 모임생성");
         System.out.println("(M) 마이페이지           (O) 로그아웃");
-        System.out.print("원하는 메뉴키를 입력하세요:");
+        System.out.println("원하는 메뉴키를 입력하세요: ");
         String in = sc.nextLine();
         switch (in) {
             case "M": //마이 페이지로 이동
@@ -83,7 +85,7 @@ public class PrintPage {
         User user = UserDao.getUser(LoginChecker.getUser().getUser_id());
         user.printInfo();
         System.out.println("(B) 뒤로가기");
-        System.out.print("원하는 메뉴키를 입력하세요:");
+        System.out.print("원하는 메뉴키를 입력하세요: ");
         String in = sc.nextLine();
         switch (in) {
             case "B":

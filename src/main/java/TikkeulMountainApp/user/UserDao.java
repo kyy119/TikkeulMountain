@@ -89,6 +89,7 @@ public class UserDao {
                 String userActive = rs.getString("user_active");
 
                 User user = new User(userId, userName, userPassword, userPhone, userAccount, userAccountBalance, userActive);
+                System.out.println("======================================================");
                 System.out.println("사용자 정보 조회가 완료되었습니다!");
                 return user;
             }
