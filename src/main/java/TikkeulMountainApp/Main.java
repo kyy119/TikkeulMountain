@@ -1,10 +1,11 @@
 package TikkeulMountainApp;
 
 import TikkeulMountainApp.util.MySqlConnect;
+import java.sql.SQLException;
 
 public class Main {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws SQLException {
 
         int page = 1;
         while(true){
@@ -23,8 +24,12 @@ public class Main {
                 page = PrintPage.accountInfoPage();
             }else if(page==6){ //모임통장 생성 페이지
                 page = PrintPage.createAccountPage();
-            }else if(page==1){ //수동 이체 페이지
-                page = PrintPage.transactionPage();
+            }else if(page==7){ //수동 입금 페이지
+                page = PrintPage.depositPage();
+            }else if(page==8){ //출금 페이지
+                page = PrintPage.withdrawPage();
+            }else if(page==9){ //회원가입 페이
+                page = PrintPage.signUpPage();
             }
         }
     }

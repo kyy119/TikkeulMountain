@@ -5,7 +5,7 @@ import java.sql.Timestamp;
 import lombok.Data;
 
 @Data
-class Transaction {
+public class Transaction {
 
     Timestamp transferDate;
     int transferAmount;
@@ -14,6 +14,9 @@ class Transaction {
     String transferMemo;
     String userId;
     int partyId;
+
+    public Transaction() {
+    }
 
     public Transaction(int transferAmount, int transferBalance, String transferIndex,
         String transferMemo, String userId, int partyId) {
@@ -29,14 +32,14 @@ class Transaction {
     public void printTransaction() {
         if (transferIndex.equals("1")) {
             System.out.println(
-                "거래시각:" + transferDate + "거래금액:" + transferAmount + "거래방식: 1" + "보내는 사람:" + userId
-                    + "받는 사람:" + partyId + "잔액:" + transferBalance);
+                "거래시각:" + transferDate + "거래금액:" + transferAmount + "거래방식: 입금" + "보내는 사람:" + userId
+                    + "잔액:" + transferBalance);
         } else if (transferIndex.equals("2")) {
             System.out.println(
-                "거래시각:" + transferDate + "거래금액:" + transferAmount + "거래방식: 2" + "보내는 사람:" + partyId
+                "거래시각:" + transferDate + "거래금액:" + transferAmount + "거래방식: 출금"
                     + "받는 사람:" + userId + "잔액:" + transferBalance);
         } else {
-            System.out.println("거래방식 명확히 하세요.");
+            System.out.println("거래방식을 명확히 하세요.");
         }
     }
 }
