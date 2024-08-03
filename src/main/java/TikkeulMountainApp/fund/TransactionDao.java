@@ -6,7 +6,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class TransactionDao {
@@ -81,5 +83,45 @@ public class TransactionDao {
         }
         return null;
 
+    }
+
+    public static List<Transaction> getPartyTransaction(int partyId){
+        Connection conn = null;
+        String sql = "select transfer_date,transfer_amount,transfer_balance,transfer_index,transfer_memo,user_id from account_history where party_id=? ";
+
+        try{
+            conn = MySqlConnect.MySqlConnect();
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+
+            pstmt.setInt(1,partyId);
+
+            ResultSet rs = pstmt.executeQuery();
+
+            List<Transaction> transactionList = new ArrayList<>();
+            while(rs.next()){
+                Transaction transaction = new Transaction();
+                transaction.setTransferDate(rs.getTimestamp("transfer_date"));
+                transaction.setTransferAmount(rs.getInt("transfer_amount"));
+                transaction.setTransferBalance(rs.getInt("transfer_balance"));
+                transaction.setTransferIndex(rs.getString("transfer_index"));
+                transaction.setTransferMemo(rs.getString("transfer_memo"));
+                transaction.setUserId(rs.getString("user_id"));
+
+                transactionList.add(transaction);
+            }
+
+            return transactionList;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                }
+            }
+        }
+        return null;
     }
 }
