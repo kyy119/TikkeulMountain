@@ -48,6 +48,7 @@ public class UserMainApp {
 
       //  UserDao.updateUserActive("jhc5555","0");
 UserDao.loginUser("jhc5555","회찬");
+UserDao.getUser("jhc5555");
 
     }
 }
