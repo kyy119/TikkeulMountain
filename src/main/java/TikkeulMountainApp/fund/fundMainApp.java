@@ -14,14 +14,14 @@ public class fundMainApp {
 //        FundService.depositAtOnce();
 
 
-//        Scheduler scheduler = new Scheduler();
-//        scheduler.execute(()-> {
-//            try {
-//                FundService.depositAtOnce();
-//            } catch (SQLException e) {
-//                throw new RuntimeException(e);
-//            }
-//        },14,22,0);
+        Scheduler scheduler = new Scheduler();
+        scheduler.execute(()-> {
+            try {
+                FundService.depositAtOnce();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        },14,22,0);
 
         Map<String,Integer> map = TransactionDao.getMemberContributions(2);
         Set<String> keySet = map.keySet();

@@ -48,10 +48,18 @@ public class UserDao {
 
             ResultSet rs = pstmt.executeQuery();
             if (rs.next()) {
-                System.out.println("로그인 성공!");
+                User user = new User();
+                user.setUser_id(rs.getString("user_id"));
+                user.setUser_name(rs.getString("user_name"));
+                user.setUser_password(rs.getString("user_password"));
+                user.setUser_phone(rs.getString("user_phone"));
+                user.setUser_account(rs.getString("user_account"));
+                user.setUser_account_balance(rs.getInt("user_account_balance"));
+                user.setUser_active(rs.getString("user_active"));
+                LoginChecker.setUser(user);
                 return true;
             } else {
-                System.out.println("로그인 실패: 아이디 또는 비밀번호가 잘못되었습니다.");
+
                 return false;
             }
         } catch (SQLException e) {

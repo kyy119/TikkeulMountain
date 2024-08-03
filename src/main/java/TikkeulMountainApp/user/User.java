@@ -14,6 +14,8 @@ public class User {
     int user_account_balance;
     String user_active;
 
+    public User() {
+    }
 
     public User(String user_id, String user_name, String user_password, String user_phone, String user_account, int user_account_balance, String user_active) {
         this.user_id = user_id;
