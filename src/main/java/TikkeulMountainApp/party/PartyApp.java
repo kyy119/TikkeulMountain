@@ -13,9 +13,10 @@ import java.util.Scanner;
 public class PartyApp {
 
     public static void main(String[] args) throws SQLException, IOException, InterruptedException {
-        Party party = new Party(); ///////////////수현 수정
-        party.printParty();///////////////수현 수정
+        Party party = new Party();
+        party.printParty();
         ASCII.printTikkeulMountain();
+
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         System.out.println("-----");
         ArrayList<String> arr = PartyService.showCategory();
