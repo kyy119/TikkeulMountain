@@ -113,7 +113,7 @@ public class UserDao {
                 int balance = rs.getInt("user_account_balance");
                 return balance;
             }
-            System.out.println("조회가 완료되었습니다!");
+            System.out.println("잔액 조회가 완료되었습니다!");
 
             pstmt.close();
         } catch (SQLException e) {
