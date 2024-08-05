@@ -1,11 +1,12 @@
 package TikkeulMountainApp;
 
 import TikkeulMountainApp.util.MySqlConnect;
+import java.io.IOException;
 import java.sql.SQLException;
 
 public class Main {
 
-    public static void main(String[] args) throws SQLException, InterruptedException {
+    public static void main(String[] args) throws SQLException, InterruptedException, IOException {
 
         int page = 1;
         while(true){

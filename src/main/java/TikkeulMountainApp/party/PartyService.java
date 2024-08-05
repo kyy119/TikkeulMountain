@@ -1,5 +1,6 @@
 package TikkeulMountainApp.party;
 
+import TikkeulMountainApp.user.LoginChecker;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -174,7 +175,7 @@ public class PartyService {
         try {
             conn = MySqlConnect.MySqlConnect();
             String sql = "insert into MEMBERSHIP ( role, user_id, party_id, user_active, party_active, daily_pay) values ( ? , ? , ? ,? ,?, ?)";
-            MemberShip memberShip = new MemberShip("방장", "duddbs", id, "1", "1", dailyPay);
+            MemberShip memberShip = new MemberShip("방장", LoginChecker.getUser().getUser_id(), id, "1", "1", dailyPay);
             PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             pstmt.setString(1, memberShip.getRole());
             pstmt.setString(2, memberShip.getUserId());

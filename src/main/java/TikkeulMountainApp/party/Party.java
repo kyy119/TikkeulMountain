@@ -42,15 +42,15 @@ public class Party {
 
    //    private String partyActive;
 
-        System.out.println("userId : " + userId);
-        System.out.println("partyId : " + partyId);
-        System.out.println("partyName : " + partyName);
-        System.out.println("dailyPay : " + dailyPay);
-        System.out.println("partyAccount : " + partyAccount);
-        System.out.println("partyAccountPassword : " + partyAccountPassword);
-        System.out.println("partyAccountBalance : " + partyAccountBalance);
-        System.out.println("partyAccountCreatedAt : " + partyAccountCreatedAt);
-        System.out.println("category : " + category);
+        System.out.println("아이디 : " + userId);
+        System.out.println("모임Id : " + partyId);
+        System.out.println("모임이름 : " + partyName);
+        System.out.println("매일 납부 금액 : " + dailyPay);
+        System.out.println("모임통장 계좌번호 : " + partyAccount);
+        System.out.println("모임통장 비밀번호 : " + partyAccountPassword);
+        System.out.println("모임통장 잔액 : " + partyAccountBalance);
+        System.out.println("모임통장 개설일 : " + partyAccountCreatedAt);
+        System.out.println("모임통장 종류 : " + category);
 
     }
 }

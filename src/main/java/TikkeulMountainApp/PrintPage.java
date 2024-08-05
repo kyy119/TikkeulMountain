@@ -1,17 +1,20 @@
 package TikkeulMountainApp;
 
+import static TikkeulMountainApp.party.PartyService.createParty;
 import static TikkeulMountainApp.party.PartyService.showPartyList;
 
-import TikkeulMountainApp.fund.FundService;
 import TikkeulMountainApp.fund.Transaction;
 import TikkeulMountainApp.fund.TransactionDao;
-import TikkeulMountainApp.party.ASCII;
 import TikkeulMountainApp.party.Party;
 import TikkeulMountainApp.party.PartyChecker;
 import TikkeulMountainApp.party.PartyService;
 import TikkeulMountainApp.user.LoginChecker;
 import TikkeulMountainApp.user.User;
 import TikkeulMountainApp.user.UserDao;
+import TikkeulMountainApp.util.ASCII;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -120,11 +123,49 @@ public class PrintPage {
     }
 
     public static int accountInfoPage() { //계좌 정보 페이지, page=5
-        return 1;
+      Party party = PartyChecker.getParty();
+        party.printParty();
+        System.out.println("                     (B) 뒤로가기");
+        System.out.print("원하는 메뉴키를 입력하세요:");
+        String in = sc.nextLine();
+        switch(in) {
+            case "B" :
+                return 4;
+            default:
+                System.out.println("다시 맞는 키를 입력해주세요");
+                return  5;
+
+        }
     }
 
-    public static int createAccountPage() {
-        return 1;
+    public static int createAccountPage() throws IOException {  //모임계좌생성
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        System.out.println("-----");
+        ArrayList<String> arr = PartyService.showCategory();
+        for (int i = 0; i < arr.size(); i++) {
+            System.out.print(i + 1 + ". ");
+            System.out.println(arr.get(i));
+        }
+        System.out.print("카테고리 선택 : ");
+        String cate = br.readLine();
+
+
+
+        System.out.print("모임 이름 : ");
+        String name = br.readLine();
+        System.out.print("매일 납부 예정 금액 : ");
+        String dailyPay = br.readLine();
+        dailyPay = PartyService.checkDailyPay(dailyPay);
+
+
+        System.out.print("계좌 비밀 번호 : ");
+        String pw = br.readLine();
+        pw = PartyService.checkPw(pw);
+        int dailyPayInt = Integer.parseInt(dailyPay);
+        PartyService.createParty(cate, name, dailyPayInt, pw);
+
+
+        return 3; //ㄱ
     }
 
     public static int depositPage() {

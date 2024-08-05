@@ -1,4 +1,4 @@
-package TikkeulMountainApp.party;
+package TikkeulMountainApp.util;
 
 public class ASCII {
 
@@ -761,29 +761,29 @@ public class ASCII {
         System.out.println();
         System.out.println();
         System.out.println();
-        System.out.println("                                    /\\");
-        System.out.println("                                   /  \\");
-        System.out.println("                                  /    \\");
-        System.out.println("                                 /      \\");
-        System.out.println("                                /        \\");
-        System.out.println("                               /          \\");
-        System.out.println("                              /            \\");
-        System.out.println("                 / \\        /              \\        /\\ ");
-        System.out.println("                /   \\      /                \\      /  \\");
-        System.out.println("               /     \\    /                  \\    /    \\");
-        System.out.println("              /       \\  /                    \\  /      \\");
-        System.out.println("             /         \\/                      \\/        \\");
-        System.out.println("            /                                             \\");
-        System.out.println("           /                                               \\");
-        System.out.println("          /                                                 \\");
-        System.out.println("         /                                                   \\");
-        System.out.println("        /                                                     \\");
-        System.out.println("       /                                                       \\");
-        System.out.println("      /                                                         \\");
-        System.out.println("     /                                                           \\");
-        System.out.println("    /                                                             \\");
-        System.out.println("   /                                                               \\");
-        System.out.println("  /                                                                 \\");
+        System.out.println("                                  /\\");
+        System.out.println("                                 /  \\");
+        System.out.println("                                /    \\");
+        System.out.println("                               /      \\");
+        System.out.println("                              /        \\");
+        System.out.println("                             /          \\");
+        System.out.println("                            /            \\");
+        System.out.println("                 /\\        /              \\        /\\ ");
+        System.out.println("                /  \\      /                \\      /  \\");
+        System.out.println("               /    \\    /                  \\    /    \\");
+        System.out.println("              /      \\  /                    \\  /      \\");
+        System.out.println("             /        \\/                      \\/        \\");
+        System.out.println("            /                                            \\");
+        System.out.println("           /                                              \\");
+        System.out.println("          /                                                \\");
+        System.out.println("         /                                                  \\");
+        System.out.println("        /                                                    \\");
+        System.out.println("       /                                                      \\");
+        System.out.println("      /                                                        \\");
+        System.out.println("     /                                                          \\");
+        System.out.println("    /                                                            \\");
+        System.out.println("   /                                                              \\");
+        System.out.println("  /                                                                \\");
         System.out.println("  ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ");
 
     }
