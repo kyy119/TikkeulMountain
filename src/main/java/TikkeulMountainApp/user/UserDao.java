@@ -24,10 +24,10 @@ public class UserDao {
             PreparedStatement pstmt = conn.prepareStatement(sql);
 
             // 중복 및 유효성 검사
-      //      if (isUserIdExists(user.getUser_id())) {
-        //        System.out.println("이미 존재하는 아이디입니다.");
-          //      return;
-           // }
+            //      if (isUserIdExists(user.getUser_id())) {
+            //        System.out.println("이미 존재하는 아이디입니다.");
+            //      return;
+            // }
             if (!user.getUser_phone().matches("010-\\d{4}-\\d{4}") || isUserPhoneExists(user.getUser_phone())) {
                 System.out.println("전화번호가 잘못되었거나 중복됩니다.");
                 return;
@@ -146,7 +146,7 @@ public class UserDao {
                 String userActive = rs.getString("user_active");
 
                 User user = new User(userId, userName, userPassword, userPhone, userAccount,
-                    userAccountBalance, userActive);
+                        userAccountBalance, userActive);
                 System.out.println("======================================================");
                 return user;
             }
