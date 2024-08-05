@@ -77,7 +77,7 @@ public class PrintPage {
         for (int i = 0; i < partyArrayList.size(); i++) {
             System.out.print(i + 1 + ". ");
             System.out.println(partyArrayList.get(i).getPartyName() + "   " + partyArrayList.get(i)
-                    .getPartyAccountBalance() + "원");
+                .getPartyAccountBalance() + "원");
         }
         System.out.println("======================== 모임 메뉴 ========================");
         System.out.println("                      (C) 모임생성");
@@ -136,7 +136,7 @@ public class PrintPage {
                     String compareStringIn = sc.nextLine();
                     if (compareString.equals(compareStringIn)) {
                         UserDao.updateUserActive(LoginChecker.getUser().getUser_id(),
-                                "0"); //userActive를 0으로 바꿔줌
+                            "0"); //userActive를 0으로 바꿔줌
                         LoginChecker.setUser(null);
                         return 1;
                     }
@@ -154,7 +154,7 @@ public class PrintPage {
         party.printParty();
         System.out.print("당일 납부자: ");
         List<String> userList = TransactionDao.getDailyContribution(party.getPartyId());
-        userList.forEach(n-> System.out.print(n+", "));
+        userList.forEach(n -> System.out.print(n + ", "));
         System.out.println();
         System.out.println("---------------");
         List<Transaction> transactionList = TransactionDao.getPartyTransaction(party.getPartyId());
@@ -186,20 +186,15 @@ public class PrintPage {
         Party party = PartyChecker.getParty();
         List<Party> partyList = PartyService.showPartyDetail(party.getPartyId());
         Map<String, Integer> map = TransactionDao.getMemberContributions(party.getPartyId());
-        Set<String> keySet = map.keySet();
-        Iterator<String> keyIterator = keySet.iterator();
-
-        List<String> contributionMember = null;
-        while (keyIterator.hasNext()) {
-            String k = keyIterator.next();
-            Integer v = map.get(k);
-
-        }
-        int count = 1;
-
-        for(int i=0; i<partyList.size();i++){
-            System.out.print(i+1+"번 멤버:");
-            System.out.println(partyList.get(i).getUserId());
+        for (int i = 0; i < partyList.size(); i++) {
+            System.out.print(i + 1 + "번 멤버:");
+            System.out.print(partyList.get(i).getUserId());
+            Integer v = map.get(partyList.get(i).getUserId());
+            if (v == null) {
+                System.out.println(" -> 납부 금액 : 0원");
+            } else {
+                System.out.println(" -> 납부 금액 : " + v);
+            }
         }
 
         System.out.println("파티 이름 : " + partyList.get(0).getPartyName());
@@ -207,7 +202,6 @@ public class PrintPage {
         System.out.println("파티 계좌번호 : " + partyList.get(0).getPartyAccount());
         System.out.println("파티 계좌 잔액 : " + partyList.get(0).getPartyAccountBalance());
         System.out.println("파티 생성일 : " + partyList.get(0).getPartyAccountCreatedAt());
-
 
         System.out.println("(D) 모임 삭제        (B) 뒤로가기");
         System.out.print("원하는 메뉴키를 입력하세요:");
@@ -264,7 +258,7 @@ public class PrintPage {
                 String friendId = sc.nextLine();
                 int index = 1;
                 for (int i = 0; i < userList.size(); i++) {
-                    if(friendId.equals(LoginChecker.getUser().getUser_id())){
+                    if (friendId.equals(LoginChecker.getUser().getUser_id())) {
                         System.out.println("본인은 입력이 불가능합니다.");
                         index = 0;
                         break;
@@ -293,7 +287,8 @@ public class PrintPage {
             case "Y":
                 int dailyPayInt = Integer.parseInt(dailyPay);
                 ArrayList<String> arrayList = new ArrayList<>(friendIDs);
-                PartyService.createParty(arr.get(Integer.parseInt(cate) - 1), name, dailyPayInt, pw, arrayList);
+                PartyService.createParty(arr.get(Integer.parseInt(cate) - 1), name, dailyPayInt, pw,
+                    arrayList);
                 return 2;
             case "n":
             case "N":
@@ -308,16 +303,17 @@ public class PrintPage {
     public static int depositPage() {
 
         int newPartyBalance = FundService.deposit(LoginChecker.getUser().getUser_id(),
-                PartyChecker.getParty().getPartyId());
+            PartyChecker.getParty().getPartyId());
         PartyChecker.getParty().setPartyAccountBalance(newPartyBalance);
         return 4;
     }
 
     public static int withdrawPage() throws SQLException {
 
-        String userRole = TransactionDao.getRole(LoginChecker.getUser().getUser_id(), PartyChecker.getParty()
-            .getPartyId());
-        if(userRole.equals("0")){
+        String userRole = TransactionDao.getRole(LoginChecker.getUser().getUser_id(),
+            PartyChecker.getParty()
+                .getPartyId());
+        if (userRole.equals("0")) {
             System.out.println("방장만 출금 가능합니다.");
         } else {
             int newPartyBalance = FundService.withdraw(LoginChecker.getUser().getUser_id(),
@@ -380,7 +376,8 @@ public class PrintPage {
         while (true) {
             System.out.print("계좌번호를 입력하세요 (3333-xx-xxxxxxx): ");
             userAccount = sc.nextLine();
-            if (!userAccount.matches("\\d{4}-\\d{2}-\\d{7}") || UserDao.isUserAccountExists(userAccount)) {
+            if (!userAccount.matches("\\d{4}-\\d{2}-\\d{7}") || UserDao.isUserAccountExists(
+                userAccount)) {
                 System.out.println("계좌번호가 잘못되었거나 중복됩니다.");
             } else {
                 System.out.println("사용 가능한 계좌번호입니다.");
