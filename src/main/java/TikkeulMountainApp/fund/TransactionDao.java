@@ -29,12 +29,10 @@ public class TransactionDao {
             pstmt.setString(6, transaction.getUserId());
             pstmt.setInt(7, transaction.getPartyId());
             int rows = pstmt.executeUpdate();
-            System.out.println("저장된 행 수: " + rows);
             if (rows == 1) {
                 ResultSet rs = pstmt.getGeneratedKeys();
                 if (rs.next()) {
                     int bno = rs.getInt(1);
-                    System.out.println("저장된bno: " + bno);
                 }
                 rs.close();
             }
