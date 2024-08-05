@@ -91,7 +91,7 @@ public class FundService {
 
         int userBalance = UserDao.getUserBalance(userId);
         if (userBalance - amount < 0) { //개인계좌잔액이 입금할 금액보다 적으면 거래 x
-            System.out.println("개인계좌의 잔액이 부족합니다.");
+            System.out.println(userId+": 개인계좌의 잔액이 부족합니다.");
         } else if (amount < 0) {
             System.out.println("음수 입니다.");
         } else {
@@ -101,14 +101,17 @@ public class FundService {
             PartyService.updatePartyBalance(partyId, newPartyBalance);
             Transaction transaction = new Transaction(amount, newPartyBalance, "1", null, userId,
                 partyId);
+            System.out.println(userId+": "+amount+"원 자동이체 되었습니다.");
             TransactionDao.addTransaction(transaction);
         }
 
     }
 
+    //user_active=1 인 모든 멤버의 party_active=1인 모든 모임에게 자동이체용 메소드
     public static void depositAtOnce() throws SQLException {
         List<MemberShip> memberShipList = PartyService.getMemberList();
         memberShipList.forEach(n -> deposit(n.getUserId(), n.getPartyId(), n.getDailyPay()));
+
     }
 
 }
