@@ -8,8 +8,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.regex.Pattern;
+
 
 public class UserDao {
+
+
 
     // Create 회원가입 메서드
     public static void registerUser(User user) {
@@ -18,6 +22,24 @@ public class UserDao {
         try {
             conn = MySqlConnect.MySqlConnect();
             PreparedStatement pstmt = conn.prepareStatement(sql);
+
+            // 중복 및 유효성 검사
+            //      if (isUserIdExists(user.getUser_id())) {
+            //        System.out.println("이미 존재하는 아이디입니다.");
+            //      return;
+            // }
+            if (!user.getUser_phone().matches("010-\\d{4}-\\d{4}") || isUserPhoneExists(user.getUser_phone())) {
+                System.out.println("전화번호가 잘못되었거나 중복됩니다.");
+                return;
+            }
+            if (!user.getUser_account().matches("\\d{4}-\\d{2}-\\d{7}") || isUserAccountExists(user.getUser_account())) {
+                System.out.println("계좌번호가 잘못되었거나 중복됩니다.");
+                return;
+            }
+            if (!user.getUser_password().matches("^(?=.*[a-zA-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{6,}$")) {
+                System.out.println("비밀번호는 최소 6자 이상, 특수문자 포함해야 합니다.");
+                return;
+            }
 
             pstmt.setString(1, user.getUser_id());
             pstmt.setString(2, user.getUser_name());
@@ -34,6 +56,39 @@ public class UserDao {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+
+    // 비밀번호 유효성 검사 메서드
+    public static boolean isValidPassword(String password) {
+        // 최소 6자 이상, 하나 이상의 문자, 하나의 숫자, 하나의 특수문자 포함
+        String passwordPattern = "^(?=.*[a-zA-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{6,}$";
+        return Pattern.matches(passwordPattern, password);
+    }
+
+    public static boolean isUserIdExists(String userId) {
+        return checkExists("SELECT COUNT(*) FROM USER WHERE user_id = ?", userId);
+    }
+
+    public static boolean isUserPhoneExists(String userPhone) {
+        return checkExists("SELECT COUNT(*) FROM USER WHERE user_phone = ?", userPhone);
+    }
+
+    public static boolean isUserAccountExists(String userAccount) {
+        return checkExists("SELECT COUNT(*) FROM USER WHERE user_account = ?", userAccount);
+    }
+
+    // 공통 중복 확인 메서드
+    private static boolean checkExists(String query, String value) {
+        try (Connection conn = MySqlConnect.MySqlConnect();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            pstmt.setString(1, value);
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) return rs.getInt(1) > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
     //로그인 메서드
@@ -91,7 +146,7 @@ public class UserDao {
                 String userActive = rs.getString("user_active");
 
                 User user = new User(userId, userName, userPassword, userPhone, userAccount,
-                    userAccountBalance, userActive);
+                        userAccountBalance, userActive);
                 System.out.println("======================================================");
                 return user;
             }

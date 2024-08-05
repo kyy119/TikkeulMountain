@@ -48,5 +48,8 @@ public class User {
         System.out.println("계좌 잔액: " + user_account_balance);
 
     }
+
+
+
 }
 

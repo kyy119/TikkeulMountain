@@ -2,6 +2,7 @@ package TikkeulMountainApp;
 
 import static TikkeulMountainApp.party.PartyService.createParty;
 import static TikkeulMountainApp.party.PartyService.showPartyList;
+import static TikkeulMountainApp.user.UserDao.isUserIdExists;
 
 import TikkeulMountainApp.fund.FundService;
 import TikkeulMountainApp.fund.Transaction;
@@ -303,25 +304,67 @@ public class PrintPage {
 
 
     public static int signUpPage() {
-        Scanner scanner = new Scanner(System.in);
-        System.out.print("아이디를 입력하세요: ");
-        String userId = scanner.nextLine();
+
+        // 중복 및 유효성 검사
+        String userId = null;
+        String userName = null;
+        String userPassword = null;
+        String userPhone = null;
+        String userAccount = null;
+
+        while (true){
+            System.out.print("아이디를 입력하세요: ");
+            userId = sc.nextLine();
+            if (isUserIdExists(userId)) {
+                System.out.println("이미 존재하는 아이디입니다.");
+
+            } else{
+                System.out.println("사용 가능한 아이디입니다.");
+                break;
+            }
+        }
+
+        while (true) {
+            System.out.print("비밀번호를 입력하세요: ");
+            userPassword = sc.nextLine();
+            if (!UserDao.isValidPassword(userPassword)) {
+                System.out.println("비밀번호는 최소 6자 이상, 특수문자 포함해야 합니다.");
+            } else {
+                System.out.println("사용 가능한 비밀번호입니다.");
+                break;
+            }
+        }
 
         System.out.print("이름을 입력하세요: ");
-        String userName = scanner.nextLine();
+        userName = sc.nextLine();
 
-        System.out.print("비밀번호를 입력하세요: ");
-        String userPassword = scanner.nextLine();
+        //비밀번호
 
-        System.out.print("전화번호를 입력하세요: ");
-        String userPhone = scanner.nextLine();
+        while (true) {
+            System.out.print("전화번호를 입력하세요 (010-xxxx-xxxx): ");
+            userPhone = sc.nextLine();
+            if (!userPhone.matches("010-\\d{4}-\\d{4}") || UserDao.isUserPhoneExists(userPhone)) {
+                System.out.println("전화번호가 잘못되었거나 중복됩니다.");
+            } else {
+                System.out.println("사용 가능한 전화번호입니다.");
+                break;
+            }
+        }
 
-        System.out.print("계좌번호를 입력하세요: ");
-        String userAccount = scanner.nextLine();
+        while (true) {
+            System.out.print("계좌번호를 입력하세요 (3333-xx-xxxxxxx): ");
+            userAccount = sc.nextLine();
+            if (!userAccount.matches("\\d{4}-\\d{2}-\\d{7}") || UserDao.isUserAccountExists(userAccount)) {
+                System.out.println("계좌번호가 잘못되었거나 중복됩니다.");
+            } else {
+                System.out.println("사용 가능한 계좌번호입니다.");
+                break;
+            }
+        }
 
-        User user = new User(userId, userName, userPassword, userPhone, userAccount);
-        UserDao.registerUser(user);
+
 
         return 1;
+
     }
 }
