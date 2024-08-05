@@ -1,7 +1,9 @@
 package TikkeulMountainApp.fund;
 
 import TikkeulMountainApp.party.MemberShip;
+import TikkeulMountainApp.party.PartyChecker;
 import TikkeulMountainApp.party.PartyService;
+import TikkeulMountainApp.user.LoginChecker;
 import TikkeulMountainApp.user.UserDao;
 import java.sql.SQLException;
 import java.util.List;
@@ -11,9 +13,10 @@ public class FundService {
 
     private static Scanner sc = new Scanner(System.in);
 
-    public static void deposit(String userId, int partyId) { //개인통장->모임통장, transferIndex: "1"
+    public static int deposit(String userId, int partyId) { //개인통장->모임통장, transferIndex: "1"
 
         int userBalance = UserDao.getUserBalance(userId);
+        int partyBalance = PartyService.getPartyBalance(partyId);
         int amount;
         while (true) {
             System.out.println("입금 취소하시려면 0을 입력하세요.");
@@ -24,12 +27,12 @@ public class FundService {
             } else if (amount < 0) {
                 System.out.println("양수를 입력해주세요.");
             } else if (amount == 0) {
-                return;
+                return partyBalance;
             } else {
                 break;
             }
         }
-        int newPartyBalance = PartyService.getPartyBalance(partyId) + amount;
+        int newPartyBalance = partyBalance + amount;
         int newUserBalance = userBalance - amount;
         UserDao.updateUserBalance(userId, newUserBalance);
         PartyService.updatePartyBalance(partyId, newPartyBalance);
@@ -37,9 +40,13 @@ public class FundService {
             partyId);
         TransactionDao.addTransaction(transaction);
 
+        return newPartyBalance;
+
     }
 
-    public static void withdraw(String userId, int partyId) { //모임통장->개인통장, transferIndex: "2"
+    public static int withdraw(String userId, int partyId) throws SQLException { //모임통장->개인통장, transferIndex: "2"
+
+        int userBalance = UserDao.getUserBalance(userId);
         int partyBalance = PartyService.getPartyBalance(partyId);
         int amount;
         while (true) {
@@ -53,21 +60,30 @@ public class FundService {
             } else if (amount < 0) {
                 System.out.println("양수를 입력해주세요.");
             } else if (amount == 0) {
-                return;
+                return partyBalance;
             } else {
                 break;
             }
         }
-
         System.out.println("출금 메모: ");
         String memo = sc.nextLine();
-        int newPartyBalance = partyBalance - amount;
-        int newUserBalance = UserDao.getUserBalance(userId) + amount;
-        UserDao.updateUserBalance(userId, newUserBalance);
-        PartyService.updatePartyBalance(partyId, newPartyBalance);
-        Transaction transaction = new Transaction(amount, newPartyBalance, "2", memo, userId,
-            partyId);
-        TransactionDao.addTransaction(transaction);
+
+        while(true){
+            System.out.print("모임 계좌 비밀번호를 입력하세요:");
+            String pwd = sc.nextLine();
+            if (pwd.equals(PartyService.getParty(partyId).getPartyAccountPassword())){
+                int newPartyBalance = partyBalance - amount;
+                int newUserBalance = userBalance + amount;
+                UserDao.updateUserBalance(userId, newUserBalance);
+                PartyService.updatePartyBalance(partyId, newPartyBalance);
+                Transaction transaction = new Transaction(amount, newPartyBalance, "2", memo, userId,
+                    partyId);
+                TransactionDao.addTransaction(transaction);
+
+                return newPartyBalance;
+            }
+        }
+
 
     }
 

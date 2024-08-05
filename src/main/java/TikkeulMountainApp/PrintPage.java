@@ -3,6 +3,7 @@ package TikkeulMountainApp;
 import static TikkeulMountainApp.party.PartyService.createParty;
 import static TikkeulMountainApp.party.PartyService.showPartyList;
 
+import TikkeulMountainApp.fund.FundService;
 import TikkeulMountainApp.fund.Transaction;
 import TikkeulMountainApp.fund.TransactionDao;
 import TikkeulMountainApp.party.Party;
@@ -28,7 +29,7 @@ public class PrintPage {
     public static int logInPage() throws InterruptedException { //로그인 페이지, page=1
 
 //        ASCII.printTikkeulMountain();
-        System.out.println("===========1================= 로그인 화면 ============================");
+        System.out.println("============================ 로그인 화면 ============================");
         System.out.println("(1)로그인");
         System.out.println("(2)회원가입");
         System.out.println("=====================================================================");
@@ -154,6 +155,7 @@ public class PrintPage {
         List<Transaction> transactionList = TransactionDao.getPartyTransaction(party.getPartyId());
         transactionList.stream().forEach(n -> n.printTransaction());
 
+        System.out.println("(D)입금하기  (W)출금하기");
         System.out.println("(I) 계좌정보보기     (B) 뒤로가기");
         System.out.print("원하는 메뉴키를 입력하세요:");
         String in = sc.nextLine();
@@ -164,14 +166,24 @@ public class PrintPage {
             case "I":
             case "i"://계좌정보 페이지로 이동
                 return 5;
+            case "D": case "d":
+                return 7;
+            case "W": case "w":
+                return 8;
             default: //
                 return 4;
         }
     }
-
-    public static int accountInfoPage() { //계좌 정보 페이지, page=5
+    public static int accountInfoPage() throws SQLException { //계좌 정보 페이지, page=5
         Party party = PartyChecker.getParty();
-        party.printParty();
+        List<Party> partyList = PartyService.showPartyDetail(party.getPartyId());
+        for (Party p : partyList) {
+            System.out.println(p.getUserId());
+        }
+        System.out.println(partyList.get(0).getPartyName());
+        System.out.println(partyList.get(0).getCategory());
+        System.out.println(partyList.get(0).getPartyAccount());
+        System.out.println(partyList.get(0).getPartyAccountCreatedAt());
         System.out.println("                     (B) 뒤로가기");
         System.out.print("원하는 메뉴키를 입력하세요:");
         String in = sc.nextLine();
@@ -186,7 +198,8 @@ public class PrintPage {
         }
     }
 
-    public static int createAccountPage() throws IOException, SQLException {  //모임계좌생성
+    //모임계좌생성, page=6
+    public static int createAccountPage() throws IOException, SQLException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         System.out.println("-----");
         ArrayList<String> arr = PartyService.showCategory();
@@ -243,13 +256,18 @@ public class PrintPage {
         return 2; //ㄱ
     }
 
+    //입금페이지, page=7
     public static int depositPage() {
 
-//        FundService.deposit(LoginChecker.getUser().getUser_id(), );
+        int newPartyBalance = FundService.deposit(LoginChecker.getUser().getUser_id(),PartyChecker.getParty().getPartyId());
+        PartyChecker.getParty().setPartyAccountBalance(newPartyBalance);
         return 4;
     }
 
-    public static int withdrawPage() {
+    public static int withdrawPage() throws SQLException {
+
+        int newPartyBalance = FundService.withdraw(LoginChecker.getUser().getUser_id(),PartyChecker.getParty().getPartyId());
+        PartyChecker.getParty().setPartyAccountBalance(newPartyBalance);
         return 4;
     }
 
