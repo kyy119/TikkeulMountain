@@ -37,7 +37,7 @@ public class PrintPage {
         switch (in) {
             case "1": //로그인
                 while (true) {
-                 //   System.out.println("UserDao");
+                    //   System.out.println("UserDao");
                     System.out.println("(B)뒤로가기");
                     System.out.print("아이디를 입력하세요: ");
                     String id = sc.nextLine();
@@ -66,9 +66,9 @@ public class PrintPage {
     public static int mainPage() throws SQLException { //메인 페이지, page=2
         ArrayList<Party> partyArrayList = showPartyList(LoginChecker.getUser().getUser_id());
         System.out.println("======================== 나의 모임 ========================");
-        for(int i = 0; i < partyArrayList.size(); i ++){
-            System.out.print(i+1 + ". ");
-            System.out.println(partyArrayList.get(i).getPartyName()+"   "+partyArrayList.get(i).getPartyAccountBalance()+"원");
+        for (int i = 0; i < partyArrayList.size(); i++) {
+            System.out.print(i + 1 + ". ");
+            System.out.println(partyArrayList.get(i).getPartyName() + "   " + partyArrayList.get(i).getPartyAccountBalance() + "원");
         }
 //        partyArrayList.stream().forEach(
 //            n -> System.out.println(n.getPartyId() +". "+n.getPartyName()));
@@ -78,12 +78,15 @@ public class PrintPage {
         System.out.println("원하는 메뉴키를 입력하세요: ");
         String in = sc.nextLine();
         switch (in) {
-            case "M": case "m"://마이 페이지로 이동
+            case "M":
+            case "m"://마이 페이지로 이동
                 return 3;
-            case "O": case "o"://로그아웃 후, 로그인 페이지로 이동
+            case "O":
+            case "o"://로그아웃 후, 로그인 페이지로 이동
                 LoginChecker.setUser(null);
                 return 1;
-            case "C": case "c"://모임 생성 페이지로 이동
+            case "C":
+            case "c"://모임 생성 페이지로 이동
                 return 6;
             default: //모임 계좌 페이지로 이동 (구현예정)
                 int intIn = Integer.parseInt(in);
@@ -92,7 +95,7 @@ public class PrintPage {
 //                party.setPartyId(intIn);
 //                PartyChecker.setParty(party);
 
-                PartyChecker.setParty(partyArrayList.get(intIn-1));
+                PartyChecker.setParty(partyArrayList.get(intIn - 1));
                 return 4;
         }
     }
@@ -105,35 +108,38 @@ public class PrintPage {
         System.out.print("원하는 메뉴키를 입력하세요: ");
         String in = sc.nextLine();
         switch (in) {
-            case "B": case "b":
+            case "B":
+            case "b":
                 return 2;
-            case "U": case "u":
+            case "U":
+            case "u":
                 System.out.print("본인 확인을 위해 비밀번호를 입력하세요:");
                 String passWord = sc.nextLine();
                 if (passWord.equals(LoginChecker.getUser().getUser_password())) {
                     System.out.print("바꿀 비밀번호를 입력하세요.");
                     String newPassword = sc.nextLine();
-                    UserDao.updateUserPassword(LoginChecker.getUser().getUser_id(),newPassword);
-                } else{
+                    UserDao.updateUserPassword(LoginChecker.getUser().getUser_id(), newPassword);
+                } else {
                     System.out.println("비밀번호가 틀렸습니다.");
                 }
                 return 3;
-            case "D": case "d": //회원 탈퇴: delete가 아닌 userActive를 0으로 수정
+            case "D":
+            case "d": //회원 탈퇴: delete가 아닌 userActive를 0으로 수정
                 System.out.print("정말 탈퇴하시겠습니까?[y/n]");
                 String in2 = sc.nextLine();
-                if(in2.equals("y")){
-                    String compareString = LoginChecker.getUser().getUser_id()+" 회원탈퇴 하겠습니다.";
+                if (in2.equals("y")) {
+                    String compareString = LoginChecker.getUser().getUser_id() + " 회원탈퇴 하겠습니다.";
                     System.out.println("따라치세요");
                     System.out.print(compareString);
                     String compareStringIn = sc.nextLine();
-                    if(compareString.equals(compareStringIn)) {
+                    if (compareString.equals(compareStringIn)) {
                         UserDao.updateUserActive(LoginChecker.getUser().getUser_id(),
-                            "0"); //userActive를 0으로 바꿔줌
+                                "0"); //userActive를 0으로 바꿔줌
                         LoginChecker.setUser(null);
                         return 1;
                     }
-                } else if(in2.equals("n")){
-                } else{
+                } else if (in2.equals("n")) {
+                } else {
                     System.out.println("다시 입력해주세요.");
                 }
             default:
@@ -146,15 +152,17 @@ public class PrintPage {
         party.printParty();
         System.out.println("---------------");
         List<Transaction> transactionList = TransactionDao.getPartyTransaction(party.getPartyId());
-        transactionList.stream().forEach(n->n.printTransaction());
+        transactionList.stream().forEach(n -> n.printTransaction());
 
         System.out.println("(I) 계좌정보보기     (B) 뒤로가기");
         System.out.print("원하는 메뉴키를 입력하세요:");
         String in = sc.nextLine();
         switch (in) {
-            case "B": case "b"://메인 페이지로 이동
+            case "B":
+            case "b"://메인 페이지로 이동
                 return 2;
-            case "I": case "i"://계좌정보 페이지로 이동
+            case "I":
+            case "i"://계좌정보 페이지로 이동
                 return 5;
             default: //
                 return 4;
@@ -162,17 +170,18 @@ public class PrintPage {
     }
 
     public static int accountInfoPage() { //계좌 정보 페이지, page=5
-      Party party = PartyChecker.getParty();
+        Party party = PartyChecker.getParty();
         party.printParty();
         System.out.println("                     (B) 뒤로가기");
         System.out.print("원하는 메뉴키를 입력하세요:");
         String in = sc.nextLine();
-        switch(in) {
-            case "B" : case "b":
+        switch (in) {
+            case "B":
+            case "b":
                 return 4;
             default:
                 System.out.println("다시 맞는 키를 입력해주세요");
-                return  5;
+                return 5;
 
         }
     }
@@ -189,13 +198,11 @@ public class PrintPage {
         String cate = br.readLine();
 
 
-
         System.out.print("모임 이름 : ");
         String name = br.readLine();
         System.out.print("매일 납부 예정 금액 : ");
         String dailyPay = br.readLine();
         dailyPay = PartyService.checkDailyPay(dailyPay);
-
 
 
         System.out.print("계좌 비밀 번호 : ");
@@ -205,27 +212,27 @@ public class PrintPage {
         List<String> friendIDs = new ArrayList<>();
         List<String> userList = UserDao.getUserList();
 
-        while(true){
+        while (true) {
             System.out.print("친구를 추가하시겠습니까?[y/n]:");
             String in = sc.nextLine();
-            if(in.equals("y")){
+            if (in.equals("y")) {
                 System.out.print("친구 ID를 입력하세요:");
                 String friendId = sc.nextLine();
                 int index = 1;
-                for(int i = 0; i < userList.size(); i ++){
-                    if(userList.get(i).equals(friendId)){
+                for (int i = 0; i < userList.size(); i++) {
+                    if (userList.get(i).equals(friendId)) {
                         friendIDs.add(friendId);
                         index = 0;
                         break;
                     }
                 }
-                if(index == 1){
+                if (index == 1) {
                     System.out.println("없는 아이디입니다.");
                 }
 
-            } else if(in.equals("n")){
+            } else if (in.equals("n")) {
                 break;
-            } else{
+            } else {
                 System.out.println("다시 입력해주세요.");
             }
         }
@@ -246,7 +253,30 @@ public class PrintPage {
         return 4;
     }
 
+
     public static int signUpPage() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("아이디를 입력하세요: ");
+        String userId = scanner.nextLine();
+
+
+
+        System.out.print("이름을 입력하세요: ");
+        String userName = scanner.nextLine();
+
+        System.out.print("비밀번호를 입력하세요: ");
+        String userPassword = scanner.nextLine();
+
+        System.out.print("전화번호를 입력하세요: ");
+        String userPhone = scanner.nextLine();
+
+        System.out.print("계좌번호를 입력하세요: ");
+        String userAccount = scanner.nextLine();
+
+
+        User user = new User(userId, userName, userPassword, userPhone, userAccount);
+        UserDao.registerUser(user);
+
         return 1;
     }
 }

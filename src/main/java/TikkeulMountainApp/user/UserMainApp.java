@@ -10,8 +10,8 @@ public class UserMainApp {
 
 //정보 조회 main
 //        // Id 입력
-//        System.out.print("조회할 사용자 ID를 입력하세요: ");
-//        String userId = scanner.nextLine();
+        System.out.print("조회할 사용자 ID를 입력하세요: ");
+        String userId = scanner.nextLine();
 //        // 특정 사용자 ID를 통해 사용자 정보 가져오기
 //        User user = UserDao.getUser(userId);
 //
@@ -31,9 +31,9 @@ public class UserMainApp {
 
 
         //scanner
-
-        // User user = new User("jhc5555","정회찬","1234","010-2222-2222","1111-1234-1234",50000, "0"); // 회원가입
-        //    UserDao.registerUser(user); // 테이블 등록
+//아이디, 이름, 비밀번호, 전화번호, 계좌번호, 계좌잔액
+       //  User user = new User("user1234","정회찬","1234","010-2222-2225","1111-1234-1236",50000); // 회원가입
+      //  UserDao.registerUser(user); // 테이블 등록
 
         //  UserDao.updateUserBalance("pk999",20000); // 수정 메서드 출력
 
