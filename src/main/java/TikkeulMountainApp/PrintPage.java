@@ -264,6 +264,11 @@ public class PrintPage {
                 String friendId = sc.nextLine();
                 int index = 1;
                 for (int i = 0; i < userList.size(); i++) {
+                    if(friendId.equals(LoginChecker.getUser().getUser_id())){
+                        System.out.println("본인은 입력이 불가능합니다.");
+                        index = 0;
+                        break;
+                    }
                     if (userList.get(i).equals(friendId)) {
                         friendIDs.add(friendId);
                         index = 0;
