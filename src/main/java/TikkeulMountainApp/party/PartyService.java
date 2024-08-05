@@ -342,7 +342,7 @@ public class PartyService {
     public static ArrayList<Party> showPartyList(String userId) throws SQLException {
         Connection conn = MySqlConnect.MySqlConnect();
         String sql =
-            "SELECT party_id, party_name, party_active, party_account_balance " + "FROM PARTY " +
+            "SELECT party_id, party_name, daily_pay, party_active, party_account, party_account_balance, category " + "FROM PARTY " +
                 "WHERE party_id IN " +
                 "(SELECT party_id FROM MEMBERSHIP WHERE user_id = ?)";
         PreparedStatement pstmt = conn.prepareStatement(sql);
@@ -354,7 +354,10 @@ public class PartyService {
             party.setPartyId(rs.getInt("party_id"));
             party.setPartyName(rs.getString("party_name"));
             String active = rs.getString("party_active");
+            party.setDailyPay(rs.getInt("daily_pay"));
+            party.setPartyAccount(rs.getString("party_account"));
             party.setPartyAccountBalance(rs.getInt("party_account_balance"));
+            party.setCategory(rs.getString("category"));
             if (active.equals("1")) {
                 party.setPartyActive(active);
                 arr.add(party);
@@ -383,7 +386,7 @@ public class PartyService {
         }
     }
 
-    public static void showPartyDetail(int partyId) throws SQLException {
+    public static List<Party> showPartyDetail(int partyId) throws SQLException {
         Connection conn = MySqlConnect.MySqlConnect();
         String sql = "SELECT a.user_id, "
             + "b.party_name, b.category, b.party_account, b.party_account_created_at "
@@ -404,13 +407,15 @@ public class PartyService {
                 partyAccountCreatedAt);
             arrayList.add(party);
         }
-        for (Party party : arrayList) {
-            System.out.println(party.getUserId());
-        }
-        System.out.println(arrayList.get(0).getPartyName());
-        System.out.println(arrayList.get(0).getCategory());
-        System.out.println(arrayList.get(0).getPartyAccount());
-        System.out.println(arrayList.get(0).getPartyAccountCreatedAt());
+
+        return arrayList;
+//        for (Party party : arrayList) {
+//            System.out.println(party.getUserId());
+//        }
+//        System.out.println(arrayList.get(0).getPartyName());
+//        System.out.println(arrayList.get(0).getCategory());
+//        System.out.println(arrayList.get(0).getPartyAccount());
+//        System.out.println(arrayList.get(0).getPartyAccountCreatedAt());
     }
 
     public static void deleteParty(int id) throws SQLException {
