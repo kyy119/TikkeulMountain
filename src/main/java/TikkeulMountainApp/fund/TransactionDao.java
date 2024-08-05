@@ -51,7 +51,7 @@ public class TransactionDao {
 
     public static Map<String, Integer> getMemberContributions(int partyId){
         Connection conn = null;
-        String sql = "SELECT user_id,SUM(transfer_amount) FROM ACCOUNT_HISTORY WHERE PARTY_ID = ? GROUP BY user_id";
+        String sql = "SELECT user_id,SUM(transfer_amount) FROM ACCOUNT_HISTORY WHERE PARTY_ID = ? AND TRANSFER_INDEX='1' GROUP BY user_id";
 
         try{
             conn = MySqlConnect.MySqlConnect();

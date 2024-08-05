@@ -21,8 +21,11 @@ import java.io.InputStreamReader;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
+import java.util.Set;
 
 public class PrintPage {
 
@@ -176,15 +179,24 @@ public class PrintPage {
     public static int accountInfoPage() throws SQLException { //계좌 정보 페이지, page=5
         Party party = PartyChecker.getParty();
         List<Party> partyList = PartyService.showPartyDetail(party.getPartyId());
-        for(int i = 0; i < partyList.size(); i ++){
-            System.out.print(i+1 +"번 멤버 : ");
-            System.out.println(partyList.get(i).getUserId());
+        Map<String,Integer> map = TransactionDao.getMemberContributions(party.getPartyId());
+        Set<String> keySet = map.keySet();
+        Iterator<String> keyIterator = keySet.iterator();
+        int count = 0;
+        while(keyIterator.hasNext()){
+            count ++;
+            String k = keyIterator.next();
+            Integer v = map.get(k);
+            System.out.print(count+"번 멤버 : ");
+            System.out.println(k+" -> 총 납부액 : "+v);
         }
         System.out.println("파티 이름 : "+partyList.get(0).getPartyName());
         System.out.println("파티 종륲 : "+partyList.get(0).getCategory());
         System.out.println("파티 계좌번호 : "+partyList.get(0).getPartyAccount());
         System.out.println("파티 계좌 잔액 : "+partyList.get(0).getPartyAccountBalance());
         System.out.println("파티 생성일 : "+partyList.get(0).getPartyAccountCreatedAt());
+
+
         System.out.println("(D) 모임 삭제        (B) 뒤로가기");
         System.out.print("원하는 메뉴키를 입력하세요:");
         String in = sc.nextLine();
