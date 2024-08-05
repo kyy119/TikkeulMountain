@@ -154,8 +154,14 @@ public class PrintPage {
         party.printParty();
         System.out.print("당일 납부자: ");
         List<String> userList = TransactionDao.getDailyContribution(party.getPartyId());
-        userList.forEach(n -> System.out.print(n + ", "));
-        System.out.println();
+
+        for(int i=0;i<userList.size();i++){
+            if(i==userList.size()-1){
+                System.out.println(userList.get(i));
+            }else {
+                System.out.print(userList.get(i)+", ");
+            }
+        }
         System.out.println("---------------");
         List<Transaction> transactionList = TransactionDao.getPartyTransaction(party.getPartyId());
         transactionList.stream().forEach(n -> n.printTransaction());
