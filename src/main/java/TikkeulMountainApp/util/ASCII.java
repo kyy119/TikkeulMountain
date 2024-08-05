@@ -644,7 +644,7 @@ public class ASCII {
         System.out.println("     /                                                               \\");
         System.out.println("    /                                                                 \\");
         System.out.println("   /                                                                   \\");
-        System.out.println("  ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ");
+        System.out.println("  ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ");
         Thread.sleep(100);
         System.out.println();
         System.out.println();
@@ -714,29 +714,29 @@ public class ASCII {
         System.out.println();
         System.out.println();
         System.out.println();
-        System.out.println("                                     __");
-        System.out.println("                                    /  \\");
-        System.out.println("                                   /    \\");
-        System.out.println("                                  /      \\");
-        System.out.println("                                 /        \\");
-        System.out.println("                                /          \\");
-        System.out.println("                               /            \\");
-        System.out.println("                   __         /              \\        __ ");
+        System.out.println("                                    __");
+        System.out.println("                                   /  \\");
+        System.out.println("                                  /    \\");
+        System.out.println("                                 /      \\");
+        System.out.println("                                /        \\");
+        System.out.println("                               /          \\");
+        System.out.println("                              /            \\");
+        System.out.println("                  __         /              \\        __ ");
         System.out.println("                 /   \\      /                \\      /  \\");
         System.out.println("                /     \\    /                  \\    /    \\");
         System.out.println("               /       \\  /                    \\  /      \\");
         System.out.println("              /         \\/                      \\/        \\");
-        System.out.println("             /                                               \\");
-        System.out.println("            /                                                 \\");
-        System.out.println("           /                                                   \\");
-        System.out.println("          /                                                     \\");
-        System.out.println("         /                                                       \\");
-        System.out.println("        /                                                         \\");
-        System.out.println("       /                                                           \\");
-        System.out.println("      /                                                             \\");
-        System.out.println("     /                                                               \\");
-        System.out.println("    /                                                                 \\");
-        System.out.println("   /                                                                   \\");
+        System.out.println("             /                                             \\");
+        System.out.println("            /                                               \\");
+        System.out.println("           /                                                 \\");
+        System.out.println("          /                                                   \\");
+        System.out.println("         /                                                     \\");
+        System.out.println("        /                                                       \\");
+        System.out.println("       /                                                         \\");
+        System.out.println("      /                                                           \\");
+        System.out.println("     /                                                             \\");
+        System.out.println("    /                                                               \\");
+        System.out.println("   /                                                                 \\");
         System.out.println("  ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ");
         Thread.sleep(100);
         System.out.println();
@@ -784,7 +784,7 @@ public class ASCII {
         System.out.println("    /                                                            \\");
         System.out.println("   /                                                              \\");
         System.out.println("  /                                                                \\");
-        System.out.println("  ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ");
+        System.out.println("  ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ");
 
     }
 }
