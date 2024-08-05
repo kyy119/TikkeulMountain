@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Scanner;
 
@@ -69,10 +70,9 @@ public class PrintPage {
         System.out.println("======================== 나의 모임 ========================");
         for (int i = 0; i < partyArrayList.size(); i++) {
             System.out.print(i + 1 + ". ");
-            System.out.println(partyArrayList.get(i).getPartyName() + "   " + partyArrayList.get(i).getPartyAccountBalance() + "원");
+            System.out.println(partyArrayList.get(i).getPartyName() + "   " + partyArrayList.get(i)
+                .getPartyAccountBalance() + "원");
         }
-//        partyArrayList.stream().forEach(
-//            n -> System.out.println(n.getPartyId() +". "+n.getPartyName()));
         System.out.println("======================== 모임 메뉴 ========================");
         System.out.println("                      (C) 모임생성");
         System.out.println("(M) 마이페이지           (O) 로그아웃");
@@ -91,11 +91,6 @@ public class PrintPage {
                 return 6;
             default: //모임 계좌 페이지로 이동 (구현예정)
                 int intIn = Integer.parseInt(in);
-
-//                Party party = PartyService.getParty(intIn);
-//                party.setPartyId(intIn);
-//                PartyChecker.setParty(party);
-
                 PartyChecker.setParty(partyArrayList.get(intIn - 1));
                 return 4;
         }
@@ -135,7 +130,7 @@ public class PrintPage {
                     String compareStringIn = sc.nextLine();
                     if (compareString.equals(compareStringIn)) {
                         UserDao.updateUserActive(LoginChecker.getUser().getUser_id(),
-                                "0"); //userActive를 0으로 바꿔줌
+                            "0"); //userActive를 0으로 바꿔줌
                         LoginChecker.setUser(null);
                         return 1;
                     }
@@ -166,14 +161,17 @@ public class PrintPage {
             case "I":
             case "i"://계좌정보 페이지로 이동
                 return 5;
-            case "D": case "d":
+            case "D":
+            case "d":
                 return 7;
-            case "W": case "w":
+            case "W":
+            case "w":
                 return 8;
             default: //
                 return 4;
         }
     }
+
     public static int accountInfoPage() throws SQLException { //계좌 정보 페이지, page=5
         Party party = PartyChecker.getParty();
         List<Party> partyList = PartyService.showPartyDetail(party.getPartyId());
@@ -210,19 +208,17 @@ public class PrintPage {
         System.out.print("카테고리 선택 : ");
         String cate = br.readLine();
 
-
         System.out.print("모임 이름 : ");
         String name = br.readLine();
         System.out.print("매일 납부 예정 금액 : ");
         String dailyPay = br.readLine();
         dailyPay = PartyService.checkDailyPay(dailyPay);
 
-
         System.out.print("계좌 비밀 번호 : ");
         String pw = br.readLine();
         pw = PartyService.checkPw(pw);
 
-        List<String> friendIDs = new ArrayList<>();
+        HashSet<String> friendIDs = new HashSet<>();
         List<String> userList = UserDao.getUserList();
 
         while (true) {
@@ -250,23 +246,25 @@ public class PrintPage {
             }
         }
         int dailyPayInt = Integer.parseInt(dailyPay);
-        PartyService.createParty(cate, name, dailyPayInt, pw, friendIDs);
+        ArrayList<String> arrayList = new ArrayList<>(friendIDs);
+        PartyService.createParty(cate, name, dailyPayInt, pw, arrayList);
 
-
-        return 2; //ㄱ
+        return 2;
     }
 
     //입금페이지, page=7
     public static int depositPage() {
 
-        int newPartyBalance = FundService.deposit(LoginChecker.getUser().getUser_id(),PartyChecker.getParty().getPartyId());
+        int newPartyBalance = FundService.deposit(LoginChecker.getUser().getUser_id(),
+            PartyChecker.getParty().getPartyId());
         PartyChecker.getParty().setPartyAccountBalance(newPartyBalance);
         return 4;
     }
 
     public static int withdrawPage() throws SQLException {
 
-        int newPartyBalance = FundService.withdraw(LoginChecker.getUser().getUser_id(),PartyChecker.getParty().getPartyId());
+        int newPartyBalance = FundService.withdraw(LoginChecker.getUser().getUser_id(),
+            PartyChecker.getParty().getPartyId());
         PartyChecker.getParty().setPartyAccountBalance(newPartyBalance);
         return 4;
     }
@@ -276,8 +274,6 @@ public class PrintPage {
         Scanner scanner = new Scanner(System.in);
         System.out.print("아이디를 입력하세요: ");
         String userId = scanner.nextLine();
-
-
 
         System.out.print("이름을 입력하세요: ");
         String userName = scanner.nextLine();
@@ -290,7 +286,6 @@ public class PrintPage {
 
         System.out.print("계좌번호를 입력하세요: ");
         String userAccount = scanner.nextLine();
-
 
         User user = new User(userId, userName, userPassword, userPhone, userAccount);
         UserDao.registerUser(user);

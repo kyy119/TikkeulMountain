@@ -8,7 +8,6 @@ import java.sql.PreparedStatement;
 import TikkeulMountainApp.util.MySqlConnect;
 import java.sql.SQLException;
 import java.sql.Connection;
-import java.sql.SQLWarning;
 import java.sql.Statement;
 import java.sql.ResultSet;
 import java.text.SimpleDateFormat;
@@ -53,7 +52,6 @@ public class PartyService {
             String ad = partyAccountDate();
             Party party = new Party(name, dailyPay, pa, pw, 0, ad,
                 cate, "1");
-            //PreparedStatement 얻기 및 값 지정
             PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             pstmt.setString(1, party.getPartyName());
             pstmt.setInt(2, party.getDailyPay());
@@ -71,7 +69,6 @@ public class PartyService {
             party.getPartyAccountCreatedAt();
             party.getCategory();
 
-            //SQL 문 실행
             int rows = pstmt.executeUpdate();
 
             if (rows == 1) {
@@ -84,7 +81,6 @@ public class PartyService {
             }
             insertMemberShip(party.getPartyId(), dailyPay);
             insertNormalMember(party.getPartyId(), strings, dailyPay);
-            //PreparedStatement 닫기
             pstmt.close();
 
         } catch (SQLException e) {
@@ -94,7 +90,6 @@ public class PartyService {
 
             if (conn != null) {
                 try {
-                    //연결 끊기
                     conn.close();
                 } catch (SQLException e) {
                 }
@@ -185,7 +180,6 @@ public class PartyService {
             pstmt.setString(5, memberShip.getPartyActive());
             pstmt.setInt(6, memberShip.getDailyPay());
 
-            //SQL 문 실행
             int rows = pstmt.executeUpdate();
 
             if (rows == 1) {
@@ -195,8 +189,6 @@ public class PartyService {
                 }
                 rs.close();
             }
-
-            //PreparedStatement 닫기
             pstmt.close();
 
         } catch (SQLException e) {
@@ -226,10 +218,9 @@ public class PartyService {
                 pstmt.setString(1, memberShip.getRole());
                 pstmt.setString(2, memberShip.getUserId());
                 pstmt.setInt(3, memberShip.getPartyId());
-                pstmt.setString(4, memberShip.getUserActive()); //10만
+                pstmt.setString(4, memberShip.getUserActive());
                 pstmt.setString(5, memberShip.getPartyActive());
                 pstmt.setInt(6, memberShip.getDailyPay());
-                //SQL 문 실행
                 int rows = pstmt.executeUpdate();
                 if (rows == 1) {
                     ResultSet rs = pstmt.getGeneratedKeys();
@@ -237,7 +228,7 @@ public class PartyService {
                         int bno = rs.getInt(1);
                     }
                     rs.close();
-                }//PreparedStatement 닫기
+                }
                 pstmt.close();
             }
         } catch (SQLException e) {
@@ -245,7 +236,6 @@ public class PartyService {
         } finally {
             if (conn != null) {
                 try {
-                    //연결 끊기
                     conn.close();
                 } catch (SQLException e) {
                 }
@@ -295,7 +285,6 @@ public class PartyService {
 
             if (conn != null) {
                 try {
-                    //연결 끊기
                     conn.close();
                 } catch (SQLException e) {
                 }
@@ -328,7 +317,6 @@ public class PartyService {
 
             if (conn != null) {
                 try {
-                    //연결 끊기
                     conn.close();
                 } catch (SQLException e) {
                 }
@@ -338,11 +326,11 @@ public class PartyService {
 
     }
 
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public static ArrayList<Party> showPartyList(String userId) throws SQLException {
         Connection conn = MySqlConnect.MySqlConnect();
         String sql =
-            "SELECT party_id, party_name, daily_pay, party_active, party_account, party_account_balance, category " + "FROM PARTY " +
+            "SELECT party_id, party_name, daily_pay, party_active, party_account, party_account_balance, category "
+                + "FROM PARTY " +
                 "WHERE party_id IN " +
                 "(SELECT party_id FROM MEMBERSHIP WHERE user_id = ?)";
         PreparedStatement pstmt = conn.prepareStatement(sql);
@@ -409,13 +397,6 @@ public class PartyService {
         }
 
         return arrayList;
-//        for (Party party : arrayList) {
-//            System.out.println(party.getUserId());
-//        }
-//        System.out.println(arrayList.get(0).getPartyName());
-//        System.out.println(arrayList.get(0).getCategory());
-//        System.out.println(arrayList.get(0).getPartyAccount());
-//        System.out.println(arrayList.get(0).getPartyAccountCreatedAt());
     }
 
     public static void deleteParty(int id) throws SQLException {
@@ -487,4 +468,3 @@ public class PartyService {
         return arr;
     }
 }
-
