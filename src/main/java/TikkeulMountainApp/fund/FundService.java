@@ -65,7 +65,7 @@ public class FundService {
                 break;
             }
         }
-        System.out.println("출금 메모: ");
+        System.out.print("출금 메모: ");
         String memo = sc.nextLine();
 
         while(true){
@@ -82,6 +82,7 @@ public class FundService {
 
                 return newPartyBalance;
             }
+            System.out.println("잘못된 비밀번호 입니다.");
         }
 
 

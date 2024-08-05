@@ -34,12 +34,13 @@ public class Party {
     }
 
     public Party(String userId, String partyName, String category, String partyAccount,
-        String partyAccountCreatedAt) {
+        String partyAccountCreatedAt, int partyAccountBalance) {
         this.userId = userId;
         this.partyName = partyName;
         this.category = category;
         this.partyAccount = partyAccount;
         this.partyAccountCreatedAt = partyAccountCreatedAt;
+        this.partyAccountBalance = partyAccountBalance;
     }
 
     public void printParty() {
