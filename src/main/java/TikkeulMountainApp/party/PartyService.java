@@ -377,7 +377,7 @@ public class PartyService {
     public static List<Party> showPartyDetail(int partyId) throws SQLException {
         Connection conn = MySqlConnect.MySqlConnect();
         String sql = "SELECT a.user_id, "
-            + "b.party_name, b.category, b.party_account, b.party_account_created_at "
+            + "b.party_name, b.category, b.party_account, b.party_account_created_at, b.party_account_balance "
             + "from MEMBERSHIP as a"
             + " INNER JOIN PARTY as b ON a.party_id = b.party_id"
             + " WHERE b.party_id = ?;";
@@ -391,22 +391,23 @@ public class PartyService {
             String category = rs.getString("category");
             String partyAccount = rs.getString("party_account");
             String partyAccountCreatedAt = rs.getString("party_account_created_at");
+            int partyAccountBalance = rs.getInt("party_account_balance");
             Party party = new Party(userId, partyName, category, partyAccount,
-                partyAccountCreatedAt);
+                partyAccountCreatedAt, partyAccountBalance);
             arrayList.add(party);
         }
 
         return arrayList;
     }
 
-    public static void deleteParty(int id) throws SQLException {
+    public static boolean deleteParty(int id) throws SQLException {
         int price = checkZero(id);
         if (price == -1) {
             System.out.println("비정상적인 접근.");
-            return;
+            return false;
         } else if (price > 0) {
             System.out.println("잔액이 있습니다");
-            return;
+            return false;
         }
         Connection conn = MySqlConnect.MySqlConnect();
         String sql = "UPDATE MEMBERSHIP SET party_active = '0' WHERE party_id = ?";
@@ -418,6 +419,7 @@ public class PartyService {
         pstmt.setInt(1, id);
         pstmt.executeUpdate();
         pstmt.close();
+        return true;
     }
 
     public static int checkZero(int id) throws SQLException {
@@ -435,21 +437,25 @@ public class PartyService {
     }
 
 
-    public static Party getParty(int id) throws SQLException {
-        Connection conn = MySqlConnect.MySqlConnect();
-        String sql = "SELECT party_name, party_account, party_account_balance,party_account_password FROM PARTY WHERE party_id = ?";
-
-        PreparedStatement pstmt = conn.prepareStatement(sql);
-        pstmt.setInt(1, id);
-        ResultSet rs = pstmt.executeQuery();
+    public static Party getParty(int id){
         Party party = new Party();
-        while (rs.next()) {
-            party.setPartyName(rs.getString("party_name"));
-            party.setPartyAccount(rs.getString("party_account"));
-            party.setPartyAccountBalance(rs.getInt("party_account_balance"));
-            party.setPartyAccountPassword(rs.getString("party_account_password"));
+        try {
+            Connection conn = MySqlConnect.MySqlConnect();
+            String sql = "SELECT party_name, party_account, party_account_balance,party_account_password FROM PARTY WHERE party_id = ?";
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, id);
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                party.setPartyName(rs.getString("party_name"));
+                party.setPartyAccount(rs.getString("party_account"));
+                party.setPartyAccountBalance(rs.getInt("party_account_balance"));
+                party.setPartyAccountPassword(rs.getString("party_account_password"));
+            }
+        }catch (SQLException e){
+            e.printStackTrace();
         }
         return party;
+
     }
 
     public static ArrayList<MemberShip> getMemberList() throws SQLException {

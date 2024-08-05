@@ -9,6 +9,7 @@ import TikkeulMountainApp.fund.TransactionDao;
 import TikkeulMountainApp.party.Party;
 import TikkeulMountainApp.party.PartyChecker;
 import TikkeulMountainApp.party.PartyService;
+import TikkeulMountainApp.party.PrivacyPolicy;
 import TikkeulMountainApp.user.LoginChecker;
 import TikkeulMountainApp.user.User;
 import TikkeulMountainApp.user.UserDao;
@@ -175,20 +176,29 @@ public class PrintPage {
     public static int accountInfoPage() throws SQLException { //계좌 정보 페이지, page=5
         Party party = PartyChecker.getParty();
         List<Party> partyList = PartyService.showPartyDetail(party.getPartyId());
-        for (Party p : partyList) {
-            System.out.println(p.getUserId());
+        for(int i = 0; i < partyList.size(); i ++){
+            System.out.print(i+1 +"번 멤버 : ");
+            System.out.println(partyList.get(i).getUserId());
         }
-        System.out.println(partyList.get(0).getPartyName());
-        System.out.println(partyList.get(0).getCategory());
-        System.out.println(partyList.get(0).getPartyAccount());
-        System.out.println(partyList.get(0).getPartyAccountCreatedAt());
-        System.out.println("                     (B) 뒤로가기");
+        System.out.println("파티 이름 : "+partyList.get(0).getPartyName());
+        System.out.println("파티 종륲 : "+partyList.get(0).getCategory());
+        System.out.println("파티 계좌번호 : "+partyList.get(0).getPartyAccount());
+        System.out.println("파티 계좌 잔액 : "+partyList.get(0).getPartyAccountBalance());
+        System.out.println("파티 생성일 : "+partyList.get(0).getPartyAccountCreatedAt());
+        System.out.println("(D) 모임 삭제        (B) 뒤로가기");
         System.out.print("원하는 메뉴키를 입력하세요:");
         String in = sc.nextLine();
         switch (in) {
             case "B":
             case "b":
                 return 4;
+            case "d": case "D":
+                if(PartyService.deleteParty(party.getPartyId())){
+                    return 2;
+                }else{
+                    return 5;
+                }
+
             default:
                 System.out.println("다시 맞는 키를 입력해주세요");
                 return 5;
@@ -245,11 +255,21 @@ public class PrintPage {
                 System.out.println("다시 입력해주세요.");
             }
         }
-        int dailyPayInt = Integer.parseInt(dailyPay);
-        ArrayList<String> arrayList = new ArrayList<>(friendIDs);
-        PartyService.createParty(cate, name, dailyPayInt, pw, arrayList);
-
+        PrivacyPolicy.PrivacyTerms();
+        System.out.print("동의하십니까?(y/n)");
+        String agree = sc.nextLine();
+        switch (agree){
+            case "y": case "Y":
+                int dailyPayInt = Integer.parseInt(dailyPay);
+                ArrayList<String> arrayList = new ArrayList<>(friendIDs);
+                PartyService.createParty(arr.get(Integer.parseInt(cate)-1), name, dailyPayInt, pw, arrayList);
+                return 2;
+            case "n": case "N":
+                System.out.println("미동의 계설 불가 메인페이지도 이동합니다.");
+                return 2;
+        }
         return 2;
+
     }
 
     //입금페이지, page=7
