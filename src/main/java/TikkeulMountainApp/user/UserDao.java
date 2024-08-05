@@ -93,7 +93,6 @@ public class UserDao {
                 User user = new User(userId, userName, userPassword, userPhone, userAccount,
                     userAccountBalance, userActive);
                 System.out.println("======================================================");
-//                System.out.println("사용자 정보 조회가 완료되었습니다!");
                 return user;
             }
         } catch (SQLException e) {
@@ -129,7 +128,7 @@ public class UserDao {
 
     //Update 수정 메서드 (잔액 수정)
     public static void updateUserBalance(String userId, int amount) {
-        Connection conn = null; // Connection 객체 선언
+        Connection conn = null;
         String sql = "UPDATE USER SET user_account_balance = ? WHERE user_id = ?";
         try {
             conn = MySqlConnect.MySqlConnect();
@@ -138,10 +137,8 @@ public class UserDao {
             pstmt.setInt(1, amount); // 잔액
             pstmt.setString(2, userId); // 아이디
 
-            int rowsUpdated = pstmt.executeUpdate();
-            if (rowsUpdated > 0) {
-                System.out.println("계좌 잔액이 성공적으로 수정되었습니다!");
-            }
+            pstmt.executeUpdate();
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -190,16 +187,14 @@ public class UserDao {
             pstmt1.executeUpdate();
             pstmt2.executeUpdate();
 
-            // conn.commit();
             System.out.println("사용자와 멤버십의 활성화 상태가 성공적으로 수정되었습니다!");
 
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
-            // 리소스 정리
             if (conn != null) {
                 try {
-                    conn.setAutoCommit(true); // 자동 커밋 모드로 되돌리기
+                    conn.setAutoCommit(true);
                     conn.close();
                 } catch (SQLException e) {
                     e.printStackTrace();
@@ -208,20 +203,17 @@ public class UserDao {
         }
     }
 
-    public static ArrayList<String> getUserList() throws SQLException{
+    public static ArrayList<String> getUserList() throws SQLException {
         Connection conn = null;
         conn = MySqlConnect.MySqlConnect();
         String sql = "SELECT user_id FROM user WHERE user_active = '1'";
         PreparedStatement pstmt = conn.prepareStatement(sql);
         ArrayList<String> arr = new ArrayList<>();
         ResultSet rs = pstmt.executeQuery();
-        while (rs.next()){
+        while (rs.next()) {
             arr.add(rs.getString("user_id"));
         }
         return arr;
     }
 
 }
-
-
-
