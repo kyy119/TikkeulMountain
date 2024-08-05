@@ -188,14 +188,20 @@ public class PrintPage {
         Map<String, Integer> map = TransactionDao.getMemberContributions(party.getPartyId());
         Set<String> keySet = map.keySet();
         Iterator<String> keyIterator = keySet.iterator();
-        int count = 0;
+
+        List<String> contributionMember = null;
         while (keyIterator.hasNext()) {
-            count++;
             String k = keyIterator.next();
             Integer v = map.get(k);
-            System.out.print(count + "번 멤버 : ");
-            System.out.println(k + " -> 총 납부액 : " + v);
+
         }
+        int count = 1;
+
+        for(int i=0; i<partyList.size();i++){
+            System.out.print(i+1+"번 멤버:");
+            System.out.println(partyList.get(i).getUserId());
+        }
+
         System.out.println("파티 이름 : " + partyList.get(0).getPartyName());
         System.out.println("파티 종륲 : " + partyList.get(0).getCategory());
         System.out.println("파티 계좌번호 : " + partyList.get(0).getPartyAccount());

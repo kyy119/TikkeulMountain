@@ -18,7 +18,7 @@ public class Main {
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
-        },17,31,0);
+        },19,21,0);
 
         int page = 1;
         while(true){
