@@ -187,7 +187,11 @@ public class PrintPage {
         List<Party> partyList = PartyService.showPartyDetail(party.getPartyId());
         Map<String, Integer> map = TransactionDao.getMemberContributions(party.getPartyId());
         for (int i = 0; i < partyList.size(); i++) {
-            System.out.print(i + 1 + "번 멤버:");
+            if(i == 0){
+                System.out.print(i + 1 + "번 멤버(방장):");
+            }else{
+                System.out.print(i + 1 + "번 멤버:");
+            }
             System.out.print(partyList.get(i).getUserId());
             Integer v = map.get(partyList.get(i).getUserId());
             if (v == null) {
