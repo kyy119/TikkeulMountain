@@ -28,7 +28,7 @@ public class PrintPage {
     public static int logInPage() throws InterruptedException { //로그인 페이지, page=1
 
 //        ASCII.printTikkeulMountain();
-        System.out.println("===========1================= 로그인 화면 ============================");
+        System.out.println("============================ 로그인 화면 ============================");
         System.out.println("(1)로그인");
         System.out.println("(2)회원가입");
         System.out.println("=====================================================================");
@@ -148,6 +148,7 @@ public class PrintPage {
         List<Transaction> transactionList = TransactionDao.getPartyTransaction(party.getPartyId());
         transactionList.stream().forEach(n->n.printTransaction());
 
+        System.out.println("(D)입금하기  (W)출금하기");
         System.out.println("(I) 계좌정보보기     (B) 뒤로가기");
         System.out.print("원하는 메뉴키를 입력하세요:");
         String in = sc.nextLine();
@@ -161,9 +162,16 @@ public class PrintPage {
         }
     }
 
-    public static int accountInfoPage() { //계좌 정보 페이지, page=5
-      Party party = PartyChecker.getParty();
-        party.printParty();
+    public static int accountInfoPage() throws SQLException { //계좌 정보 페이지, page=5
+        Party party = PartyChecker.getParty();
+        List<Party> partyList = PartyService.showPartyDetail(party.getPartyId());
+        for (Party p : partyList) {
+            System.out.println(p.getUserId());
+        }
+        System.out.println(partyList.get(0).getPartyName());
+        System.out.println(partyList.get(0).getCategory());
+        System.out.println(partyList.get(0).getPartyAccount());
+        System.out.println(partyList.get(0).getPartyAccountCreatedAt());
         System.out.println("                     (B) 뒤로가기");
         System.out.print("원하는 메뉴키를 입력하세요:");
         String in = sc.nextLine();
@@ -247,6 +255,9 @@ public class PrintPage {
     }
 
     public static int signUpPage() {
+
+
+//        UserDao.registerUser(user);
         return 1;
     }
 }
