@@ -49,21 +49,21 @@ public class TransactionDao {
         }
     }
 
-    public static Map<String, Integer> getMemberContributions(int partyId){
+    public static Map<String, Integer> getMemberContributions(int partyId) {
         Connection conn = null;
         String sql = "SELECT user_id,SUM(transfer_amount) FROM ACCOUNT_HISTORY WHERE PARTY_ID = ? AND TRANSFER_INDEX='1' GROUP BY user_id";
 
-        try{
+        try {
             conn = MySqlConnect.MySqlConnect();
             PreparedStatement pstmt = conn.prepareStatement(sql);
 
-            pstmt.setInt(1,partyId);
+            pstmt.setInt(1, partyId);
 
             ResultSet rs = pstmt.executeQuery();
 
             Map<String, Integer> map = new HashMap<>();
-            while(rs.next()){
-                map.put(rs.getString("user_id"),rs.getInt("SUM(transfer_amount)"));
+            while (rs.next()) {
+                map.put(rs.getString("user_id"), rs.getInt("SUM(transfer_amount)"));
 
             }
 
@@ -83,20 +83,20 @@ public class TransactionDao {
 
     }
 
-    public static List<Transaction> getPartyTransaction(int partyId){
+    public static List<Transaction> getPartyTransaction(int partyId) {
         Connection conn = null;
         String sql = "select transfer_date,transfer_amount,transfer_balance,transfer_index,transfer_memo,user_id from account_history where party_id=? ";
 
-        try{
+        try {
             conn = MySqlConnect.MySqlConnect();
             PreparedStatement pstmt = conn.prepareStatement(sql);
 
-            pstmt.setInt(1,partyId);
+            pstmt.setInt(1, partyId);
 
             ResultSet rs = pstmt.executeQuery();
 
             List<Transaction> transactionList = new ArrayList<>();
-            while(rs.next()){
+            while (rs.next()) {
                 Transaction transaction = new Transaction();
                 transaction.setTransferDate(rs.getTimestamp("transfer_date"));
                 transaction.setTransferAmount(rs.getInt("transfer_amount"));
@@ -121,5 +121,67 @@ public class TransactionDao {
             }
         }
         return null;
+    }
+
+    public static List<String> getDailyContribution(int partyId) {
+        Connection conn = null;
+        String sql = "select user_id from account_history where date(transfer_date) = curdate() and party_id = ? group by user_id";
+
+        try {
+            conn = MySqlConnect.MySqlConnect();
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+
+            pstmt.setInt(1, partyId);
+
+            ResultSet rs = pstmt.executeQuery();
+            List<String> userList = new ArrayList<>();
+            while (rs.next()) {
+                userList.add(rs.getString("user_id"));
+            }
+
+            return userList;
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                }
+            }
+        }
+        return null;
+
+    }
+
+    public static String getRole(String userId,int partyId){
+        Connection conn = null;
+        String sql = "select role from membership where user_id = ? and party_id = ?";
+        try {
+            conn = MySqlConnect.MySqlConnect();
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+
+            pstmt.setString(1, userId);
+            pstmt.setInt(2, partyId);
+
+            ResultSet rs = pstmt.executeQuery();
+            String userRole = null;
+            if (rs.next()) {
+                userRole = rs.getString("role");
+            }
+
+            return userRole;
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                }
+            }
+        }
+        return null;
+
     }
 }

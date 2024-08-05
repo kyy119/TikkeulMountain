@@ -152,6 +152,10 @@ public class PrintPage {
     public static int accountPage() { //모임계좌 페이지, page=4
         Party party = PartyChecker.getParty();
         party.printParty();
+        System.out.print("당일 납부자: ");
+        List<String> userList = TransactionDao.getDailyContribution(party.getPartyId());
+        userList.forEach(n-> System.out.print(n+", "));
+        System.out.println();
         System.out.println("---------------");
         List<Transaction> transactionList = TransactionDao.getPartyTransaction(party.getPartyId());
         transactionList.stream().forEach(n -> n.printTransaction());
@@ -300,9 +304,16 @@ public class PrintPage {
 
     public static int withdrawPage() throws SQLException {
 
-        int newPartyBalance = FundService.withdraw(LoginChecker.getUser().getUser_id(),
+        String userRole = TransactionDao.getRole(LoginChecker.getUser().getUser_id(), PartyChecker.getParty()
+            .getPartyId());
+        if(userRole.equals("0")){
+            System.out.println("방장만 출금 가능합니다.");
+        } else {
+            int newPartyBalance = FundService.withdraw(LoginChecker.getUser().getUser_id(),
                 PartyChecker.getParty().getPartyId());
-        PartyChecker.getParty().setPartyAccountBalance(newPartyBalance);
+            PartyChecker.getParty().setPartyAccountBalance(newPartyBalance);
+
+        }
         return 4;
     }
 
