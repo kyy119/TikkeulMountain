@@ -16,6 +16,7 @@ import TikkeulMountainApp.user.User;
 import TikkeulMountainApp.user.UserDao;
 import TikkeulMountainApp.user.UserMainApp;
 import TikkeulMountainApp.util.ASCII;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -76,7 +77,7 @@ public class PrintPage {
         for (int i = 0; i < partyArrayList.size(); i++) {
             System.out.print(i + 1 + ". ");
             System.out.println(partyArrayList.get(i).getPartyName() + "   " + partyArrayList.get(i)
-                .getPartyAccountBalance() + "원");
+                    .getPartyAccountBalance() + "원");
         }
         System.out.println("======================== 모임 메뉴 ========================");
         System.out.println("                      (C) 모임생성");
@@ -135,7 +136,7 @@ public class PrintPage {
                     String compareStringIn = sc.nextLine();
                     if (compareString.equals(compareStringIn)) {
                         UserDao.updateUserActive(LoginChecker.getUser().getUser_id(),
-                            "0"); //userActive를 0으로 바꿔줌
+                                "0"); //userActive를 0으로 바꿔줌
                         LoginChecker.setUser(null);
                         return 1;
                     }
@@ -180,22 +181,22 @@ public class PrintPage {
     public static int accountInfoPage() throws SQLException { //계좌 정보 페이지, page=5
         Party party = PartyChecker.getParty();
         List<Party> partyList = PartyService.showPartyDetail(party.getPartyId());
-        Map<String,Integer> map = TransactionDao.getMemberContributions(party.getPartyId());
+        Map<String, Integer> map = TransactionDao.getMemberContributions(party.getPartyId());
         Set<String> keySet = map.keySet();
         Iterator<String> keyIterator = keySet.iterator();
         int count = 0;
-        while(keyIterator.hasNext()){
-            count ++;
+        while (keyIterator.hasNext()) {
+            count++;
             String k = keyIterator.next();
             Integer v = map.get(k);
-            System.out.print(count+"번 멤버 : ");
-            System.out.println(k+" -> 총 납부액 : "+v);
+            System.out.print(count + "번 멤버 : ");
+            System.out.println(k + " -> 총 납부액 : " + v);
         }
-        System.out.println("파티 이름 : "+partyList.get(0).getPartyName());
-        System.out.println("파티 종륲 : "+partyList.get(0).getCategory());
-        System.out.println("파티 계좌번호 : "+partyList.get(0).getPartyAccount());
-        System.out.println("파티 계좌 잔액 : "+partyList.get(0).getPartyAccountBalance());
-        System.out.println("파티 생성일 : "+partyList.get(0).getPartyAccountCreatedAt());
+        System.out.println("파티 이름 : " + partyList.get(0).getPartyName());
+        System.out.println("파티 종륲 : " + partyList.get(0).getCategory());
+        System.out.println("파티 계좌번호 : " + partyList.get(0).getPartyAccount());
+        System.out.println("파티 계좌 잔액 : " + partyList.get(0).getPartyAccountBalance());
+        System.out.println("파티 생성일 : " + partyList.get(0).getPartyAccountCreatedAt());
 
 
         System.out.println("(D) 모임 삭제        (B) 뒤로가기");
@@ -205,10 +206,11 @@ public class PrintPage {
             case "B":
             case "b":
                 return 4;
-            case "d": case "D":
-                if(PartyService.deleteParty(party.getPartyId())){
+            case "d":
+            case "D":
+                if (PartyService.deleteParty(party.getPartyId())) {
                     return 2;
-                }else{
+                } else {
                     return 5;
                 }
 
@@ -271,13 +273,15 @@ public class PrintPage {
         PrivacyPolicy.PrivacyTerms();
         System.out.print("동의하십니까?(y/n)");
         String agree = sc.nextLine();
-        switch (agree){
-            case "y": case "Y":
+        switch (agree) {
+            case "y":
+            case "Y":
                 int dailyPayInt = Integer.parseInt(dailyPay);
                 ArrayList<String> arrayList = new ArrayList<>(friendIDs);
-                PartyService.createParty(arr.get(Integer.parseInt(cate)-1), name, dailyPayInt, pw, arrayList);
+                PartyService.createParty(arr.get(Integer.parseInt(cate) - 1), name, dailyPayInt, pw, arrayList);
                 return 2;
-            case "n": case "N":
+            case "n":
+            case "N":
                 System.out.println("미동의 계설 불가 메인페이지도 이동합니다.");
                 return 2;
         }
@@ -289,7 +293,7 @@ public class PrintPage {
     public static int depositPage() {
 
         int newPartyBalance = FundService.deposit(LoginChecker.getUser().getUser_id(),
-            PartyChecker.getParty().getPartyId());
+                PartyChecker.getParty().getPartyId());
         PartyChecker.getParty().setPartyAccountBalance(newPartyBalance);
         return 4;
     }
@@ -297,7 +301,7 @@ public class PrintPage {
     public static int withdrawPage() throws SQLException {
 
         int newPartyBalance = FundService.withdraw(LoginChecker.getUser().getUser_id(),
-            PartyChecker.getParty().getPartyId());
+                PartyChecker.getParty().getPartyId());
         PartyChecker.getParty().setPartyAccountBalance(newPartyBalance);
         return 4;
     }
@@ -312,13 +316,13 @@ public class PrintPage {
         String userPhone = null;
         String userAccount = null;
 
-        while (true){
+        while (true) {
             System.out.print("아이디를 입력하세요: ");
             userId = sc.nextLine();
             if (isUserIdExists(userId)) {
                 System.out.println("이미 존재하는 아이디입니다.");
 
-            } else{
+            } else {
                 System.out.println("사용 가능한 아이디입니다.");
                 break;
             }
@@ -328,7 +332,7 @@ public class PrintPage {
             System.out.print("비밀번호를 입력하세요: ");
             userPassword = sc.nextLine();
             if (!UserDao.isValidPassword(userPassword)) {
-                System.out.println("비밀번호는 최소 6자 이상, 특수문자 포함해야 합니다.");
+                System.out.println("비밀번호는 최소 6자 이상, 영문, 특수문자 포함해야 합니다.");
             } else {
                 System.out.println("사용 가능한 비밀번호입니다.");
                 break;
@@ -361,9 +365,7 @@ public class PrintPage {
                 break;
             }
         }
-
-
-
+        UserDao.registerUser(new User(userId, userName, userPassword, userPhone, userAccount));
         return 1;
 
     }
