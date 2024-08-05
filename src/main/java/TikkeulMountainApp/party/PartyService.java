@@ -302,7 +302,7 @@ public class PartyService {
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public static ArrayList<Party> showPartyList(String userId) throws SQLException {
         Connection conn = MySqlConnect.MySqlConnect();
-        String sql = "SELECT party_id, party_name, party_active " + "FROM PARTY " +
+        String sql = "SELECT party_id, party_name, party_active, party_account_balance " + "FROM PARTY " +
             "WHERE party_id IN " +
             "(SELECT party_id FROM MEMBERSHIP WHERE user_id = ?)";
         PreparedStatement pstmt = conn.prepareStatement(sql);
@@ -314,6 +314,7 @@ public class PartyService {
             party.setPartyId(rs.getInt("party_id"));
             party.setPartyName(rs.getString("party_name"));
             String active = rs.getString("party_active");
+            party.setPartyAccountBalance(rs.getInt("party_account_balance"));
             if (active.equals("1")) {
                 party.setPartyActive(active);
                 arr.add(party);
