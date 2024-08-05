@@ -456,7 +456,7 @@ public class PartyService {
 
     public static Party getParty(int id) throws SQLException {
         Connection conn = MySqlConnect.MySqlConnect();
-        String sql = "SELECT party_name, party_account, party_account_balance FROM PARTY WHERE party_id = ?";
+        String sql = "SELECT party_name, party_account, party_account_balance,party_account_password FROM PARTY WHERE party_id = ?";
 
         PreparedStatement pstmt = conn.prepareStatement(sql);
         pstmt.setInt(1, id);
@@ -466,6 +466,7 @@ public class PartyService {
             party.setPartyName(rs.getString("party_name"));
             party.setPartyAccount(rs.getString("party_account"));
             party.setPartyAccountBalance(rs.getInt("party_account_balance"));
+            party.setPartyAccountPassword(rs.getString("party_account_password"));
         }
         return party;
     }
