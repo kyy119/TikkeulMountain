@@ -39,7 +39,7 @@ public class UserDao {
     //로그인 메서드
     public static boolean loginUser(String userid, String password) {
         Connection conn = null;
-        String sql = "SELECT * FROM user WHERE user_id = ? AND user_password = ?";
+        String sql = "SELECT * FROM user WHERE user_id = ? AND user_password = ? AND user_active='1'";
 
         try {
             conn = MySqlConnect.MySqlConnect();
@@ -93,7 +93,7 @@ public class UserDao {
                 User user = new User(userId, userName, userPassword, userPhone, userAccount,
                     userAccountBalance, userActive);
                 System.out.println("======================================================");
-                System.out.println("사용자 정보 조회가 완료되었습니다!");
+//                System.out.println("사용자 정보 조회가 완료되었습니다!");
                 return user;
             }
         } catch (SQLException e) {

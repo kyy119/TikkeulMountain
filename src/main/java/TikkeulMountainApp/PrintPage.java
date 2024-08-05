@@ -27,8 +27,8 @@ public class PrintPage {
 
     public static int logInPage() throws InterruptedException { //로그인 페이지, page=1
 
-        ASCII.printTikkeulMountain();
-        System.out.println("============================ 로그인 화면 ============================");
+//        ASCII.printTikkeulMountain();
+        System.out.println("===========1================= 로그인 화면 ============================");
         System.out.println("(1)로그인");
         System.out.println("(2)회원가입");
         System.out.println("=====================================================================");
@@ -68,7 +68,7 @@ public class PrintPage {
         System.out.println("======================== 나의 모임 ========================");
         for(int i = 0; i < partyArrayList.size(); i ++){
             System.out.print(i+1 + ". ");
-            System.out.println(partyArrayList.get(i).getPartyName());
+            System.out.println(partyArrayList.get(i).getPartyName()+"   "+partyArrayList.get(i).getPartyAccountBalance()+"원");
         }
 //        partyArrayList.stream().forEach(
 //            n -> System.out.println(n.getPartyId() +". "+n.getPartyName()));
@@ -83,14 +83,16 @@ public class PrintPage {
             case "O": case "o"://로그아웃 후, 로그인 페이지로 이동
                 LoginChecker.setUser(null);
                 return 1;
-            case "C": case "c"://모임 생성 페이지로 이동 (구현예정)
+            case "C": case "c"://모임 생성 페이지로 이동
                 return 6;
             default: //모임 계좌 페이지로 이동 (구현예정)
                 int intIn = Integer.parseInt(in);
-                Party party = PartyService.getParty(intIn); //partyId 잘못 입력했을 때 제약조건 설정해야함
-                party.setPartyId(intIn);
-                PartyChecker.setParty(party);
-                partyArrayList.get(intIn-1).getPartyId();
+
+//                Party party = PartyService.getParty(intIn);
+//                party.setPartyId(intIn);
+//                PartyChecker.setParty(party);
+
+                PartyChecker.setParty(partyArrayList.get(intIn-1));
                 return 4;
         }
     }
@@ -98,12 +100,42 @@ public class PrintPage {
     public static int myPage() { //마이 페이지, page=3
         User user = UserDao.getUser(LoginChecker.getUser().getUser_id());
         user.printInfo();
-        System.out.println("(B) 뒤로가기");
+
+        System.out.println("(B) 뒤로가기                  (U)비밀번호 수정 (D)탈퇴");
         System.out.print("원하는 메뉴키를 입력하세요: ");
         String in = sc.nextLine();
         switch (in) {
             case "B": case "b":
                 return 2;
+            case "U": case "u":
+                System.out.print("본인 확인을 위해 비밀번호를 입력하세요:");
+                String passWord = sc.nextLine();
+                if (passWord.equals(LoginChecker.getUser().getUser_password())) {
+                    System.out.print("바꿀 비밀번호를 입력하세요.");
+                    String newPassword = sc.nextLine();
+                    UserDao.updateUserPassword(LoginChecker.getUser().getUser_id(),newPassword);
+                } else{
+                    System.out.println("비밀번호가 틀렸습니다.");
+                }
+                return 3;
+            case "D": case "d": //회원 탈퇴: delete가 아닌 userActive를 0으로 수정
+                System.out.print("정말 탈퇴하시겠습니까?[y/n]");
+                String in2 = sc.nextLine();
+                if(in2.equals("y")){
+                    String compareString = LoginChecker.getUser().getUser_id()+" 회원탈퇴 하겠습니다.";
+                    System.out.println("따라치세요");
+                    System.out.print(compareString);
+                    String compareStringIn = sc.nextLine();
+                    if(compareString.equals(compareStringIn)) {
+                        UserDao.updateUserActive(LoginChecker.getUser().getUser_id(),
+                            "0"); //userActive를 0으로 바꿔줌
+                        LoginChecker.setUser(null);
+                        return 1;
+                    }
+                } else if(in2.equals("n")){
+                } else{
+                    System.out.println("다시 입력해주세요.");
+                }
             default:
                 return 3;
         }
