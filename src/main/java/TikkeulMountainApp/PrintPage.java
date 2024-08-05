@@ -3,6 +3,7 @@ package TikkeulMountainApp;
 import static TikkeulMountainApp.party.PartyService.createParty;
 import static TikkeulMountainApp.party.PartyService.showPartyList;
 
+import TikkeulMountainApp.fund.FundService;
 import TikkeulMountainApp.fund.Transaction;
 import TikkeulMountainApp.fund.TransactionDao;
 import TikkeulMountainApp.party.Party;
@@ -157,6 +158,10 @@ public class PrintPage {
                 return 2;
             case "I": case "i"://계좌정보 페이지로 이동
                 return 5;
+            case "D": case "d":
+                return 7;
+            case "W": case "w":
+                return 8;
             default: //
                 return 4;
         }
@@ -185,7 +190,8 @@ public class PrintPage {
         }
     }
 
-    public static int createAccountPage() throws IOException, SQLException {  //모임계좌생성
+    //모임계좌생성, page=6
+    public static int createAccountPage() throws IOException, SQLException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         System.out.println("-----");
         ArrayList<String> arr = PartyService.showCategory();
@@ -244,13 +250,18 @@ public class PrintPage {
         return 2; //ㄱ
     }
 
+    //입금페이지, page=7
     public static int depositPage() {
 
-//        FundService.deposit(LoginChecker.getUser().getUser_id(), );
+        int newPartyBalance = FundService.deposit(LoginChecker.getUser().getUser_id(),PartyChecker.getParty().getPartyId());
+        PartyChecker.getParty().setPartyAccountBalance(newPartyBalance);
         return 4;
     }
 
-    public static int withdrawPage() {
+    public static int withdrawPage() throws SQLException {
+
+        int newPartyBalance = FundService.withdraw(LoginChecker.getUser().getUser_id(),PartyChecker.getParty().getPartyId());
+        PartyChecker.getParty().setPartyAccountBalance(newPartyBalance);
         return 4;
     }
 
