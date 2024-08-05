@@ -39,7 +39,7 @@ public class UserDao {
     //로그인 메서드
     public static boolean loginUser(String userid, String password) {
         Connection conn = null;
-        String sql = "SELECT * FROM user WHERE user_id = ? AND user_password = ?";
+        String sql = "SELECT * FROM user WHERE user_id = ? AND user_password = ? AND user_active='1'";
 
         try {
             conn = MySqlConnect.MySqlConnect();
