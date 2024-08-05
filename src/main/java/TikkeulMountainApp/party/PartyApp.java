@@ -16,7 +16,7 @@ public class PartyApp {
     public static void main(String[] args) throws SQLException, IOException, InterruptedException {
         Party party = new Party();
         party.printParty();
-       // ASCII.printTikkeulMountain();
+        // ASCII.printTikkeulMountain();
 
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         System.out.println("-----");
@@ -35,12 +35,12 @@ public class PartyApp {
         System.out.print("dailypay : ");
         String dailypay = br.readLine();
         dailypay = PartyService.checkDailyPay(dailypay);
-       // dailpay = Integer.parseInt(dailpay);
+        // dailpay = Integer.parseInt(dailpay);
         System.out.print("계좌 비밀 번호 : ");
         String pw = br.readLine();
         pw = PartyService.checkPw(pw);
 
-      //  PartyService.createParty(arr.get(cate - 1), name, Integer.parseInt(dailypay), pw);
+        //  PartyService.createParty(arr.get(cate - 1), name, Integer.parseInt(dailypay), pw);
 //        PartyService.createParty("여행","중국여행", 400, "1211");
         //       ps.updatePartyBalance(3,55500);
 
