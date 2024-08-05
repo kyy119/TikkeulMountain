@@ -64,26 +64,32 @@ public class PrintPage {
 
     public static int mainPage() throws SQLException { //메인 페이지, page=2
         ArrayList<Party> partyArrayList = showPartyList(LoginChecker.getUser().getUser_id());
-        partyArrayList.stream().forEach(
-            n -> System.out.println(n.getPartyId() + n.getPartyName() + n.getPartyActive()));
+        System.out.println("======================== 나의 모임 ========================");
+        for(int i = 0; i < partyArrayList.size(); i ++){
+            System.out.print(i+1 + ". ");
+            System.out.println(partyArrayList.get(i).getPartyName());
+        }
+//        partyArrayList.stream().forEach(
+//            n -> System.out.println(n.getPartyId() +". "+n.getPartyName()));
         System.out.println("======================== 모임 메뉴 ========================");
         System.out.println("                      (C) 모임생성");
         System.out.println("(M) 마이페이지           (O) 로그아웃");
         System.out.println("원하는 메뉴키를 입력하세요: ");
         String in = sc.nextLine();
         switch (in) {
-            case "M": //마이 페이지로 이동
+            case "M": case "m"://마이 페이지로 이동
                 return 3;
-            case "O": //로그아웃 후, 로그인 페이지로 이동
+            case "O": case "o"://로그아웃 후, 로그인 페이지로 이동
                 LoginChecker.setUser(null);
                 return 1;
-            case "C": //모임 생성 페이지로 이동 (구현예정)
+            case "C": case "c"://모임 생성 페이지로 이동 (구현예정)
                 return 6;
             default: //모임 계좌 페이지로 이동 (구현예정)
                 int intIn = Integer.parseInt(in);
                 Party party = PartyService.getParty(intIn); //partyId 잘못 입력했을 때 제약조건 설정해야함
                 party.setPartyId(intIn);
                 PartyChecker.setParty(party);
+                partyArrayList.get(intIn-1).getPartyId();
                 return 4;
         }
     }
@@ -95,7 +101,7 @@ public class PrintPage {
         System.out.print("원하는 메뉴키를 입력하세요: ");
         String in = sc.nextLine();
         switch (in) {
-            case "B":
+            case "B": case "b":
                 return 2;
             default:
                 return 3;
@@ -113,9 +119,9 @@ public class PrintPage {
         System.out.print("원하는 메뉴키를 입력하세요:");
         String in = sc.nextLine();
         switch (in) {
-            case "B": //메인 페이지로 이동
+            case "B": case "b"://메인 페이지로 이동
                 return 2;
-            case "I": //계좌정보 페이지로 이동
+            case "I": case "i"://계좌정보 페이지로 이동
                 return 5;
             default: //
                 return 4;
@@ -129,7 +135,7 @@ public class PrintPage {
         System.out.print("원하는 메뉴키를 입력하세요:");
         String in = sc.nextLine();
         switch(in) {
-            case "B" :
+            case "B" : case "b":
                 return 4;
             default:
                 System.out.println("다시 맞는 키를 입력해주세요");
