@@ -24,8 +24,8 @@ public class UserDao {
             pstmt.setString(3, user.getUser_password());
             pstmt.setString(4, user.getUser_phone());
             pstmt.setString(5, user.getUser_account());
-            pstmt.setInt(6, user.getUser_account_balance());
-            pstmt.setString(7, user.getUser_active());
+            pstmt.setInt(6, 100000);
+            pstmt.setString(7, "1");
 
             int rowsInserted = pstmt.executeUpdate();
             if (rowsInserted > 0) {
