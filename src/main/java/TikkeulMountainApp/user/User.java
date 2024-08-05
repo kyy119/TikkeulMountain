@@ -31,11 +31,11 @@ public class User {
         public void printInfo(){
         System.out.println("아이디: " + user_id);
         System.out.println("이름: " + user_name);
-        System.out.println("비밀번호: " + user_password);
+//        System.out.println("비밀번호: " + user_password);
         System.out.println("전화번호: " + user_phone);
         System.out.println("계좌번호: " + user_account);
         System.out.println("계좌 잔액: " + user_account_balance);
-        System.out.println("활성상태: " + user_active);
+//        System.out.println("활성상태: " + user_active);
 
         }
     }
