@@ -7,8 +7,10 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 public class UserDao {
+
     // Create 회원가입 메서드
     public static void registerUser(User user) {
         Connection conn = null;
@@ -88,7 +90,8 @@ public class UserDao {
                 int userAccountBalance = rs.getInt("user_account_balance");
                 String userActive = rs.getString("user_active");
 
-                User user = new User(userId, userName, userPassword, userPhone, userAccount, userAccountBalance, userActive);
+                User user = new User(userId, userName, userPassword, userPhone, userAccount,
+                    userAccountBalance, userActive);
                 System.out.println("======================================================");
 //                System.out.println("사용자 정보 조회가 완료되었습니다!");
                 return user;
@@ -184,10 +187,10 @@ public class UserDao {
             pstmt2.setString(1, userActive);
             pstmt2.setString(2, userId);
 
-           pstmt1.executeUpdate();
+            pstmt1.executeUpdate();
             pstmt2.executeUpdate();
 
-           // conn.commit();
+            // conn.commit();
             System.out.println("사용자와 멤버십의 활성화 상태가 성공적으로 수정되었습니다!");
 
         } catch (SQLException e) {
@@ -205,10 +208,20 @@ public class UserDao {
         }
     }
 
-
-
-
+    public static ArrayList<String> getUserList() throws SQLException{
+        Connection conn = null;
+        conn = MySqlConnect.MySqlConnect();
+        String sql = "SELECT user_id FROM user WHERE user_active = '1'";
+        PreparedStatement pstmt = conn.prepareStatement(sql);
+        ArrayList<String> arr = new ArrayList<>();
+        ResultSet rs = pstmt.executeQuery();
+        while (rs.next()){
+            arr.add(rs.getString("user_id"));
         }
+        return arr;
+    }
+
+}
 
 
 

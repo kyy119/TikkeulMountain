@@ -11,6 +11,7 @@ import TikkeulMountainApp.party.PartyService;
 import TikkeulMountainApp.user.LoginChecker;
 import TikkeulMountainApp.user.User;
 import TikkeulMountainApp.user.UserDao;
+import TikkeulMountainApp.user.UserMainApp;
 import TikkeulMountainApp.util.ASCII;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -160,7 +161,7 @@ public class PrintPage {
         }
     }
 
-    public static int createAccountPage() throws IOException {  //모임계좌생성
+    public static int createAccountPage() throws IOException, SQLException {  //모임계좌생성
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         System.out.println("-----");
         ArrayList<String> arr = PartyService.showCategory();
@@ -180,14 +181,43 @@ public class PrintPage {
         dailyPay = PartyService.checkDailyPay(dailyPay);
 
 
+
         System.out.print("계좌 비밀 번호 : ");
         String pw = br.readLine();
         pw = PartyService.checkPw(pw);
+
+        List<String> friendIDs = new ArrayList<>();
+        List<String> userList = UserDao.getUserList();
+
+        while(true){
+            System.out.print("친구를 추가하시겠습니까?[y/n]:");
+            String in = sc.nextLine();
+            if(in.equals("y")){
+                System.out.print("친구 ID를 입력하세요:");
+                String friendId = sc.nextLine();
+                int index = 1;
+                for(int i = 0; i < userList.size(); i ++){
+                    if(userList.get(i).equals(friendId)){
+                        friendIDs.add(friendId);
+                        index = 0;
+                        break;
+                    }
+                }
+                if(index == 1){
+                    System.out.println("없는 아이디입니다.");
+                }
+
+            } else if(in.equals("n")){
+                break;
+            } else{
+                System.out.println("다시 입력해주세요.");
+            }
+        }
         int dailyPayInt = Integer.parseInt(dailyPay);
-        PartyService.createParty(cate, name, dailyPayInt, pw);
+        PartyService.createParty(cate, name, dailyPayInt, pw, friendIDs);
 
 
-        return 3; //ㄱ
+        return 2; //ㄱ
     }
 
     public static int depositPage() {
