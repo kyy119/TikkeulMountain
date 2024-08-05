@@ -185,6 +185,8 @@ public class UserDao {
     public static void updateUserBalance(String userId, int amount) {
         Connection conn = null;
         String sql = "UPDATE USER SET user_account_balance = ? WHERE user_id = ?";
+
+
         try {
             conn = MySqlConnect.MySqlConnect();
             PreparedStatement pstmt = conn.prepareStatement(sql);
@@ -201,15 +203,20 @@ public class UserDao {
     }
 
     //수정메서드 (비밀번호 수정)
-    public static void updateUserPassword(String userId, String newPassword) {
+    public static void updateUserPassword(String userId, String Password) {
         Connection conn = null;
         String sql = "UPDATE USER SET user_password = ? WHERE user_id = ?";
+
+        if (!isValidPassword(Password)) {
+            System.out.println("비밀번호는 최소 6자 이상, 특수문자 포함해야 합니다.");
+            return;
+        }
 
         try {
             conn = MySqlConnect.MySqlConnect();
             PreparedStatement pstmt = conn.prepareStatement(sql);
 
-            pstmt.setString(1, newPassword);
+            pstmt.setString(1, Password);
             pstmt.setString(2, userId);
 
             int rowsUpdated = pstmt.executeUpdate();
