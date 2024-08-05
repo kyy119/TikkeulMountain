@@ -17,7 +17,7 @@ import java.util.Date;
 
 public class PartyService {
 
-    public static int checkCate(String cate) throws IOException{
+    public static int checkCate(String cate) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         try {
             cate = br.readLine();
@@ -38,7 +38,8 @@ public class PartyService {
     }
 
     //모임 생성 메소드
-    public static void createParty(String cate, String name, int dailyPay, String pw) {
+    public static void createParty(String cate, String name, int dailyPay, String pw,
+        String[] strings) {
         Connection conn = null;
 
         try {
@@ -84,6 +85,7 @@ public class PartyService {
                 rs.close();
             }
             insertMemberShip(party.getPartyId(), dailyPay);
+            insertNormalMember(party.getPartyId(), strings, dailyPay);
             //PreparedStatement 닫기
             pstmt.close();
 
@@ -175,7 +177,8 @@ public class PartyService {
         try {
             conn = MySqlConnect.MySqlConnect();
             String sql = "insert into MEMBERSHIP ( role, user_id, party_id, user_active, party_active, daily_pay) values ( ? , ? , ? ,? ,?, ?)";
-            MemberShip memberShip = new MemberShip("방장", LoginChecker.getUser().getUser_id(), id, "1", "1", dailyPay);
+            MemberShip memberShip = new MemberShip("1", LoginChecker.getUser().getUser_id(), id,
+                "1", "1", dailyPay);
             PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             pstmt.setString(1, memberShip.getRole());
             pstmt.setString(2, memberShip.getUserId());
@@ -214,6 +217,48 @@ public class PartyService {
             }
         }
     }
+
+    public static void insertNormalMember(int id, String[] strings, int dailyPay) {
+        Connection conn = null;
+        try {
+            conn = MySqlConnect.MySqlConnect();
+            for (int i = 0; i < strings.length; i++) {
+                String sql = "insert into MEMBERSHIP ( role, user_id, party_id, user_active, party_active, daily_pay) values ( ? , ? , ? ,? ,?, ?)";
+                MemberShip memberShip = new MemberShip("0", strings[i], id, "1", "1", dailyPay);
+                PreparedStatement pstmt = conn.prepareStatement(sql,
+                    Statement.RETURN_GENERATED_KEYS);
+                pstmt.setString(1, memberShip.getRole());
+                pstmt.setString(2, memberShip.getUserId());
+                pstmt.setInt(3, memberShip.getPartyId());
+                pstmt.setString(4, memberShip.getUserActive()); //10만
+                pstmt.setString(5, memberShip.getPartyActive());
+                pstmt.setInt(6, memberShip.getDailyPay());
+                //SQL 문 실행
+                int rows = pstmt.executeUpdate();
+                System.out.println("저장된 행 수: " + rows);
+                if (rows == 1) {
+                    ResultSet rs = pstmt.getGeneratedKeys();
+                    if (rs.next()) {
+                        int bno = rs.getInt(1);
+                        System.out.println("저장된 bno: " + bno);
+                    }
+                    rs.close();
+                }//PreparedStatement 닫기
+                pstmt.close();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            if (conn != null) {
+                try {
+                    //연결 끊기
+                    conn.close();
+                } catch (SQLException e) {
+                }
+            }
+        }
+    }
+
 
     public static ArrayList<String> showCategory() {
         Connection conn = null;
@@ -302,9 +347,10 @@ public class PartyService {
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public static ArrayList<Party> showPartyList(String userId) throws SQLException {
         Connection conn = MySqlConnect.MySqlConnect();
-        String sql = "SELECT party_id, party_name, party_active, party_account_balance " + "FROM PARTY " +
-            "WHERE party_id IN " +
-            "(SELECT party_id FROM MEMBERSHIP WHERE user_id = ?)";
+        String sql =
+            "SELECT party_id, party_name, party_active, party_account_balance " + "FROM PARTY " +
+                "WHERE party_id IN " +
+                "(SELECT party_id FROM MEMBERSHIP WHERE user_id = ?)";
         PreparedStatement pstmt = conn.prepareStatement(sql);
         pstmt.setString(1, userId);
         ResultSet rs = pstmt.executeQuery();
