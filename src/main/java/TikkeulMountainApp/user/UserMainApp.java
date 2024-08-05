@@ -6,12 +6,15 @@ import java.util.Scanner;
 public class UserMainApp {
 
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
 
-//정보 조회 main
-//        // Id 입력
-        System.out.print("조회할 사용자 ID를 입력하세요: ");
-        String userId = scanner.nextLine();
+        UserDao.updateUserActive("pk3455","1");
+        UserDao.updateUserActive("pk3457","1");
+//        Scanner scanner = new Scanner(System.in);
+//
+////정보 조회 main
+////        // Id 입력
+//        System.out.print("조회할 사용자 ID를 입력하세요: ");
+//        String userId = scanner.nextLine();
 //        // 특정 사용자 ID를 통해 사용자 정보 가져오기
 //        User user = UserDao.getUser(userId);
 //
