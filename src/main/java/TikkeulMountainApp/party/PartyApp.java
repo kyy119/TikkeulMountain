@@ -1,5 +1,6 @@
 package TikkeulMountainApp.party;
 
+import TikkeulMountainApp.util.ASCII;
 import TikkeulMountainApp.util.MySqlConnect;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -15,7 +16,7 @@ public class PartyApp {
     public static void main(String[] args) throws SQLException, IOException, InterruptedException {
         Party party = new Party();
         party.printParty();
-        ASCII.printTikkeulMountain();
+       // ASCII.printTikkeulMountain();
 
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         System.out.println("-----");
@@ -34,6 +35,7 @@ public class PartyApp {
         System.out.print("dailypay : ");
         String dailypay = br.readLine();
         dailypay = PartyService.checkDailyPay(dailypay);
+       // dailpay = Integer.parseInt(dailpay);
         System.out.print("계좌 비밀 번호 : ");
         String pw = br.readLine();
         pw = PartyService.checkPw(pw);
