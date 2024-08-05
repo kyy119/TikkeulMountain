@@ -14,6 +14,7 @@ import java.sql.ResultSet;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class PartyService {
 
@@ -39,7 +40,7 @@ public class PartyService {
 
     //모임 생성 메소드
     public static void createParty(String cate, String name, int dailyPay, String pw,
-        String[] strings) {
+        List<String> strings) {
         Connection conn = null;
 
         try {
@@ -63,7 +64,6 @@ public class PartyService {
             pstmt.setString(7, party.getCategory());
             pstmt.setString(8, party.getPartyActive());
 
-            System.out.println(party.getPartyName());
             party.getDailyPay();
             party.getPartyAccount();
             party.getPartyAccountPassword();
@@ -73,13 +73,11 @@ public class PartyService {
 
             //SQL 문 실행
             int rows = pstmt.executeUpdate();
-            System.out.println("저장된 행 수: " + rows);
 
             if (rows == 1) {
                 ResultSet rs = pstmt.getGeneratedKeys();
                 if (rs.next()) {
                     int bno = rs.getInt(1);
-                    System.out.println("저장된 bno: " + bno);
                     party.setPartyId(bno);
                 }
                 rs.close();
@@ -189,13 +187,11 @@ public class PartyService {
 
             //SQL 문 실행
             int rows = pstmt.executeUpdate();
-            System.out.println("저장된 행 수: " + rows);
 
             if (rows == 1) {
                 ResultSet rs = pstmt.getGeneratedKeys();
                 if (rs.next()) {
                     int bno = rs.getInt(1);
-                    System.out.println("저장된 bno: " + bno);
                 }
                 rs.close();
             }
@@ -218,13 +214,13 @@ public class PartyService {
         }
     }
 
-    public static void insertNormalMember(int id, String[] strings, int dailyPay) {
+    public static void insertNormalMember(int id, List<String> strings, int dailyPay) {
         Connection conn = null;
         try {
             conn = MySqlConnect.MySqlConnect();
-            for (int i = 0; i < strings.length; i++) {
+            for (int i = 0; i < strings.size(); i++) {
                 String sql = "insert into MEMBERSHIP ( role, user_id, party_id, user_active, party_active, daily_pay) values ( ? , ? , ? ,? ,?, ?)";
-                MemberShip memberShip = new MemberShip("0", strings[i], id, "1", "1", dailyPay);
+                MemberShip memberShip = new MemberShip("0", strings.get(i), id, "1", "1", dailyPay);
                 PreparedStatement pstmt = conn.prepareStatement(sql,
                     Statement.RETURN_GENERATED_KEYS);
                 pstmt.setString(1, memberShip.getRole());
@@ -235,12 +231,10 @@ public class PartyService {
                 pstmt.setInt(6, memberShip.getDailyPay());
                 //SQL 문 실행
                 int rows = pstmt.executeUpdate();
-                System.out.println("저장된 행 수: " + rows);
                 if (rows == 1) {
                     ResultSet rs = pstmt.getGeneratedKeys();
                     if (rs.next()) {
                         int bno = rs.getInt(1);
-                        System.out.println("저장된 bno: " + bno);
                     }
                     rs.close();
                 }//PreparedStatement 닫기
