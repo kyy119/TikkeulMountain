@@ -101,11 +101,12 @@ public class PrintPage {
                     int intIn = Integer.parseInt(in);
                     PartyChecker.setParty(partyArrayList.get(intIn - 1));
                     return 4;
-                } catch (NumberFormatException e){
+                } catch (NumberFormatException e) {
                     System.out.println("올바르지 않은 값입니다. 다시 입력하세요.");
-                    System.out.println();
-                    return 2;
+                } catch (IndexOutOfBoundsException e) {
+                    System.out.println("올바른 모임 번호를 입력하세요.");
                 }
+                return 2;
         }
     }
 
@@ -136,7 +137,7 @@ public class PrintPage {
             case "d": //회원 탈퇴: delete가 아닌 userActive를 0으로 수정
                 List<Party> partyList = PartyService.showPartyList(LoginChecker.getUser()
                     .getUser_id());
-                if(partyList.size()==0) {
+                if (partyList.size() == 0) {
                     System.out.print("정말 탈퇴하시겠습니까?[y/n]");
                     String in2 = sc.nextLine();
                     if (in2.equals("y")) {
@@ -154,7 +155,7 @@ public class PrintPage {
                     } else {
                         System.out.println("다시 입력해주세요.");
                     }
-                } else{
+                } else {
                     System.out.println("회원 탈퇴하려면 가입한 모임을 다 탈퇴해주세요.");
                 }
             default:
@@ -168,7 +169,7 @@ public class PrintPage {
         System.out.print("당일 납부자: ");
         List<String> userList = TransactionDao.getDailyContribution(party.getPartyId());
 
-        if(userList.size()==0){
+        if (userList.size() == 0) {
             System.out.println("없음.");
         } else {
             for (int i = 0; i < userList.size(); i++) {
@@ -210,10 +211,10 @@ public class PrintPage {
         List<Party> partyList = PartyService.showPartyDetail(party.getPartyId());
         Map<String, Integer> map = TransactionDao.getMemberContributions(party.getPartyId());
         for (int i = 0; i < partyList.size(); i++) {
-            if(i == 0){
+            if (i == 0) {
                 System.out.print(i + 1 + "번 멤버(방장):");
-            }else{
-                if(partyList.get(i).getPartyActive().equals("0")){
+            } else {
+                if (partyList.get(i).getPartyActive().equals("0")) {
                     System.out.print("(휴면 계정) ");
                 }
                 System.out.print(i + 1 + "번 멤버:");
@@ -243,15 +244,16 @@ public class PrintPage {
             case "d":
             case "D":
                 //방장일때
-                if(TransactionDao.getRole(LoginChecker.getUser().getUser_id(),party.getPartyId()).equals("1")){
+                if (TransactionDao.getRole(LoginChecker.getUser().getUser_id(), party.getPartyId())
+                    .equals("1")) {
                     if (PartyService.deleteParty(party.getPartyId())) {
                         return 2;
-                    }
-                    else{
+                    } else {
                         return 5;
                     }
-                }else{
-                    PartyService.updatePartyActive(LoginChecker.getUser().getUser_id(), party.getPartyId());
+                } else {
+                    PartyService.updatePartyActive(LoginChecker.getUser().getUser_id(),
+                        party.getPartyId());
                     return 2;
                 }
 
@@ -303,13 +305,13 @@ public class PrintPage {
                     if (userList.get(i).equals(friendId)) {
                         int idx = 1;
                         index = 0;
-                        for(String str : friendIDs){
-                            if(str.equals(friendId)){
+                        for (String str : friendIDs) {
+                            if (str.equals(friendId)) {
                                 idx = 0;
                                 break;
                             }
                         }
-                        if(idx == 0){
+                        if (idx == 0) {
                             System.out.println("전에 이미 추가하였습니다");
                             break;
                         }
