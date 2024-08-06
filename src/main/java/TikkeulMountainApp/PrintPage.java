@@ -332,10 +332,12 @@ public class PrintPage {
 
         }
 
-        while(true) {
+
+
             PrivacyPolicy.PrivacyTerms();
+        while(true) {
             System.out.print("동의하십니까?(y/n)");
-            String agree = sc.nextLine();
+        String agree = sc.nextLine();
 
             switch (agree) {
                 case "y":
@@ -355,8 +357,8 @@ public class PrintPage {
                     System.out.println("다시 맞는 키를 입력해주세요");
 
             }
+            // return 2;
         }
-      // return 2;
 
     }
 
