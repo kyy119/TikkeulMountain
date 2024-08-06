@@ -46,7 +46,6 @@ public class PrintPage {
         switch (in) {
             case "1": //로그인
                 while (true) {
-                    //   System.out.println("UserDao");
                     System.out.println("(B)뒤로가기");
                     System.out.print("아이디를 입력하세요: ");
                     String id = sc.nextLine();
@@ -62,6 +61,7 @@ public class PrintPage {
                         return 2;
                     } else {
                         System.out.println("로그인 실패: 아이디 또는 비밀번호가 잘못되었습니다.");
+                        System.out.println();
                     }
                 }
             case "2": //회원가입 페이지로 이동
@@ -97,9 +97,15 @@ public class PrintPage {
             case "c"://모임 생성 페이지로 이동
                 return 6;
             default: //모임 계좌 페이지로 이동 (구현예정)
-                int intIn = Integer.parseInt(in);
-                PartyChecker.setParty(partyArrayList.get(intIn - 1));
-                return 4;
+                try {
+                    int intIn = Integer.parseInt(in);
+                    PartyChecker.setParty(partyArrayList.get(intIn - 1));
+                    return 4;
+                } catch (NumberFormatException e){
+                    System.out.println("올바르지 않은 값입니다. 다시 입력하세요.");
+                    System.out.println();
+                    return 2;
+                }
         }
     }
 
