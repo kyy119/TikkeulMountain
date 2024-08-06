@@ -206,6 +206,9 @@ public class PrintPage {
             if(i == 0){
                 System.out.print(i + 1 + "번 멤버(방장):");
             }else{
+                if(partyList.get(i).getPartyActive().equals("0")){
+                    System.out.print("(휴면 계정) ");
+                }
                 System.out.print(i + 1 + "번 멤버:");
             }
             System.out.print(partyList.get(i).getUserId());
