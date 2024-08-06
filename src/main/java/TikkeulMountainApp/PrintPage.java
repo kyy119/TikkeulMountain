@@ -277,7 +277,7 @@ public class PrintPage {
         String pw = br.readLine();
         pw = PartyService.checkPw(pw);
 
-        HashSet<String> friendIDs = new HashSet<>();
+        ArrayList<String> friendIDs = new ArrayList<>();
         List<String> userList = UserDao.getUserList();
 
         while (true) {
@@ -294,8 +294,20 @@ public class PrintPage {
                         break;
                     }
                     if (userList.get(i).equals(friendId)) {
-                        friendIDs.add(friendId);
+                        int idx = 1;
                         index = 0;
+                        for(String str : friendIDs){
+                            if(str.equals(friendId)){
+                                idx = 0;
+                                break;
+                            }
+                        }
+                        if(idx == 0){
+                            System.out.println("전에 이미 추가하였습니다");
+                            break;
+                        }
+                        friendIDs.add(friendId);
+                        System.out.println("친구 아이디 추가 완료!");
                         break;
                     }
                 }
