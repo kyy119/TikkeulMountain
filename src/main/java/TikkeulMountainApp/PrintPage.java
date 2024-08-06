@@ -226,10 +226,17 @@ public class PrintPage {
                 return 4;
             case "d":
             case "D":
-                if (PartyService.deleteParty(party.getPartyId())) {
+                //방장일때
+                if(TransactionDao.getRole(LoginChecker.getUser().getUser_id(),party.getPartyId()).equals("1")){
+                    if (PartyService.deleteParty(party.getPartyId())) {
+                        return 2;
+                    }
+                    else{
+                        return 5;
+                    }
+                }else{
+                    PartyService.updatePartyActive(LoginChecker.getUser().getUser_id(), party.getPartyId());
                     return 2;
-                } else {
-                    return 5;
                 }
 
             default:
