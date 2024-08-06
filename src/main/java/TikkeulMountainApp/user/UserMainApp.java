@@ -7,8 +7,8 @@ public class UserMainApp {
 
     public static void main(String[] args) {
 
-        UserDao.updateUserActive("pk3455","1");
-        UserDao.updateUserActive("pk3457","1");
+     //   UserDao.updateUserActive("pk3455","1");
+     //   UserDao.updateUserActive("pk3457","1");
 //        Scanner scanner = new Scanner(System.in);
 //
 ////정보 조회 main
