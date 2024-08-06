@@ -298,7 +298,7 @@ public class PrintPage {
                 int dailyPayInt = Integer.parseInt(dailyPay);
                 ArrayList<String> arrayList = new ArrayList<>(friendIDs);
                 PartyService.createParty(arr.get(Integer.parseInt(cate) - 1), name, dailyPayInt, pw,
-                    arrayList);
+                        arrayList);
                 return 2;
             case "n":
             case "N":
@@ -306,7 +306,6 @@ public class PrintPage {
                 return 2;
         }
         return 2;
-
     }
 
     //입금페이지, page=7
