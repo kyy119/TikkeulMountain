@@ -21,15 +21,19 @@ public class FundService {
         while (true) {
             System.out.println("입금 취소하시려면 0을 입력하세요.");
             System.out.print("모임통장에 입금할 금액을 입력하세요: ");
-            amount = Integer.parseInt(sc.nextLine());
-            if (userBalance - amount < 0) { //개인계좌잔액이 입금할 금액보다 적으면 거래 x
-                System.out.println("개인계좌의 잔액이 부족합니다.");
-            } else if (amount < 0) {
-                System.out.println("양수를 입력해주세요.");
-            } else if (amount == 0) {
-                return partyBalance;
-            } else {
-                break;
+            try {
+                amount = Integer.parseInt(sc.nextLine());
+                if (userBalance - amount < 0) { //개인계좌잔액이 입금할 금액보다 적으면 거래 x
+                    System.out.println("개인계좌의 잔액이 부족합니다.");
+                } else if (amount < 0) {
+                    System.out.println("양수를 입력해주세요.");
+                } else if (amount == 0) {
+                    return partyBalance;
+                } else {
+                    break;
+                }
+            } catch (NumberFormatException e){
+                System.out.println("숫자로 입력바랍니다.");
             }
         }
         int newPartyBalance = partyBalance + amount;
@@ -52,21 +56,34 @@ public class FundService {
         while (true) {
             System.out.println("출금 취소하시려면 0을 입력하세요.");
             System.out.print("모임통장에서 출금할 금액을 입력하세요: ");
-            amount = Integer.parseInt(sc.nextLine());
-            if (amount > 2000000) {
-                System.out.println("출금 최대 금액은 200만원입니다.");
-            } else if (partyBalance - amount < 0) {
-                System.out.println("모임통장의 잔액이 부족합니다.");
-            } else if (amount < 0) {
-                System.out.println("양수를 입력해주세요.");
-            } else if (amount == 0) {
-                return partyBalance;
-            } else {
+            try {
+                amount = Integer.parseInt(sc.nextLine());
+                if (amount > 2000000) {
+                    System.out.println("출금 최대 금액은 200만원입니다.");
+                } else if (partyBalance - amount < 0) {
+                    System.out.println("모임통장의 잔액이 부족합니다.");
+                } else if (amount < 0) {
+                    System.out.println("양수를 입력해주세요.");
+                } else if (amount == 0) {
+                    return partyBalance;
+                } else {
+                    break;
+                }
+            } catch (NumberFormatException e){
+                System.out.println("숫자로 입력 바랍니다.");
+            }
+
+        }
+        System.out.print("출금 메모(50자 제한): ");
+        String memo = null;
+        while(true) {
+            memo = sc.nextLine();
+            if(memo.length()<=50) {
                 break;
+            }else{
+                System.out.println("메모는 50자 제한입니다.");
             }
         }
-        System.out.print("출금 메모: ");
-        String memo = sc.nextLine();
 
         while(true){
             System.out.print("모임 계좌 비밀번호를 입력하세요:");
