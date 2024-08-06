@@ -33,9 +33,10 @@ public class Party {
     public Party() {
     }
 
-    public Party(String userId, String partyName, String category, String partyAccount,
+    public Party(String userId, String partyActive, String partyName, String category, String partyAccount,
         String partyAccountCreatedAt, int partyAccountBalance) {
         this.userId = userId;
+        this.partyActive = partyActive;
         this.partyName = partyName;
         this.category = category;
         this.partyAccount = partyAccount;

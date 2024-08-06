@@ -17,23 +17,23 @@ import java.util.List;
 
 public class PartyService {
 
-    public static int checkCate(String cate) throws IOException {
+    public static String checkCate(String cate) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        try {
-            cate = br.readLine();
-            while (Integer.parseInt(cate) < 1 || Integer.parseInt(cate) >= 5) {
+        while (true){
+            try {
+                if(Integer.parseInt(cate) < 1 || Integer.parseInt(cate) >= 5){
+                    System.out.println("1 ~ 4 숫자만 입력하세요");
+                    System.out.print("카테고리 선택 : ");
+                    cate = br.readLine();
+                }else{
+                    return cate;
+                }
+            }catch (NumberFormatException e){
                 System.out.println("1 ~ 4 숫자만 입력하세요");
                 System.out.print("카테고리 선택 : ");
                 cate = br.readLine();
             }
-
-        } catch (NumberFormatException e) {
-            System.out.println("1 ~ 4 숫자만 입력하세요");
-            System.out.print("카테고리 선택 : ");
-            cate = br.readLine();
-
         }
-        return Integer.parseInt(cate);
 
     }
 
@@ -96,15 +96,24 @@ public class PartyService {
             }
         }
     }
-
     public static String checkDailyPay(String dailyPay) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        while (Integer.parseInt(dailyPay) > 1000 || Integer.parseInt(dailyPay) <= 0) {
-            System.out.println("매일 납부 금액은 1 ~ 1000원 사이로 지정 가능합니다.");
-            System.out.print("납부 금액 입력 : ");
-            dailyPay = br.readLine();
+        while (true) {
+            try {
+                int pay = Integer.parseInt(dailyPay);
+                if (pay > 1000 || pay <= 0) {
+                    System.out.println("매일 납부 금액은 1 ~ 1000원 사이로 지정 가능합니다.");
+                    System.out.print("납부 금액 입력 : ");
+                    dailyPay = br.readLine();
+                } else {
+                    return dailyPay;
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("숫자만 입력해주세요.");
+                System.out.print("납부 금액 입력 : ");
+                dailyPay = br.readLine();
+            }
         }
-        return dailyPay;
     }
 
     public static String checkPw(String pw) throws IOException {
@@ -332,7 +341,7 @@ public class PartyService {
             "SELECT party_id, party_name, daily_pay, party_active, party_account, party_account_balance, category "
                 + "FROM PARTY " +
                 "WHERE party_id IN " +
-                "(SELECT party_id FROM MEMBERSHIP WHERE user_id = ?)";
+                "(SELECT party_id FROM MEMBERSHIP WHERE user_id = ? and party_active= '1')";
         PreparedStatement pstmt = conn.prepareStatement(sql);
         pstmt.setString(1, userId);
         ResultSet rs = pstmt.executeQuery();
@@ -376,7 +385,7 @@ public class PartyService {
 
     public static List<Party> showPartyDetail(int partyId) throws SQLException {
         Connection conn = MySqlConnect.MySqlConnect();
-        String sql = "SELECT a.user_id, "
+        String sql = "SELECT a.user_id, a.party_active, "
             + "b.party_name, b.category, b.party_account, b.party_account_created_at, b.party_account_balance "
             + "from MEMBERSHIP as a"
             + " INNER JOIN PARTY as b ON a.party_id = b.party_id"
@@ -387,12 +396,13 @@ public class PartyService {
         ArrayList<Party> arrayList = new ArrayList<>();
         while (rs.next()) {
             String userId = rs.getString("user_id");
+            String partyActive = rs.getString("party_active");
             String partyName = rs.getString("party_name");
             String category = rs.getString("category");
             String partyAccount = rs.getString("party_account");
             String partyAccountCreatedAt = rs.getString("party_account_created_at");
             int partyAccountBalance = rs.getInt("party_account_balance");
-            Party party = new Party(userId, partyName, category, partyAccount,
+            Party party = new Party(userId, partyActive, partyName, category, partyAccount,
                 partyAccountCreatedAt, partyAccountBalance);
             arrayList.add(party);
         }
@@ -437,7 +447,7 @@ public class PartyService {
     }
 
 
-    public static Party getParty(int id){
+    public static Party getParty(int id) {
         Party party = new Party();
         try {
             Connection conn = MySqlConnect.MySqlConnect();
@@ -451,7 +461,7 @@ public class PartyService {
                 party.setPartyAccountBalance(rs.getInt("party_account_balance"));
                 party.setPartyAccountPassword(rs.getString("party_account_password"));
             }
-        }catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return party;
@@ -473,4 +483,29 @@ public class PartyService {
         }
         return arr;
     }
+
+    public static void updatePartyActive(String userId, int partyId) {
+        Connection conn = null; // Connection 객체 선언
+        String sql2 = "UPDATE MEMBERSHIP SET party_active = '0' WHERE user_id = ? AND party_id = ?";
+        try {
+            conn = MySqlConnect.MySqlConnect();
+            PreparedStatement pstmt = conn.prepareStatement(sql2);
+            pstmt.setString(1, userId);
+            pstmt.setInt(2, partyId);
+            pstmt.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.setAutoCommit(true);
+                    conn.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
 }

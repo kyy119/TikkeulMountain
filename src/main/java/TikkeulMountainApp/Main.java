@@ -18,10 +18,20 @@ public class Main {
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
-        },19,21,0);
+        },9,3,0);
 
         int page = 1;
         while(true){
+            System.out.println();
+            System.out.println();
+            System.out.println();
+            System.out.println();
+            System.out.println();
+            System.out.println();
+            System.out.println();
+            System.out.println();
+            System.out.println();
+            System.out.println();
             if(page==0){ //종료
                 System.out.println("시스템을 종료합니다.");
                 break;

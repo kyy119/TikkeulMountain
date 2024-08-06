@@ -1,5 +1,6 @@
 package TikkeulMountainApp;
 
+import static TikkeulMountainApp.party.PartyService.checkCate;
 import static TikkeulMountainApp.party.PartyService.createParty;
 import static TikkeulMountainApp.party.PartyService.showPartyList;
 import static TikkeulMountainApp.user.UserDao.isUserIdExists;
@@ -102,7 +103,7 @@ public class PrintPage {
         }
     }
 
-    public static int myPage() { //마이 페이지, page=3
+    public static int myPage() throws SQLException { //마이 페이지, page=3
         User user = UserDao.getUser(LoginChecker.getUser().getUser_id());
         user.printInfo();
 
@@ -127,22 +128,28 @@ public class PrintPage {
                 return 3;
             case "D":
             case "d": //회원 탈퇴: delete가 아닌 userActive를 0으로 수정
-                System.out.print("정말 탈퇴하시겠습니까?[y/n]");
-                String in2 = sc.nextLine();
-                if (in2.equals("y")) {
-                    String compareString = LoginChecker.getUser().getUser_id() + " 회원탈퇴 하겠습니다.";
-                    System.out.println("따라치세요");
-                    System.out.print(compareString);
-                    String compareStringIn = sc.nextLine();
-                    if (compareString.equals(compareStringIn)) {
-                        UserDao.updateUserActive(LoginChecker.getUser().getUser_id(),
-                            "0"); //userActive를 0으로 바꿔줌
-                        LoginChecker.setUser(null);
-                        return 1;
+                List<Party> partyList = PartyService.showPartyList(LoginChecker.getUser()
+                    .getUser_id());
+                if(partyList.size()==0) {
+                    System.out.print("정말 탈퇴하시겠습니까?[y/n]");
+                    String in2 = sc.nextLine();
+                    if (in2.equals("y")) {
+                        String compareString = LoginChecker.getUser().getUser_id() + " 회원탈퇴 하겠습니다.";
+                        System.out.println("따라치세요");
+                        System.out.print(compareString);
+                        String compareStringIn = sc.nextLine();
+                        if (compareString.equals(compareStringIn)) {
+                            UserDao.updateUserActive(LoginChecker.getUser().getUser_id(),
+                                "0"); //userActive를 0으로 바꿔줌
+                            LoginChecker.setUser(null);
+                            return 1;
+                        }
+                    } else if (in2.equals("n")) {
+                    } else {
+                        System.out.println("다시 입력해주세요.");
                     }
-                } else if (in2.equals("n")) {
-                } else {
-                    System.out.println("다시 입력해주세요.");
+                } else{
+                    System.out.println("회원 탈퇴하려면 가입한 모임을 다 탈퇴해주세요.");
                 }
             default:
                 return 3;
@@ -155,11 +162,15 @@ public class PrintPage {
         System.out.print("당일 납부자: ");
         List<String> userList = TransactionDao.getDailyContribution(party.getPartyId());
 
-        for(int i=0;i<userList.size();i++){
-            if(i==userList.size()-1){
-                System.out.println(userList.get(i));
-            }else {
-                System.out.print(userList.get(i)+", ");
+        if(userList.size()==0){
+            System.out.println("없음.");
+        } else {
+            for (int i = 0; i < userList.size(); i++) {
+                if (i == userList.size() - 1) {
+                    System.out.println(userList.get(i));
+                } else {
+                    System.out.print(userList.get(i) + ", ");
+                }
             }
         }
         System.out.println("---------------");
@@ -196,6 +207,9 @@ public class PrintPage {
             if(i == 0){
                 System.out.print(i + 1 + "번 멤버(방장):");
             }else{
+                if(partyList.get(i).getPartyActive().equals("0")){
+                    System.out.print("(휴면 계정) ");
+                }
                 System.out.print(i + 1 + "번 멤버:");
             }
             System.out.print(partyList.get(i).getUserId());
@@ -222,10 +236,17 @@ public class PrintPage {
                 return 4;
             case "d":
             case "D":
-                if (PartyService.deleteParty(party.getPartyId())) {
+                //방장일때
+                if(TransactionDao.getRole(LoginChecker.getUser().getUser_id(),party.getPartyId()).equals("1")){
+                    if (PartyService.deleteParty(party.getPartyId())) {
+                        return 2;
+                    }
+                    else{
+                        return 5;
+                    }
+                }else{
+                    PartyService.updatePartyActive(LoginChecker.getUser().getUser_id(), party.getPartyId());
                     return 2;
-                } else {
-                    return 5;
                 }
 
             default:
@@ -246,7 +267,7 @@ public class PrintPage {
         }
         System.out.print("카테고리 선택 : ");
         String cate = br.readLine();
-
+        cate = PartyService.checkCate(cate);
         System.out.print("모임 이름 : ");
         String name = br.readLine();
         System.out.print("매일 납부 예정 금액 : ");
@@ -257,7 +278,7 @@ public class PrintPage {
         String pw = br.readLine();
         pw = PartyService.checkPw(pw);
 
-        HashSet<String> friendIDs = new HashSet<>();
+        ArrayList<String> friendIDs = new ArrayList<>();
         List<String> userList = UserDao.getUserList();
 
         while (true) {
@@ -274,8 +295,20 @@ public class PrintPage {
                         break;
                     }
                     if (userList.get(i).equals(friendId)) {
-                        friendIDs.add(friendId);
+                        int idx = 1;
                         index = 0;
+                        for(String str : friendIDs){
+                            if(str.equals(friendId)){
+                                idx = 0;
+                                break;
+                            }
+                        }
+                        if(idx == 0){
+                            System.out.println("전에 이미 추가하였습니다");
+                            break;
+                        }
+                        friendIDs.add(friendId);
+                        System.out.println("친구 아이디 추가 완료!");
                         break;
                     }
                 }
@@ -288,24 +321,35 @@ public class PrintPage {
             } else {
                 System.out.println("다시 입력해주세요.");
             }
+
         }
-        PrivacyPolicy.PrivacyTerms();
-        System.out.print("동의하십니까?(y/n)");
-        String agree = sc.nextLine();
-        switch (agree) {
-            case "y":
-            case "Y":
-                int dailyPayInt = Integer.parseInt(dailyPay);
-                ArrayList<String> arrayList = new ArrayList<>(friendIDs);
-                PartyService.createParty(arr.get(Integer.parseInt(cate) - 1), name, dailyPayInt, pw,
+
+        while(true) {
+            PrivacyPolicy.PrivacyTerms();
+            System.out.print("동의하십니까?(y/n)");
+            String agree = sc.nextLine();
+
+            switch (agree) {
+                case "y":
+                case "Y":
+                    int dailyPayInt = Integer.parseInt(dailyPay);
+                    ArrayList<String> arrayList = new ArrayList<>(friendIDs);
+                    PartyService.createParty(arr.get(Integer.parseInt(cate) - 1), name,
+                        dailyPayInt,
+                        pw,
                         arrayList);
-                return 2;
-            case "n":
-            case "N":
-                System.out.println("미동의 계설 불가 메인페이지도 이동합니다.");
-                return 2;
+                    return 2;
+                case "n":
+                case "N":
+                    System.out.println("미동의 계설 불가 메인페이지도 이동합니다.");
+                    return 2;
+                default:
+                    System.out.println("다시 맞는 키를 입력해주세요");
+
+            }
         }
-        return 2;
+      // return 2;
+
     }
 
     //입금페이지, page=7

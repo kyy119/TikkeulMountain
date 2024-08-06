@@ -26,7 +26,7 @@ public class Scheduler {
     public void execute(Runnable command, int hour, int minute, int second) {
         ZonedDateTime now = ZonedDateTime.of(now(), ZoneId.of(SEOUL_ZONE));
         ZonedDateTime nextExecutionTime = this.getNextExecutionTime(hour, minute, second, now);
-        scheduler.scheduleAtFixedRate(command, this.getInitialExecutionTime(now, nextExecutionTime), ONE_DAY_AS_SECOND, SECONDS);
+        scheduler.scheduleAtFixedRate(command, this.getInitialExecutionTime(now, nextExecutionTime), ONE_MINUTE_AS_SECOND, SECONDS);
     }
 
     private ZonedDateTime getNextExecutionTime(int hour, int minute, int second, ZonedDateTime now) {
