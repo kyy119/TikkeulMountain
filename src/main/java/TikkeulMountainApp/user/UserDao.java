@@ -14,7 +14,6 @@ import java.util.regex.Pattern;
 public class UserDao {
 
 
-
     // Create 회원가입
     public static void registerUser(User user) {
         Connection conn = null;
@@ -37,6 +36,13 @@ public class UserDao {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                }
+            }
         }
     }
 
@@ -47,14 +53,17 @@ public class UserDao {
         String passwordPattern = "^(?=.*[a-zA-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{6,}$";
         return Pattern.matches(passwordPattern, password);
     }
+
     // 아이디 중복
     public static boolean isUserIdExists(String userId) {
         return checkExists("SELECT COUNT(*) FROM USER WHERE user_id = ?", userId);
     }
+
     // 폰 번호 중복
     public static boolean isUserPhoneExists(String userPhone) {
         return checkExists("SELECT COUNT(*) FROM USER WHERE user_phone = ?", userPhone);
     }
+
     // 계좌 번호 중복
     public static boolean isUserAccountExists(String userAccount) {
         return checkExists("SELECT COUNT(*) FROM USER WHERE user_account = ?", userAccount);
@@ -63,10 +72,12 @@ public class UserDao {
     // 공통 중복 확인
     private static boolean checkExists(String query, String value) {
         try (Connection conn = MySqlConnect.MySqlConnect();
-             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            PreparedStatement pstmt = conn.prepareStatement(query)) {
             pstmt.setString(1, value);
             ResultSet rs = pstmt.executeQuery();
-            if (rs.next()) return rs.getInt(1) > 0;
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -104,6 +115,13 @@ public class UserDao {
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                }
+            }
         }
 
     }
@@ -128,12 +146,19 @@ public class UserDao {
                 String userActive = rs.getString("user_active");
 
                 User user = new User(userId, userName, userPassword, userPhone, userAccount,
-                        userAccountBalance, userActive);
+                    userAccountBalance, userActive);
                 System.out.println("======================================================");
                 return user;
             }
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                }
+            }
         }
         return null;
     }
@@ -153,11 +178,17 @@ public class UserDao {
                 int balance = rs.getInt("user_account_balance");
                 return balance;
             }
-            System.out.println("잔액 조회가 완료되었습니다!");
 
             pstmt.close();
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                }
+            }
         }
         return 0;
     }
@@ -167,7 +198,6 @@ public class UserDao {
     public static void updateUserBalance(String userId, int amount) {
         Connection conn = null;
         String sql = "UPDATE USER SET user_account_balance = ? WHERE user_id = ?";
-
 
         try {
             conn = MySqlConnect.MySqlConnect();
@@ -180,6 +210,13 @@ public class UserDao {
 
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                }
+            }
         }
 
     }
@@ -208,6 +245,13 @@ public class UserDao {
         } catch (SQLException e) {
             e.printStackTrace();
 
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                }
+            }
         }
 
     }
@@ -257,6 +301,12 @@ public class UserDao {
         ResultSet rs = pstmt.executeQuery();
         while (rs.next()) {
             arr.add(rs.getString("user_id"));
+        }
+        if (conn != null) {
+            try {
+                conn.close();
+            } catch (SQLException e) {
+            }
         }
         return arr;
     }
