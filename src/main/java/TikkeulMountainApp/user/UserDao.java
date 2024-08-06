@@ -147,7 +147,7 @@ public class UserDao {
 
                 User user = new User(userId, userName, userPassword, userPhone, userAccount,
                     userAccountBalance, userActive);
-                System.out.println("======================================================");
+
                 return user;
             }
         } catch (SQLException e) {
@@ -275,7 +275,7 @@ public class UserDao {
             pstmt1.executeUpdate();
             pstmt2.executeUpdate();
 
-            System.out.println("사용자와 멤버십의 활성화 상태가 성공적으로 수정되었습니다!");
+            System.out.println("회원탈퇴가 완료 되었습니다!");
 
         } catch (SQLException e) {
             e.printStackTrace();

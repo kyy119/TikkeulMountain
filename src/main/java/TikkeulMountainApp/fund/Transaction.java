@@ -33,7 +33,8 @@ public class Transaction {
         if (transferIndex.equals("1")) {
             System.out.println(
                 "거래시각: " + transferDate + " | 거래금액:" + transferAmount + " | 거래방식: 입금"
-                    + " | 보내는 사람: " + userId + " | 잔액:" + transferBalance);
+                    + "| 보내는 사람: " + userId + " | 잔액:" + transferBalance);
+
         } else if (transferIndex.equals("2")) {
             System.out.println(
                 "거래시각: " + transferDate + " | 거래금액:" + transferAmount + " | 거래방식: 출금"

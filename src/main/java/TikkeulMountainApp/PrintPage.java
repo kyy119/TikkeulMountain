@@ -14,6 +14,7 @@ import TikkeulMountainApp.user.LoginChecker;
 import TikkeulMountainApp.user.User;
 import TikkeulMountainApp.user.UserDao;
 
+import TikkeulMountainApp.util.ASCII;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -29,11 +30,12 @@ public class PrintPage {
 
     public static int logInPage() throws InterruptedException { //로그인 페이지, page=1
 
-//        ASCII.printTikkeulMountain();
+        ASCII.printTikkeulMountain();
         System.out.println("============================ 로그인 화면 ============================");
         System.out.println("(1)로그인");
         System.out.println("(2)회원가입");
         System.out.println("=====================================================================");
+
         System.out.print("원하는 메뉴키를 입력하세요:");
         String in = sc.nextLine();
         switch (in) {
@@ -60,22 +62,25 @@ public class PrintPage {
             case "2": //회원가입 페이지로 이동
                 return 9;
             default:
-                System.out.println("다시 압력하세요.");
+                System.out.println("올바른 메뉴키를 입력해 주세요.");
                 return 1;
         }
     }
 
     public static int mainPage() throws SQLException { //메인 페이지, page=2
         ArrayList<Party> partyArrayList = showPartyList(LoginChecker.getUser().getUserId());
-        System.out.println("======================== 나의 모임 ========================");
+        System.out.println("========================= 나의 모임 통장목록 =========================");
         for (int i = 0; i < partyArrayList.size(); i++) {
             System.out.print(i + 1 + ". ");
             System.out.println(partyArrayList.get(i).getPartyName() + "   " + partyArrayList.get(i)
                 .getPartyAccountBalance() + "원");
+            System.out.println();
+
         }
-        System.out.println("======================== 모임 메뉴 ========================");
-        System.out.println("                      (C) 모임생성");
-        System.out.println("(M) 마이페이지           (O) 로그아웃");
+        System.out.println("---------------------------------------------------------------------");
+        System.out.println("(M)마이페이지                                            (O)로그아웃");
+        System.out.println("                                                         (C)모임생성");
+        System.out.println("---------------------------------------------------------------------");
         System.out.println("원하는 메뉴키를 입력하세요: ");
         String in = sc.nextLine();
         switch (in) {
@@ -105,9 +110,12 @@ public class PrintPage {
 
     public static int myPage() throws SQLException { //마이 페이지, page=3
         User user = UserDao.getUser(LoginChecker.getUser().getUserId());
+        System.out.println("============================= 마이페이지 =============================");
         user.printInfo();
-
-        System.out.println("(B) 뒤로가기                  (U)비밀번호 수정 (D)탈퇴");
+        System.out.println("---------------------------------------------------------------------");
+        System.out.println("                                                     (U)비밀번호 수정");
+        System.out.println("(B)뒤로가기                                                   (D)탈퇴");
+        System.out.println("---------------------------------------------------------------------");
         System.out.print("원하는 메뉴키를 입력하세요: ");
         String in = sc.nextLine();
         switch (in) {
@@ -119,11 +127,11 @@ public class PrintPage {
                 System.out.print("본인 확인을 위해 비밀번호를 입력하세요:");
                 String passWord = sc.nextLine();
                 if (passWord.equals(LoginChecker.getUser().getUserPassword())) {
-                    System.out.print("바꿀 비밀번호를 입력하세요.");
+                    System.out.print("변경할 비밀번호를 입력하세요.");
                     String newPassword = sc.nextLine();
                     UserDao.updateUserPassword(LoginChecker.getUser().getUserId(), newPassword);
                 } else {
-                    System.out.println("비밀번호가 틀렸습니다.");
+                    System.out.println("비밀번호가 일치하지 않습니다.");
                 }
                 return 3;
             case "D":
@@ -133,9 +141,9 @@ public class PrintPage {
                 if (partyList.size() == 0) {
                     System.out.print("정말 탈퇴하시겠습니까?[y/n]");
                     String in2 = sc.nextLine();
-                    if (in2.equals("y")) {
+                    if (in2.equals("y")| in2.equals("Y")) {
                         String compareString = LoginChecker.getUser().getUserId() + " 회원탈퇴 하겠습니다.";
-                        System.out.println("따라치세요");
+                        System.out.println("따라서 입력해 주세요");
                         System.out.print(compareString);
                         String compareStringIn = sc.nextLine();
                         if (compareString.equals(compareStringIn)) {
@@ -144,9 +152,9 @@ public class PrintPage {
                             LoginChecker.setUser(null);
                             return 1;
                         }
-                    } else if (in2.equals("n")) {
+                    } else if (in2.equals("n")| in2.equals("N")) {
                     } else {
-                        System.out.println("다시 입력해주세요.");
+                        System.out.println("다시 입력해 주세요.");
                     }
                 } else {
                     System.out.println("회원 탈퇴하려면 가입한 모임을 다 탈퇴해주세요.");
@@ -157,6 +165,7 @@ public class PrintPage {
     }
 
     public static int accountPage() { //모임계좌 페이지, page=4
+        System.out.println("============================= 모임통장 ==============================");
         Party party = PartyChecker.getParty();
         party.printParty();
         System.out.print("당일 납부자: ");
@@ -173,12 +182,13 @@ public class PrintPage {
                 }
             }
         }
-        System.out.println("---------------");
+        System.out.println("============================= 거래내역 ==============================");
         List<Transaction> transactionList = TransactionDao.getPartyTransaction(party.getPartyId());
         transactionList.stream().forEach(n -> n.printTransaction());
-
-        System.out.println("(D)입금하기  (W)출금하기");
-        System.out.println("(I) 계좌정보보기     (B) 뒤로가기");
+        System.out.println("---------------------------------------------------------------------");
+        System.out.println("(D)입금하기                                               (W)출금하기");
+        System.out.println("(I)계좌정보보기                                           (B)뒤로가기");
+        System.out.println("---------------------------------------------------------------------");
         System.out.print("원하는 메뉴키를 입력하세요:");
         String in = sc.nextLine();
         switch (in) {
@@ -200,6 +210,7 @@ public class PrintPage {
     }
 
     public static int accountInfoPage() throws SQLException { //계좌 정보 페이지, page=5
+        System.out.println("======================== 모임통장 계좌상세 ==========================");
         Party party = PartyChecker.getParty();
         List<Party> partyList = PartyService.showPartyDetail(party.getPartyId());
         Map<String, Integer> map = TransactionDao.getMemberContributions(party.getPartyId());
@@ -221,13 +232,14 @@ public class PrintPage {
             }
         }
 
-        System.out.println("파티 이름 : " + partyList.get(0).getPartyName());
-        System.out.println("파티 종륲 : " + partyList.get(0).getCategory());
-        System.out.println("파티 계좌번호 : " + partyList.get(0).getPartyAccount());
-        System.out.println("파티 계좌 잔액 : " + partyList.get(0).getPartyAccountBalance());
-        System.out.println("파티 생성일 : " + partyList.get(0).getPartyAccountCreatedAt());
-
-        System.out.println("(D) 모임 삭제        (B) 뒤로가기");
+        System.out.println("모임통장 이름     : " + partyList.get(0).getPartyName());
+        System.out.println("모임통장 종류     : " + partyList.get(0).getCategory());
+        System.out.println("모임통장 계좌번호 : " + partyList.get(0).getPartyAccount());
+        System.out.println("모임통장 계좌 잔액: " + partyList.get(0).getPartyAccountBalance());
+        System.out.println("모임통장 생성일   : " + partyList.get(0).getPartyAccountCreatedAt());
+        System.out.println("---------------------------------------------------------------------");
+        System.out.println("(D)모임 삭제                                              (B)뒤로가기");
+        System.out.println("---------------------------------------------------------------------");
         System.out.print("원하는 메뉴키를 입력하세요:");
         String in = sc.nextLine();
         switch (in) {
@@ -259,8 +271,8 @@ public class PrintPage {
 
     //모임계좌생성, page=6
     public static int createAccountPage() throws IOException, SQLException {
+        System.out.println("=========================== 모임통장 생성 ============================");
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        System.out.println("-----");
         ArrayList<String> arr = PartyService.showCategory();
         for (int i = 0; i < arr.size(); i++) {
             System.out.print(i + 1 + ". ");
@@ -283,9 +295,9 @@ public class PrintPage {
         List<String> userList = UserDao.getUserList();
 
         while (true) {
-            System.out.print("친구를 추가하시겠습니까?[y/n]:");
+            System.out.print("친구를 추가 하시겠습니까? [Y/N] :");
             String in = sc.nextLine();
-            if (in.equals("y")) {
+            if (in.equals("y") | in.equals("Y")) {
                 System.out.print("친구 ID를 입력하세요:");
                 String friendId = sc.nextLine();
                 int index = 1;
@@ -317,17 +329,17 @@ public class PrintPage {
                     System.out.println("없는 아이디입니다.");
                 }
 
-            } else if (in.equals("n")) {
+            } else if (in.equals("n") | in.equals("N")) {
                 break;
             } else {
-                System.out.println("다시 입력해주세요.");
+                System.out.println("[Y/N] 으로 다시 입력해주세요.");
             }
 
         }
 
         PrivacyPolicy.PrivacyTerms();
         while (true) {
-            System.out.print("동의하십니까?(y/n)");
+            System.out.print("이용약관에 동의하십니까? [y/n]");
             String agree = sc.nextLine();
 
             switch (agree) {
@@ -342,10 +354,10 @@ public class PrintPage {
                     return 2;
                 case "n":
                 case "N":
-                    System.out.println("미동의 계설 불가 메인페이지도 이동합니다.");
+                    System.out.println("미동의, 모임통장 계좌 개설 불가로 메인페이지도 이동합니다.");
                     return 2;
                 default:
-                    System.out.println("다시 맞는 키를 입력해주세요");
+                    System.out.println("올바른 메뉴키를 입력해주세요");
 
             }
             // return 2;
@@ -380,7 +392,7 @@ public class PrintPage {
 
 
     public static int signUpPage() {
-
+        System.out.println("============================= 회원가입 ==============================");
         // 중복 및 유효성 검사
         String userId = null;
         String userName = null;
