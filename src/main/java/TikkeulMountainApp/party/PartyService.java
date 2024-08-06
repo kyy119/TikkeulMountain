@@ -473,4 +473,28 @@ public class PartyService {
         }
         return arr;
     }
+    public static void updatePartyActive(String userId, int partyId) {
+        Connection conn = null; // Connection 객체 선언
+        String sql2 = "UPDATE MEMBERSHIP SET party_active = '0' WHERE user_id = ? AND party_id = ?";
+        try {
+            conn = MySqlConnect.MySqlConnect();
+            PreparedStatement pstmt = conn.prepareStatement(sql2);
+            pstmt.setString(1, userId);
+            pstmt.setInt(2, partyId);
+            pstmt.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.setAutoCommit(true);
+                    conn.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
 }
