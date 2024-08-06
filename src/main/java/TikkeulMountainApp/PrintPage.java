@@ -1,7 +1,5 @@
 package TikkeulMountainApp;
 
-import static TikkeulMountainApp.party.PartyService.checkCate;
-import static TikkeulMountainApp.party.PartyService.createParty;
 import static TikkeulMountainApp.party.PartyService.showPartyList;
 import static TikkeulMountainApp.user.UserDao.isUserIdExists;
 
@@ -15,20 +13,15 @@ import TikkeulMountainApp.party.PrivacyPolicy;
 import TikkeulMountainApp.user.LoginChecker;
 import TikkeulMountainApp.user.User;
 import TikkeulMountainApp.user.UserDao;
-import TikkeulMountainApp.user.UserMainApp;
-import TikkeulMountainApp.util.ASCII;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
-import java.util.Set;
 
 public class PrintPage {
 
@@ -332,12 +325,10 @@ public class PrintPage {
 
         }
 
-
-
-            PrivacyPolicy.PrivacyTerms();
-        while(true) {
+        PrivacyPolicy.PrivacyTerms();
+        while (true) {
             System.out.print("동의하십니까?(y/n)");
-        String agree = sc.nextLine();
+            String agree = sc.nextLine();
 
             switch (agree) {
                 case "y":
