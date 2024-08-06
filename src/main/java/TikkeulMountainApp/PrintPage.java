@@ -102,7 +102,7 @@ public class PrintPage {
         }
     }
 
-    public static int myPage() { //마이 페이지, page=3
+    public static int myPage() throws SQLException { //마이 페이지, page=3
         User user = UserDao.getUser(LoginChecker.getUser().getUser_id());
         user.printInfo();
 
@@ -127,22 +127,28 @@ public class PrintPage {
                 return 3;
             case "D":
             case "d": //회원 탈퇴: delete가 아닌 userActive를 0으로 수정
-                System.out.print("정말 탈퇴하시겠습니까?[y/n]");
-                String in2 = sc.nextLine();
-                if (in2.equals("y")) {
-                    String compareString = LoginChecker.getUser().getUser_id() + " 회원탈퇴 하겠습니다.";
-                    System.out.println("따라치세요");
-                    System.out.print(compareString);
-                    String compareStringIn = sc.nextLine();
-                    if (compareString.equals(compareStringIn)) {
-                        UserDao.updateUserActive(LoginChecker.getUser().getUser_id(),
-                            "0"); //userActive를 0으로 바꿔줌
-                        LoginChecker.setUser(null);
-                        return 1;
+                List<Party> partyList = PartyService.showPartyList(LoginChecker.getUser()
+                    .getUser_id());
+                if(partyList.size()==0) {
+                    System.out.print("정말 탈퇴하시겠습니까?[y/n]");
+                    String in2 = sc.nextLine();
+                    if (in2.equals("y")) {
+                        String compareString = LoginChecker.getUser().getUser_id() + " 회원탈퇴 하겠습니다.";
+                        System.out.println("따라치세요");
+                        System.out.print(compareString);
+                        String compareStringIn = sc.nextLine();
+                        if (compareString.equals(compareStringIn)) {
+                            UserDao.updateUserActive(LoginChecker.getUser().getUser_id(),
+                                "0"); //userActive를 0으로 바꿔줌
+                            LoginChecker.setUser(null);
+                            return 1;
+                        }
+                    } else if (in2.equals("n")) {
+                    } else {
+                        System.out.println("다시 입력해주세요.");
                     }
-                } else if (in2.equals("n")) {
-                } else {
-                    System.out.println("다시 입력해주세요.");
+                } else{
+                    System.out.println("회원 탈퇴하려면 가입한 모임을 다 탈퇴해주세요.");
                 }
             default:
                 return 3;
