@@ -45,10 +45,10 @@ public class Party {
     }
 
     public void printParty() {
-        System.out.println("모임이름 : " + partyName);
-        System.out.println("모임통장 계좌번호 : " + partyAccount);
-        System.out.println("모임통장 잔액 : " + partyAccountBalance);
-        System.out.println("매일 납부 금액 : " + dailyPay);
-        System.out.println("모임통장 종류 : " + category);
+        System.out.println("모임이름         : " + partyName);
+        System.out.println("모임통장 계좌번호: " + partyAccount);
+        System.out.println("모임통장 잔액    : " + partyAccountBalance);
+        System.out.println("매일 납부 금액   : " + dailyPay);
+        System.out.println("모임통장 종류    : " + category);
     }
 }

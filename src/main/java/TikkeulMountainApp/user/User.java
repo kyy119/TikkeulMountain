@@ -41,10 +41,10 @@ public class User {
     }
 
     public void printInfo() {
-        System.out.println("아이디: " + userId);
-        System.out.println("이름: " + userName);
-        System.out.println("전화번호: " + userPhone);
-        System.out.println("계좌번호: " + userAccount);
+        System.out.println("아이디   : " + userId);
+        System.out.println("이름     : " + userName);
+        System.out.println("전화번호 : " + userPhone);
+        System.out.println("계좌번호 : " + userAccount);
         System.out.println("계좌 잔액: " + userAccountBalance);
 
     }
