@@ -1,5 +1,6 @@
 package TikkeulMountainApp.fund;
 
+import java.time.DayOfWeek;
 import java.time.Duration;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -38,6 +39,10 @@ public class Scheduler {
 
         if (this.isOverDay(now, nextExecutionTime))
             nextExecutionTime = nextExecutionTime.plusDays(ONE_DAY);
+        else if(this.isWeekend(nextExecutionTime)){
+            System.out.println("주말엔 자동이체 불가");
+            nextExecutionTime = nextExecutionTime.plusDays(ONE_DAY);
+        }
 
         return nextExecutionTime;
     }
@@ -51,4 +56,8 @@ public class Scheduler {
         return duration.getSeconds();
     }
 
+    private boolean isWeekend(ZonedDateTime dateTime) {
+        return dateTime.getDayOfWeek() == DayOfWeek.SATURDAY ||
+            dateTime.getDayOfWeek() == DayOfWeek.SUNDAY;
+    }
 }
