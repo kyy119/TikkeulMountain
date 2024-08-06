@@ -134,31 +134,43 @@ public class PartyService {
         return cpw;
     }
 
-    public static String checkAccount() throws SQLException {
-        Connection conn = MySqlConnect.MySqlConnect();
-        String str = createPartyAccount();
-        String sql = "SELECT party_account FROM PARTY";
-        PreparedStatement pstmt = conn.prepareStatement(sql);
-        ArrayList<String> arr = new ArrayList<>();
-        ResultSet rs = pstmt.executeQuery();
-        while (rs.next()) {
-            arr.add(rs.getString("party_account"));
-        }
-        int index = 0;
-        while (true) {
-            index = 0;
-            for (String str1 : arr) {
-                if (str1.equals(str)) {
-                    str = createPartyAccount();
-                    index = 1;
+    public static String checkAccount() {
+        Connection conn = null;
+        String str = "";
+        try {
+            conn = MySqlConnect.MySqlConnect();
+            str = createPartyAccount();
+            String sql = "SELECT party_account FROM PARTY";
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            ArrayList<String> arr = new ArrayList<>();
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                arr.add(rs.getString("party_account"));
+            }
+            int index = 0;
+            while (true) {
+                index = 0;
+                for (String str1 : arr) {
+                    if (str1.equals(str)) {
+                        str = createPartyAccount();
+                        index = 1;
+                        break;
+                    }
+                }
+                if (index == 0) {
                     break;
                 }
             }
-            if (index == 0) {
-                break;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
             }
         }
-        conn.close();
         return str;
     }
 
@@ -249,13 +261,14 @@ public class PartyService {
                 try {
                     conn.close();
                 } catch (SQLException e) {
+                    e.printStackTrace();
                 }
             }
         }
     }
 
 
-    public static ArrayList<String> showCategory() throws SQLException {
+    public static ArrayList<String> showCategory() {
         Connection conn = null;
         ArrayList<String> arr = new ArrayList<>();
         try {
@@ -267,11 +280,14 @@ public class PartyService {
                 arr.add(rs.getString("category"));
             }
         } catch (SQLException e) {
-            conn.close();
             e.printStackTrace();
         } finally {
-            if (conn != null) {
-                conn.close();
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
         }
         return arr;
@@ -342,123 +358,181 @@ public class PartyService {
 
     }
 
-    public static ArrayList<Party> showPartyList(String userId) throws SQLException {
-        Connection conn = MySqlConnect.MySqlConnect();
-        String sql =
-            "SELECT party_id, party_name, daily_pay, party_active, party_account, party_account_balance, category "
-                + "FROM PARTY " +
-                "WHERE party_id IN " +
-                "(SELECT party_id FROM MEMBERSHIP WHERE user_id = ? and party_active= '1')";
-        PreparedStatement pstmt = conn.prepareStatement(sql);
-        pstmt.setString(1, userId);
-        ResultSet rs = pstmt.executeQuery();
+    public static ArrayList<Party> showPartyList(String userId) {
+        Connection conn = null;
         ArrayList<Party> arr = new ArrayList<>();
-        while (rs.next()) {
-            Party party = new Party();
-            party.setPartyId(rs.getInt("party_id"));
-            party.setPartyName(rs.getString("party_name"));
-            String active = rs.getString("party_active");
-            party.setDailyPay(rs.getInt("daily_pay"));
-            party.setPartyAccount(rs.getString("party_account"));
-            party.setPartyAccountBalance(rs.getInt("party_account_balance"));
-            party.setCategory(rs.getString("category"));
-            if (active.equals("1")) {
-                party.setPartyActive(active);
-                arr.add(party);
-            } else {
-                continue;
+        try {
+            conn = MySqlConnect.MySqlConnect();
+            String sql =
+                "SELECT party_id, party_name, daily_pay, party_active, party_account, party_account_balance, category "
+                    + "FROM PARTY " +
+                    "WHERE party_id IN " +
+                    "(SELECT party_id FROM MEMBERSHIP WHERE user_id = ? and party_active= '1')";
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, userId);
+            ResultSet rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+                Party party = new Party();
+                party.setPartyId(rs.getInt("party_id"));
+                party.setPartyName(rs.getString("party_name"));
+                String active = rs.getString("party_active");
+                party.setDailyPay(rs.getInt("daily_pay"));
+                party.setPartyAccount(rs.getString("party_account"));
+                party.setPartyAccountBalance(rs.getInt("party_account_balance"));
+                party.setCategory(rs.getString("category"));
+                if (active.equals("1")) {
+                    party.setPartyActive(active);
+                    arr.add(party);
+                } else {
+                    continue;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
         }
-        conn.close();
         return arr;
     }
 
-    public static void searchParty(String userId, String str) throws SQLException {
-        Connection conn = MySqlConnect.MySqlConnect();
-        ArrayList<Party> arr = showPartyList(userId);
-        ArrayList<String> arr2 = new ArrayList<>();
-        for (Party party : arr) {
-            if (party.getPartyName().contains(str)) {
-                arr2.add(party.getPartyName());
+    public static void searchParty(String userId, String str) {
+        Connection conn = null;
+        try {
+            conn = MySqlConnect.MySqlConnect();
+            ArrayList<Party> arr = showPartyList(userId);
+            ArrayList<String> arr2 = new ArrayList<>();
+            for (Party party : arr) {
+                if (party.getPartyName().contains(str)) {
+                    arr2.add(party.getPartyName());
+                }
+            }
+            if (arr2.size() == 0) {
+                System.out.println("검색 내용이 없습니다.");
+            } else {
+                for (String str1 : arr2) {
+                    System.out.println(str1);
+                }
+            }
+        } finally {
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
         }
-        if (arr2.size() == 0) {
-            System.out.println("검색 내용이 없습니다.");
-        } else {
-            for (String str1 : arr2) {
-                System.out.println(str1);
-            }
-        }
-        conn.close();
     }
 
-    public static List<Party> showPartyDetail(int partyId) throws SQLException {
-        Connection conn = MySqlConnect.MySqlConnect();
-        String sql = "SELECT a.user_id, a.party_active, "
-            + "b.party_name, b.category, b.party_account, b.party_account_created_at, b.party_account_balance "
-            + "from MEMBERSHIP as a"
-            + " INNER JOIN PARTY as b ON a.party_id = b.party_id"
-            + " WHERE b.party_id = ?;";
-        PreparedStatement pstmt = conn.prepareStatement(sql);
-        pstmt.setInt(1, partyId);
-        ResultSet rs = pstmt.executeQuery();
+    public static List<Party> showPartyDetail(int partyId) {
+        Connection conn = null;
         ArrayList<Party> arrayList = new ArrayList<>();
-        while (rs.next()) {
-            String userId = rs.getString("user_id");
-            String partyActive = rs.getString("party_active");
-            String partyName = rs.getString("party_name");
-            String category = rs.getString("category");
-            String partyAccount = rs.getString("party_account");
-            String partyAccountCreatedAt = rs.getString("party_account_created_at");
-            int partyAccountBalance = rs.getInt("party_account_balance");
-            Party party = new Party(userId, partyActive, partyName, category, partyAccount,
-                partyAccountCreatedAt, partyAccountBalance);
-            arrayList.add(party);
+        try {
+            conn = MySqlConnect.MySqlConnect();
+            String sql = "SELECT a.user_id, a.party_active, "
+                + "b.party_name, b.category, b.party_account, b.party_account_created_at, b.party_account_balance "
+                + "from MEMBERSHIP as a"
+                + " INNER JOIN PARTY as b ON a.party_id = b.party_id"
+                + " WHERE b.party_id = ?;";
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, partyId);
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                String userId = rs.getString("user_id");
+                String partyActive = rs.getString("party_active");
+                String partyName = rs.getString("party_name");
+                String category = rs.getString("category");
+                String partyAccount = rs.getString("party_account");
+                String partyAccountCreatedAt = rs.getString("party_account_created_at");
+                int partyAccountBalance = rs.getInt("party_account_balance");
+                Party party = new Party(userId, partyActive, partyName, category, partyAccount,
+                    partyAccountCreatedAt, partyAccountBalance);
+                arrayList.add(party);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
-        conn.close();
         return arrayList;
     }
 
-    public static boolean deleteParty(int id) throws SQLException {
-        int price = checkZero(id);
-        if (price == -1) {
-            System.out.println("비정상적인 접근.");
-            return false;
-        } else if (price > 0) {
-            System.out.println("잔액이 있습니다");
-            return false;
+    public static boolean deleteParty(int id) {
+        Connection conn = null;
+        try {
+            int price = checkZero(id);
+            if (price == -1) {
+                System.out.println("비정상적인 접근.");
+                return false;
+            } else if (price > 0) {
+                System.out.println("잔액이 있습니다");
+                return false;
+            }
+            conn = MySqlConnect.MySqlConnect();
+            String sql = "UPDATE MEMBERSHIP SET party_active = '0' WHERE party_id = ?";
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, id);
+            pstmt.executeUpdate();
+            sql = "UPDATE PARTY SET party_active = '0' WHERE party_id = ?";
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, id);
+            pstmt.executeUpdate();
+            pstmt.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
-        Connection conn = MySqlConnect.MySqlConnect();
-        String sql = "UPDATE MEMBERSHIP SET party_active = '0' WHERE party_id = ?";
-        PreparedStatement pstmt = conn.prepareStatement(sql);
-        pstmt.setInt(1, id);
-        pstmt.executeUpdate();
-        sql = "UPDATE PARTY SET party_active = '0' WHERE party_id = ?";
-        pstmt = conn.prepareStatement(sql);
-        pstmt.setInt(1, id);
-        pstmt.executeUpdate();
-        pstmt.close();
-        conn.close();
         return true;
     }
 
-    public static int checkZero(int id) throws SQLException {
-        Connection conn = MySqlConnect.MySqlConnect();
-        //select party_account_balance from party where party_name = '김나나';
-        String sql = "SELECT party_account_balance FROM party WHERE party_id = ?";
-        PreparedStatement pstmt = conn.prepareStatement(sql);
-        pstmt.setInt(1, id);
+    public static int checkZero(int id) {
+        Connection conn = null;
         int price = -1;
-        ResultSet rs = pstmt.executeQuery();
-        if (rs.next()) {
-            price = rs.getInt("party_account_balance");
+        try {
+            conn = MySqlConnect.MySqlConnect();
+            String sql = "SELECT party_account_balance FROM party WHERE party_id = ?";
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, id);
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                price = rs.getInt("party_account_balance");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
-        conn.close();
         return price;
     }
 
 
-    public static Party getParty(int id) throws SQLException {
+    public static Party getParty(int id) {
         Connection conn = null;
         Party party = new Party();
         try {
@@ -476,28 +550,44 @@ public class PartyService {
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
-            if (conn != null) {
-                conn.close();
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
         }
         return party;
 
     }
 
-    public static ArrayList<MemberShip> getMemberList() throws SQLException {
-        Connection conn = MySqlConnect.MySqlConnect();
-        String sql = "SELECT user_id, party_id, daily_pay FROM MEMBERSHIP WHERE user_active = '1' AND party_active = '1'";
-        PreparedStatement pstmt = conn.prepareStatement(sql);
-        ResultSet rs = pstmt.executeQuery();
+    public static ArrayList<MemberShip> getMemberList() {
+        Connection conn = null;
         ArrayList<MemberShip> arr = new ArrayList<>();
-        while (rs.next()) {
-            MemberShip memberShip = new MemberShip();
-            memberShip.setUserId(rs.getString("user_id"));
-            memberShip.setPartyId(rs.getInt("party_id"));
-            memberShip.setDailyPay(rs.getInt("daily_pay"));
-            arr.add(memberShip);
+        try {
+            conn = MySqlConnect.MySqlConnect();
+            String sql = "SELECT user_id, party_id, daily_pay FROM MEMBERSHIP WHERE user_active = '1' AND party_active = '1'";
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                MemberShip memberShip = new MemberShip();
+                memberShip.setUserId(rs.getString("user_id"));
+                memberShip.setPartyId(rs.getInt("party_id"));
+                memberShip.setDailyPay(rs.getInt("daily_pay"));
+                arr.add(memberShip);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
-        conn.close();
         return arr;
     }
 
