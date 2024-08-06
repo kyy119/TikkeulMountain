@@ -155,11 +155,15 @@ public class PrintPage {
         System.out.print("당일 납부자: ");
         List<String> userList = TransactionDao.getDailyContribution(party.getPartyId());
 
-        for(int i=0;i<userList.size();i++){
-            if(i==userList.size()-1){
-                System.out.println(userList.get(i));
-            }else {
-                System.out.print(userList.get(i)+", ");
+        if(userList.size()==0){
+            System.out.println("없음.");
+        } else {
+            for (int i = 0; i < userList.size(); i++) {
+                if (i == userList.size() - 1) {
+                    System.out.println(userList.get(i));
+                } else {
+                    System.out.print(userList.get(i) + ", ");
+                }
             }
         }
         System.out.println("---------------");

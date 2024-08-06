@@ -332,7 +332,7 @@ public class PartyService {
             "SELECT party_id, party_name, daily_pay, party_active, party_account, party_account_balance, category "
                 + "FROM PARTY " +
                 "WHERE party_id IN " +
-                "(SELECT party_id FROM MEMBERSHIP WHERE user_id = ?)";
+                "(SELECT party_id FROM MEMBERSHIP WHERE user_id = ? and party_active= '1')";
         PreparedStatement pstmt = conn.prepareStatement(sql);
         pstmt.setString(1, userId);
         ResultSet rs = pstmt.executeQuery();
