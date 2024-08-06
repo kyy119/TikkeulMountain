@@ -7,45 +7,45 @@ import lombok.Setter;
 @Data
 public class User {
 
-    String user_id;
-    String user_name;
-    String user_password;
-    String user_phone;
-    String user_account;
-    int user_account_balance;
-    String user_active;
+    String userId;
+    String userName;
+    String userPassword;
+    String userPhone;
+    String userAccount;
+    int userAccountBalance;
+    String userActive;
 
     public User() {
     }
 
-    public User(String user_id, String user_name, String user_password, String user_phone,
-        String user_account, int user_account_balance, String user_active) {
-        this.user_id = user_id;
-        this.user_name = user_name;
-        this.user_password = user_password;
-        this.user_phone = user_phone;
-        this.user_account = user_account;
-        this.user_account_balance = user_account_balance;
-        this.user_active = user_active;
+    public User(String userId, String userName, String userPassword, String userPhone,
+        String userAccount, int userAccountBalance, String userActive) {
+        this.userId = userId;
+        this.userName = userName;
+        this.userPassword = userPassword;
+        this.userPhone = userPhone;
+        this.userAccount = userAccount;
+        this.userAccountBalance = userAccountBalance;
+        this.userActive = userActive;
 
 
     }
 
-    public User(String user_id, String user_name, String user_password, String user_phone,
+    public User(String userId, String userName, String userPassword, String userPhone,
         String user_account) {
-        this.user_id = user_id;
-        this.user_name = user_name;
-        this.user_password = user_password;
-        this.user_phone = user_phone;
-        this.user_account = user_account;
+        this.userId = userId;
+        this.userName = userName;
+        this.userPassword = userPassword;
+        this.userPhone = userPhone;
+        this.userAccount = user_account;
     }
 
     public void printInfo() {
-        System.out.println("아이디: " + user_id);
-        System.out.println("이름: " + user_name);
-        System.out.println("전화번호: " + user_phone);
-        System.out.println("계좌번호: " + user_account);
-        System.out.println("계좌 잔액: " + user_account_balance);
+        System.out.println("아이디: " + userId);
+        System.out.println("이름: " + userName);
+        System.out.println("전화번호: " + userPhone);
+        System.out.println("계좌번호: " + userAccount);
+        System.out.println("계좌 잔액: " + userAccountBalance);
 
     }
 
