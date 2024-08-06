@@ -81,7 +81,7 @@ public class PrintPage {
         System.out.println("(M)마이페이지                                            (O)로그아웃");
         System.out.println("                                                         (C)모임생성");
         System.out.println("---------------------------------------------------------------------");
-        System.out.println("원하는 메뉴키를 입력하세요: ");
+        System.out.print("원하는 메뉴키를 입력하세요: ");
         String in = sc.nextLine();
         switch (in) {
             case "M":
@@ -114,7 +114,7 @@ public class PrintPage {
         user.printInfo();
         System.out.println("---------------------------------------------------------------------");
         System.out.println("                                                     (U)비밀번호 수정");
-        System.out.println("(B)뒤로가기                                                   (D)탈퇴");
+        System.out.println("(D)탈퇴                                                   (B)뒤로가기");
         System.out.println("---------------------------------------------------------------------");
         System.out.print("원하는 메뉴키를 입력하세요: ");
         String in = sc.nextLine();
