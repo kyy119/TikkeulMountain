@@ -478,7 +478,7 @@ public class PartyService {
                 System.out.println("비정상적인 접근.");
                 return false;
             } else if (price > 0) {
-                System.out.println("잔액이 있습니다");
+                System.out.println("잔액이 있습니다. 모임 통장을 삭제하려면 통장의 잔액을 비워주세요.");
                 return false;
             }
             conn = MySqlConnect.MySqlConnect();
@@ -491,6 +491,7 @@ public class PartyService {
             pstmt.setInt(1, id);
             pstmt.executeUpdate();
             pstmt.close();
+            return true;
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
@@ -502,7 +503,7 @@ public class PartyService {
                 e.printStackTrace();
             }
         }
-        return true;
+        return false;
     }
 
     public static int checkZero(int id) {
