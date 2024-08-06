@@ -19,16 +19,16 @@ public class PartyService {
 
     public static String checkCate(String cate) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        while (true){
+        while (true) {
             try {
-                if(Integer.parseInt(cate) < 1 || Integer.parseInt(cate) >= 5){
+                if (Integer.parseInt(cate) < 1 || Integer.parseInt(cate) >= 5) {
                     System.out.println("1 ~ 4 숫자만 입력하세요");
                     System.out.print("카테고리 선택 : ");
                     cate = br.readLine();
-                }else{
+                } else {
                     return cate;
                 }
-            }catch (NumberFormatException e){
+            } catch (NumberFormatException e) {
                 System.out.println("1 ~ 4 숫자만 입력하세요");
                 System.out.print("카테고리 선택 : ");
                 cate = br.readLine();
@@ -96,6 +96,7 @@ public class PartyService {
             }
         }
     }
+
     public static String checkDailyPay(String dailyPay) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         while (true) {
@@ -157,6 +158,7 @@ public class PartyService {
                 break;
             }
         }
+        conn.close();
         return str;
     }
 
@@ -253,7 +255,7 @@ public class PartyService {
     }
 
 
-    public static ArrayList<String> showCategory() {
+    public static ArrayList<String> showCategory() throws SQLException {
         Connection conn = null;
         ArrayList<String> arr = new ArrayList<>();
         try {
@@ -265,7 +267,12 @@ public class PartyService {
                 arr.add(rs.getString("category"));
             }
         } catch (SQLException e) {
+            conn.close();
             e.printStackTrace();
+        } finally {
+            if (conn != null) {
+                conn.close();
+            }
         }
         return arr;
     }
@@ -362,6 +369,7 @@ public class PartyService {
                 continue;
             }
         }
+        conn.close();
         return arr;
     }
 
@@ -381,6 +389,7 @@ public class PartyService {
                 System.out.println(str1);
             }
         }
+        conn.close();
     }
 
     public static List<Party> showPartyDetail(int partyId) throws SQLException {
@@ -406,7 +415,7 @@ public class PartyService {
                 partyAccountCreatedAt, partyAccountBalance);
             arrayList.add(party);
         }
-
+        conn.close();
         return arrayList;
     }
 
@@ -429,6 +438,7 @@ public class PartyService {
         pstmt.setInt(1, id);
         pstmt.executeUpdate();
         pstmt.close();
+        conn.close();
         return true;
     }
 
@@ -443,14 +453,16 @@ public class PartyService {
         if (rs.next()) {
             price = rs.getInt("party_account_balance");
         }
+        conn.close();
         return price;
     }
 
 
-    public static Party getParty(int id) {
+    public static Party getParty(int id) throws SQLException {
+        Connection conn = null;
         Party party = new Party();
         try {
-            Connection conn = MySqlConnect.MySqlConnect();
+            conn = MySqlConnect.MySqlConnect();
             String sql = "SELECT party_name, party_account, party_account_balance,party_account_password FROM PARTY WHERE party_id = ?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setInt(1, id);
@@ -463,6 +475,10 @@ public class PartyService {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            if (conn != null) {
+                conn.close();
+            }
         }
         return party;
 
@@ -481,6 +497,7 @@ public class PartyService {
             memberShip.setDailyPay(rs.getInt("daily_pay"));
             arr.add(memberShip);
         }
+        conn.close();
         return arr;
     }
 
