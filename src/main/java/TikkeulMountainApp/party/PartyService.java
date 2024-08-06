@@ -376,7 +376,7 @@ public class PartyService {
 
     public static List<Party> showPartyDetail(int partyId) throws SQLException {
         Connection conn = MySqlConnect.MySqlConnect();
-        String sql = "SELECT a.user_id, "
+        String sql = "SELECT a.user_id, a.party_active, "
             + "b.party_name, b.category, b.party_account, b.party_account_created_at, b.party_account_balance "
             + "from MEMBERSHIP as a"
             + " INNER JOIN PARTY as b ON a.party_id = b.party_id"
@@ -387,12 +387,13 @@ public class PartyService {
         ArrayList<Party> arrayList = new ArrayList<>();
         while (rs.next()) {
             String userId = rs.getString("user_id");
+            String partyActive = rs.getString("party_active");
             String partyName = rs.getString("party_name");
             String category = rs.getString("category");
             String partyAccount = rs.getString("party_account");
             String partyAccountCreatedAt = rs.getString("party_account_created_at");
             int partyAccountBalance = rs.getInt("party_account_balance");
-            Party party = new Party(userId, partyName, category, partyAccount,
+            Party party = new Party(userId, partyActive, partyName, category, partyAccount,
                 partyAccountCreatedAt, partyAccountBalance);
             arrayList.add(party);
         }
@@ -437,7 +438,7 @@ public class PartyService {
     }
 
 
-    public static Party getParty(int id){
+    public static Party getParty(int id) {
         Party party = new Party();
         try {
             Connection conn = MySqlConnect.MySqlConnect();
@@ -451,7 +452,7 @@ public class PartyService {
                 party.setPartyAccountBalance(rs.getInt("party_account_balance"));
                 party.setPartyAccountPassword(rs.getString("party_account_password"));
             }
-        }catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return party;
@@ -473,6 +474,7 @@ public class PartyService {
         }
         return arr;
     }
+
     public static void updatePartyActive(String userId, int partyId) {
         Connection conn = null; // Connection 객체 선언
         String sql2 = "UPDATE MEMBERSHIP SET party_active = '0' WHERE user_id = ? AND party_id = ?";
