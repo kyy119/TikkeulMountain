@@ -22,6 +22,16 @@ public class Main {
 
         int page = 1;
         while(true){
+            System.out.println();
+            System.out.println();
+            System.out.println();
+            System.out.println();
+            System.out.println();
+            System.out.println();
+            System.out.println();
+            System.out.println();
+            System.out.println();
+            System.out.println();
             if(page==0){ //종료
                 System.out.println("시스템을 종료합니다.");
                 break;
