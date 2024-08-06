@@ -22,11 +22,11 @@ public class UserDao {
             conn = MySqlConnect.MySqlConnect();
             PreparedStatement pstmt = conn.prepareStatement(sql);
 
-            pstmt.setString(1, user.getUser_id());
-            pstmt.setString(2, user.getUser_name());
-            pstmt.setString(3, user.getUser_password());
-            pstmt.setString(4, user.getUser_phone());
-            pstmt.setString(5, user.getUser_account());
+            pstmt.setString(1, user.getUserId());
+            pstmt.setString(2, user.getUserName());
+            pstmt.setString(3, user.getUserPassword());
+            pstmt.setString(4, user.getUserPhone());
+            pstmt.setString(5, user.getUserAccount());
             pstmt.setInt(6, 100000);
             pstmt.setString(7, "1");
 
@@ -99,13 +99,13 @@ public class UserDao {
             ResultSet rs = pstmt.executeQuery();
             if (rs.next()) {
                 User user = new User();
-                user.setUser_id(rs.getString("user_id"));
-                user.setUser_name(rs.getString("user_name"));
-                user.setUser_password(rs.getString("user_password"));
-                user.setUser_phone(rs.getString("user_phone"));
-                user.setUser_account(rs.getString("user_account"));
-                user.setUser_account_balance(rs.getInt("user_account_balance"));
-                user.setUser_active(rs.getString("user_active"));
+                user.setUserId(rs.getString("user_id"));
+                user.setUserName(rs.getString("user_name"));
+                user.setUserPassword(rs.getString("user_password"));
+                user.setUserPhone(rs.getString("user_phone"));
+                user.setUserAccount(rs.getString("user_account"));
+                user.setUserAccountBalance(rs.getInt("user_account_balance"));
+                user.setUserActive(rs.getString("user_active"));
                 LoginChecker.setUser(user);
                 return true;
             } else {

@@ -181,7 +181,7 @@ public class PartyService {
         try {
             conn = MySqlConnect.MySqlConnect();
             String sql = "insert into MEMBERSHIP ( role, user_id, party_id, user_active, party_active, daily_pay) values ( ? , ? , ? ,? ,?, ?)";
-            MemberShip memberShip = new MemberShip("1", LoginChecker.getUser().getUser_id(), id,
+            MemberShip memberShip = new MemberShip("1", LoginChecker.getUser().getUserId(), id,
                 "1", "1", dailyPay);
             PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             pstmt.setString(1, memberShip.getRole());

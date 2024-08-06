@@ -66,7 +66,7 @@ public class PrintPage {
     }
 
     public static int mainPage() throws SQLException { //메인 페이지, page=2
-        ArrayList<Party> partyArrayList = showPartyList(LoginChecker.getUser().getUser_id());
+        ArrayList<Party> partyArrayList = showPartyList(LoginChecker.getUser().getUserId());
         System.out.println("======================== 나의 모임 ========================");
         for (int i = 0; i < partyArrayList.size(); i++) {
             System.out.print(i + 1 + ". ");
@@ -104,7 +104,7 @@ public class PrintPage {
     }
 
     public static int myPage() throws SQLException { //마이 페이지, page=3
-        User user = UserDao.getUser(LoginChecker.getUser().getUser_id());
+        User user = UserDao.getUser(LoginChecker.getUser().getUserId());
         user.printInfo();
 
         System.out.println("(B) 뒤로가기                  (U)비밀번호 수정 (D)탈퇴");
@@ -118,10 +118,10 @@ public class PrintPage {
             case "u":
                 System.out.print("본인 확인을 위해 비밀번호를 입력하세요:");
                 String passWord = sc.nextLine();
-                if (passWord.equals(LoginChecker.getUser().getUser_password())) {
+                if (passWord.equals(LoginChecker.getUser().getUserPassword())) {
                     System.out.print("바꿀 비밀번호를 입력하세요.");
                     String newPassword = sc.nextLine();
-                    UserDao.updateUserPassword(LoginChecker.getUser().getUser_id(), newPassword);
+                    UserDao.updateUserPassword(LoginChecker.getUser().getUserId(), newPassword);
                 } else {
                     System.out.println("비밀번호가 틀렸습니다.");
                 }
@@ -129,17 +129,17 @@ public class PrintPage {
             case "D":
             case "d": //회원 탈퇴: delete가 아닌 userActive를 0으로 수정
                 List<Party> partyList = PartyService.showPartyList(LoginChecker.getUser()
-                    .getUser_id());
+                    .getUserId());
                 if (partyList.size() == 0) {
                     System.out.print("정말 탈퇴하시겠습니까?[y/n]");
                     String in2 = sc.nextLine();
                     if (in2.equals("y")) {
-                        String compareString = LoginChecker.getUser().getUser_id() + " 회원탈퇴 하겠습니다.";
+                        String compareString = LoginChecker.getUser().getUserId() + " 회원탈퇴 하겠습니다.";
                         System.out.println("따라치세요");
                         System.out.print(compareString);
                         String compareStringIn = sc.nextLine();
                         if (compareString.equals(compareStringIn)) {
-                            UserDao.updateUserActive(LoginChecker.getUser().getUser_id(),
+                            UserDao.updateUserActive(LoginChecker.getUser().getUserId(),
                                 "0"); //userActive를 0으로 바꿔줌
                             LoginChecker.setUser(null);
                             return 1;
@@ -237,7 +237,7 @@ public class PrintPage {
             case "d":
             case "D":
                 //방장일때
-                if (TransactionDao.getRole(LoginChecker.getUser().getUser_id(), party.getPartyId())
+                if (TransactionDao.getRole(LoginChecker.getUser().getUserId(), party.getPartyId())
                     .equals("1")) {
                     if (PartyService.deleteParty(party.getPartyId())) {
                         return 2;
@@ -245,7 +245,7 @@ public class PrintPage {
                         return 5;
                     }
                 } else {
-                    PartyService.updatePartyActive(LoginChecker.getUser().getUser_id(),
+                    PartyService.updatePartyActive(LoginChecker.getUser().getUserId(),
                         party.getPartyId());
                     return 2;
                 }
@@ -290,7 +290,7 @@ public class PrintPage {
                 String friendId = sc.nextLine();
                 int index = 1;
                 for (int i = 0; i < userList.size(); i++) {
-                    if (friendId.equals(LoginChecker.getUser().getUser_id())) {
+                    if (friendId.equals(LoginChecker.getUser().getUserId())) {
                         System.out.println("본인은 입력이 불가능합니다.");
                         index = 0;
                         break;
@@ -356,7 +356,7 @@ public class PrintPage {
     //입금페이지, page=7
     public static int depositPage() {
 
-        int newPartyBalance = FundService.deposit(LoginChecker.getUser().getUser_id(),
+        int newPartyBalance = FundService.deposit(LoginChecker.getUser().getUserId(),
             PartyChecker.getParty().getPartyId());
         PartyChecker.getParty().setPartyAccountBalance(newPartyBalance);
         return 4;
@@ -364,13 +364,13 @@ public class PrintPage {
 
     public static int withdrawPage() throws SQLException {
 
-        String userRole = TransactionDao.getRole(LoginChecker.getUser().getUser_id(),
+        String userRole = TransactionDao.getRole(LoginChecker.getUser().getUserId(),
             PartyChecker.getParty()
                 .getPartyId());
         if (userRole.equals("0")) {
             System.out.println("방장만 출금 가능합니다.");
         } else {
-            int newPartyBalance = FundService.withdraw(LoginChecker.getUser().getUser_id(),
+            int newPartyBalance = FundService.withdraw(LoginChecker.getUser().getUserId(),
                 PartyChecker.getParty().getPartyId());
             PartyChecker.getParty().setPartyAccountBalance(newPartyBalance);
 
