@@ -32,12 +32,12 @@ public class Transaction {
     public void printTransaction() {
         if (transferIndex.equals("1")) {
             System.out.println(
-                "거래시각:" + transferDate + "거래금액:" + transferAmount + "거래방식: 입금" + "보내는 사람:" + userId
-                    + "잔액:" + transferBalance);
+                "거래시각: " + transferDate + " | 거래금액:" + transferAmount + " | 거래방식: 입금"
+                    + " | 보내는 사람: " + userId + " | 잔액:" + transferBalance);
         } else if (transferIndex.equals("2")) {
             System.out.println(
-                "거래시각:" + transferDate + "거래금액:" + transferAmount + "거래방식: 출금"
-                    + "받는 사람:" + userId + "잔액:" + transferBalance);
+                "거래시각: " + transferDate + " | 거래금액:" + transferAmount + " | 거래방식: 출금"
+                    + " | 받는 사람:" + userId + " | 잔액:" + transferBalance + " | 출금메모: " + transferMemo);
         } else {
             System.out.println("거래방식을 명확히 하세요.");
         }
