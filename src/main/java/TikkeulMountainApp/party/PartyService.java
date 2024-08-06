@@ -17,23 +17,23 @@ import java.util.List;
 
 public class PartyService {
 
-    public static int checkCate(String cate) throws IOException {
+    public static String checkCate(String cate) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        try {
-            cate = br.readLine();
-            while (Integer.parseInt(cate) < 1 || Integer.parseInt(cate) >= 5) {
+        while (true){
+            try {
+                if(Integer.parseInt(cate) < 1 || Integer.parseInt(cate) >= 5){
+                    System.out.println("1 ~ 4 숫자만 입력하세요");
+                    System.out.print("카테고리 선택 : ");
+                    cate = br.readLine();
+                }else{
+                    return cate;
+                }
+            }catch (NumberFormatException e){
                 System.out.println("1 ~ 4 숫자만 입력하세요");
                 System.out.print("카테고리 선택 : ");
                 cate = br.readLine();
             }
-
-        } catch (NumberFormatException e) {
-            System.out.println("1 ~ 4 숫자만 입력하세요");
-            System.out.print("카테고리 선택 : ");
-            cate = br.readLine();
-
         }
-        return Integer.parseInt(cate);
 
     }
 
@@ -96,15 +96,24 @@ public class PartyService {
             }
         }
     }
-
     public static String checkDailyPay(String dailyPay) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        while (Integer.parseInt(dailyPay) > 1000 || Integer.parseInt(dailyPay) <= 0) {
-            System.out.println("매일 납부 금액은 1 ~ 1000원 사이로 지정 가능합니다.");
-            System.out.print("납부 금액 입력 : ");
-            dailyPay = br.readLine();
+        while (true) {
+            try {
+                int pay = Integer.parseInt(dailyPay);
+                if (pay > 1000 || pay <= 0) {
+                    System.out.println("매일 납부 금액은 1 ~ 1000원 사이로 지정 가능합니다.");
+                    System.out.print("납부 금액 입력 : ");
+                    dailyPay = br.readLine();
+                } else {
+                    return dailyPay;
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("숫자만 입력해주세요.");
+                System.out.print("납부 금액 입력 : ");
+                dailyPay = br.readLine();
+            }
         }
-        return dailyPay;
     }
 
     public static String checkPw(String pw) throws IOException {

@@ -1,5 +1,6 @@
 package TikkeulMountainApp;
 
+import static TikkeulMountainApp.party.PartyService.checkCate;
 import static TikkeulMountainApp.party.PartyService.createParty;
 import static TikkeulMountainApp.party.PartyService.showPartyList;
 import static TikkeulMountainApp.user.UserDao.isUserIdExists;
@@ -266,7 +267,7 @@ public class PrintPage {
         }
         System.out.print("카테고리 선택 : ");
         String cate = br.readLine();
-
+        cate = PartyService.checkCate(cate);
         System.out.print("모임 이름 : ");
         String name = br.readLine();
         System.out.print("매일 납부 예정 금액 : ");
