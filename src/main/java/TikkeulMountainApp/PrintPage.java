@@ -321,24 +321,34 @@ public class PrintPage {
             } else {
                 System.out.println("다시 입력해주세요.");
             }
+
         }
-        PrivacyPolicy.PrivacyTerms();
-        System.out.print("동의하십니까?(y/n)");
-        String agree = sc.nextLine();
-        switch (agree) {
-            case "y":
-            case "Y":
-                int dailyPayInt = Integer.parseInt(dailyPay);
-                ArrayList<String> arrayList = new ArrayList<>(friendIDs);
-                PartyService.createParty(arr.get(Integer.parseInt(cate) - 1), name, dailyPayInt, pw,
-                    arrayList);
-                return 2;
-            case "n":
-            case "N":
-                System.out.println("미동의 계설 불가 메인페이지도 이동합니다.");
-                return 2;
-        }
-        return 2;
+
+            while(true) {
+                PrivacyPolicy.PrivacyTerms();
+                System.out.print("동의하십니까?(y/n)");
+                String agree = sc.nextLine();
+
+                switch (agree) {
+                    case "y":
+                    case "Y":
+                        int dailyPayInt = Integer.parseInt(dailyPay);
+                        ArrayList<String> arrayList = new ArrayList<>(friendIDs);
+                        PartyService.createParty(arr.get(Integer.parseInt(cate) - 1), name,
+                            dailyPayInt,
+                            pw,
+                            arrayList);
+                        return 2;
+                    case "n":
+                    case "N":
+                        System.out.println("미동의 계설 불가 메인페이지도 이동합니다.");
+                        return 2;
+                    default:
+                        System.out.println("다시 맞는 키를 입력해주세요");
+
+                }
+            }
+          // return 2;
 
     }
 
