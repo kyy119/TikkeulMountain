@@ -13,6 +13,7 @@ import java.util.Map;
 
 public class TransactionDao {
 
+    //거래 객체를 db에 저장
     public static void addTransaction(Transaction transaction) {
         Connection conn = null;
         String sql =
@@ -49,6 +50,7 @@ public class TransactionDao {
         }
     }
 
+    //모임에서 멤버별 총 납부금액 메소드
     public static Map<String, Integer> getMemberContributions(int partyId) {
         Connection conn = null;
         String sql = "SELECT user_id,SUM(transfer_amount) FROM ACCOUNT_HISTORY WHERE PARTY_ID = ? AND TRANSFER_INDEX='1' GROUP BY user_id";
@@ -83,6 +85,7 @@ public class TransactionDao {
 
     }
 
+    //모임별 거래내역 메소드
     public static List<Transaction> getPartyTransaction(int partyId) {
         Connection conn = null;
         String sql = "select transfer_date,transfer_amount,transfer_balance,transfer_index,transfer_memo,user_id from account_history where party_id=? ";
@@ -123,6 +126,7 @@ public class TransactionDao {
         return null;
     }
 
+    //당일 납부자 조희 메소드
     public static List<String> getDailyContribution(int partyId) {
         Connection conn = null;
         String sql = "select user_id from account_history where date(transfer_date) = curdate() and party_id = ? group by user_id";
@@ -154,6 +158,7 @@ public class TransactionDao {
 
     }
 
+    //모임 역할 조회 메소드
     public static String getRole(String userId,int partyId){
         Connection conn = null;
         String sql = "select role from membership where user_id = ? and party_id = ?";

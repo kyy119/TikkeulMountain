@@ -374,6 +374,7 @@ public class PrintPage {
         return 4;
     }
 
+    //출금페이지, page=8
     public static int withdrawPage() throws SQLException {
 
         String userRole = TransactionDao.getRole(LoginChecker.getUser().getUserId(),
