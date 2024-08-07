@@ -78,8 +78,8 @@ public class PrintPage {
 
         }
         System.out.println("---------------------------------------------------------------------");
-        System.out.println("(M)마이페이지                                            (O)로그아웃");
-        System.out.println("                                                         (C)모임생성");
+        System.out.println("(M)마이페이지                                            (C)모임생성");
+        System.out.println("                                                         (O)로그아웃");
         System.out.println("---------------------------------------------------------------------");
         System.out.print("원하는 메뉴키를 입력하세요: ");
         String in = sc.nextLine();
@@ -259,6 +259,7 @@ public class PrintPage {
                 } else {
                     PartyService.updatePartyActive(LoginChecker.getUser().getUserId(),
                         party.getPartyId());
+                    System.out.println("모임 탈퇴가 완료되었습니다.");
                     return 2;
                 }
 
