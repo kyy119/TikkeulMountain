@@ -17,6 +17,7 @@ import java.util.List;
 
 public class PartyService {
 
+    //카테고리 선택 예외 처리
     public static String checkCate(String cate) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         while (true) {
@@ -96,7 +97,7 @@ public class PartyService {
             }
         }
     }
-
+    //매일 납부 금액 확인
     public static String checkDailyPay(String dailyPay) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         while (true) {
@@ -116,7 +117,7 @@ public class PartyService {
             }
         }
     }
-
+    //계좌 비밀번호 유효성 검사
     public static String checkPw(String pw) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         while (pw.length() != 4) {
@@ -133,7 +134,7 @@ public class PartyService {
         System.out.println("비밀번호가 확인되었습니다.");
         return cpw;
     }
-
+    //계좌 중복 검사
     public static String checkAccount() {
         Connection conn = null;
         String str = "";
@@ -173,21 +174,21 @@ public class PartyService {
         }
         return str;
     }
-
+    //계좌 랜덤 생성
     public static String createPartyAccount() {
         String str = "3333-10-388";
         int a = (int) (Math.random() * 8999) + 1000;
         str += Integer.toString(a);
         return str;
     }
-
+    //모임 계좌 생성일 생성
     public static String partyAccountDate() {
         Date now = new Date();
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String str = simpleDateFormat.format(now);
         return str;
     }
-
+    //membership 테이블에 방장 넣기
     public static void insertMemberShip(int id, int dailyPay) {
         Connection conn = null;
         try {
@@ -228,7 +229,7 @@ public class PartyService {
             }
         }
     }
-
+    //membership 테이블에 일반 멤버 넣기
     public static void insertNormalMember(int id, List<String> strings, int dailyPay) {
         Connection conn = null;
         try {
@@ -267,7 +268,7 @@ public class PartyService {
         }
     }
 
-
+    //카테고리 선택 보여주기
     public static ArrayList<String> showCategory() {
         Connection conn = null;
         ArrayList<String> arr = new ArrayList<>();
@@ -293,7 +294,7 @@ public class PartyService {
         return arr;
     }
 
-
+    //모임 통장 잔액 수정
     public static void updatePartyBalance(int partyId, int amount) {
         Connection conn = null;
 
@@ -323,7 +324,7 @@ public class PartyService {
             }
         }
     }
-
+    //모임 계좌 잔액 가져오기
     public static int getPartyBalance(int partyId) {
         Connection conn = null;
 
@@ -357,7 +358,7 @@ public class PartyService {
         return 0;
 
     }
-
+    //들어가 있는 모임 리스트 가져오기
     public static ArrayList<Party> showPartyList(String userId) {
         Connection conn = null;
         ArrayList<Party> arr = new ArrayList<>();
@@ -401,36 +402,7 @@ public class PartyService {
         }
         return arr;
     }
-
-    public static void searchParty(String userId, String str) {
-        Connection conn = null;
-        try {
-            conn = MySqlConnect.MySqlConnect();
-            ArrayList<Party> arr = showPartyList(userId);
-            ArrayList<String> arr2 = new ArrayList<>();
-            for (Party party : arr) {
-                if (party.getPartyName().contains(str)) {
-                    arr2.add(party.getPartyName());
-                }
-            }
-            if (arr2.size() == 0) {
-                System.out.println("검색 내용이 없습니다.");
-            } else {
-                for (String str1 : arr2) {
-                    System.out.println(str1);
-                }
-            }
-        } finally {
-            try {
-                if (conn != null) {
-                    conn.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
+    //모임 상세보기
     public static List<Party> showPartyDetail(int partyId) {
         Connection conn = null;
         ArrayList<Party> arrayList = new ArrayList<>();
@@ -469,7 +441,7 @@ public class PartyService {
         }
         return arrayList;
     }
-
+    //모임 삭제
     public static boolean deleteParty(int id) {
         Connection conn = null;
         try {
@@ -505,7 +477,7 @@ public class PartyService {
         }
         return false;
     }
-
+    //잔액 0원 확인
     public static int checkZero(int id) {
         Connection conn = null;
         int price = -1;
@@ -532,7 +504,7 @@ public class PartyService {
         return price;
     }
 
-
+    //모임 정보 가져오기
     public static Party getParty(int id) {
         Connection conn = null;
         Party party = new Party();
@@ -562,7 +534,7 @@ public class PartyService {
         return party;
 
     }
-
+    //모임 멤버 정보 가져오기
     public static ArrayList<MemberShip> getMemberList() {
         Connection conn = null;
         ArrayList<MemberShip> arr = new ArrayList<>();
@@ -591,7 +563,7 @@ public class PartyService {
         }
         return arr;
     }
-
+    //모임 비활성화
     public static void updatePartyActive(String userId, int partyId) {
         Connection conn = null; // Connection 객체 선언
         String sql2 = "UPDATE MEMBERSHIP SET party_active = '0' WHERE user_id = ? AND party_id = ?";
