@@ -400,6 +400,7 @@ public class PrintPage {
         String userPhone = null;
         String userAccount = null;
 
+        //아이디
         while (true) {
             System.out.print("아이디를 입력하세요: ");
             userId = sc.nextLine();
@@ -412,6 +413,7 @@ public class PrintPage {
             }
         }
 
+        //비밀번호
         while (true) {
             System.out.print("비밀번호를 입력하세요: ");
             userPassword = sc.nextLine();
@@ -426,8 +428,7 @@ public class PrintPage {
         System.out.print("이름을 입력하세요: ");
         userName = sc.nextLine();
 
-        //비밀번호
-
+        //핸드폰 번호
         while (true) {
             System.out.print("전화번호를 입력하세요 (010-xxxx-xxxx): ");
             userPhone = sc.nextLine();
@@ -439,6 +440,7 @@ public class PrintPage {
             }
         }
 
+        //계좌번호
         while (true) {
             System.out.print("계좌번호를 입력하세요 (3333-xx-xxxxxxx): ");
             userAccount = sc.nextLine();
