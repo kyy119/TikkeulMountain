@@ -7,13 +7,13 @@ import lombok.Data;
 @Data
 public class Transaction {
 
-    Timestamp transferDate;
-    int transferAmount;
-    int transferBalance;
+    Timestamp transferDate; //거래날짜
+    int transferAmount; //거래금액
+    int transferBalance; //거래후 잔액
     String transferIndex; //입금,출금 구분자'1': 개인통장->모임통장'2': 모임통장->개인통장
-    String transferMemo;
-    String userId;
-    int partyId;
+    String transferMemo; //거래 메모
+    String userId; //사용자 id
+    int partyId; //모임 id
 
     public Transaction() {
     }

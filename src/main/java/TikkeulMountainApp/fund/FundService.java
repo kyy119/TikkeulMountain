@@ -86,7 +86,7 @@ public class FundService {
         }
 
         while(true){
-            System.out.print("모임 계좌 비밀번호를 입력하세요:");
+            System.out.print("모임 계좌 비밀번호를 입력하세요:"); //모임 계좌 비밀번호 일치해야 출금가능
             String pwd = sc.nextLine();
             if (pwd.equals(PartyService.getParty(partyId).getPartyAccountPassword())){
                 int newPartyBalance = partyBalance - amount;
