@@ -176,6 +176,11 @@ public class PrintPage {
 
     public static int accountPage() { //모임계좌 페이지, page=4
         System.out.println("============================= 모임통장 ==============================");
+        int partyId = PartyChecker.getParty().getPartyId();
+        int newPartyBalance = PartyService.getPartyBalance(partyId);
+
+        PartyChecker.getParty().setPartyAccountBalance(newPartyBalance);
+
         Party party = PartyChecker.getParty();
         party.printParty();
         System.out.print("당일 납부자: ");
