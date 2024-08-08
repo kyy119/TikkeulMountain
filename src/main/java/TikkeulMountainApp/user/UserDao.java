@@ -226,10 +226,7 @@ public class UserDao {
         Connection conn = null;
         String sql = "UPDATE USER SET user_password = ? WHERE user_id = ?";
 
-        if (!isValidPassword(Password)) {
-            System.out.println("비밀번호는 최소 6자 이상, 특수문자 포함해야 합니다.");
-            return;
-        }
+
 
         try {
             conn = MySqlConnect.MySqlConnect();
