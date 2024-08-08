@@ -143,7 +143,8 @@ public class PrintPage {
                 } else {
                     System.out.println("비밀번호가 일치하지 않습니다.");
                 }
-                return 3;
+                LoginChecker.setUser(null);
+                return 1;
             case "D":
             case "d": //회원 탈퇴: delete가 아닌 userActive를 0으로 수정
                 List<Party> partyList = PartyService.showPartyList(LoginChecker.getUser()
@@ -258,15 +259,24 @@ public class PrintPage {
                 return 4;
             case "d":
             case "D":
+                System.out.print("모임을 탈퇴 하시겠습니까?(Y/N)");
+                String str = sc.nextLine();
+                switch (str){
+                    case "n": case "N":
+                        return 5;
+                }
                 //방장일때
                 if (TransactionDao.getRole(LoginChecker.getUser().getUserId(), party.getPartyId())
                     .equals("1")) {
+                    //잔액이 없으면
                     if (PartyService.deleteParty(party.getPartyId())) {
                         return 2;
                     } else {
+                        //잔액이 있으면
                         return 5;
                     }
                 } else {
+                    //일반 멤버일때
                     PartyService.updatePartyActive(LoginChecker.getUser().getUserId(),
                         party.getPartyId());
                     System.out.println("모임 탈퇴가 완료되었습니다.");
