@@ -16,7 +16,7 @@ public class Scheduler {
     public static final int ONE_DAY = 1;
     public static final int ONE_DAY_AS_SECOND = 24 * 60 * 60;
     public static final int SINGLE_POOL_SIZE = 1;
-    public static final int ONE_MINUTE_AS_SECOND = 60;
+    public static final int ONE_MINUTE_AS_SECOND = 60*3;
 
     private final ScheduledExecutorService scheduler;
 
