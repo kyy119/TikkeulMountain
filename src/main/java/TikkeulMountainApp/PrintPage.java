@@ -219,7 +219,7 @@ public class PrintPage {
                 System.out.print(i + 1 + "번 멤버(방장):");
             } else {
                 if (partyList.get(i).getPartyActive().equals("0")) {
-                    System.out.print("(휴면 계정) ");
+                    System.out.print("(탈퇴 계정) ");
                 }
                 System.out.print(i + 1 + "번 멤버:");
             }
@@ -238,7 +238,7 @@ public class PrintPage {
         System.out.println("모임통장 계좌 잔액: " + partyList.get(0).getPartyAccountBalance());
         System.out.println("모임통장 생성일   : " + partyList.get(0).getPartyAccountCreatedAt());
         System.out.println("---------------------------------------------------------------------");
-        System.out.println("(D)모임 삭제                                              (B)뒤로가기");
+        System.out.println("(D)모임 탈퇴                                              (B)뒤로가기");
         System.out.println("---------------------------------------------------------------------");
         System.out.print("원하는 메뉴키를 입력하세요:");
         String in = sc.nextLine();
