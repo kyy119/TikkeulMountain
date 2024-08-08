@@ -126,9 +126,19 @@ public class PrintPage {
             case "u":
                 System.out.print("본인 확인을 위해 비밀번호를 입력하세요:");
                 String passWord = sc.nextLine();
+                String newPassword = null;
                 if (passWord.equals(LoginChecker.getUser().getUserPassword())) {
-                    System.out.print("변경할 비밀번호를 입력하세요.");
-                    String newPassword = sc.nextLine();
+                    while(true) {
+                        System.out.print("변경할 비밀번호를 입력하세요.");
+                        newPassword = sc.nextLine();
+
+                        if (!UserDao.isValidPassword(newPassword)) {
+                            System.out.println("비밀번호는 최소 6자 이상, 특수문자 포함해야 합니다.");
+                        }else {
+                            break;
+                        }
+                    }
+
                     UserDao.updateUserPassword(LoginChecker.getUser().getUserId(), newPassword);
                 } else {
                     System.out.println("비밀번호가 일치하지 않습니다.");
