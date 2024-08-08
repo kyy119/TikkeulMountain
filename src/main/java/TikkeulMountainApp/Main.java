@@ -10,15 +10,6 @@ public class Main {
 
     public static void main(String[] args) throws SQLException, InterruptedException, IOException {
 
-        //자동이체, hour과 minute 수정하면됨
-        Scheduler scheduler = new Scheduler(); 
-        scheduler.execute(()-> {
-            try {
-                FundService.depositAtOnce();
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
-        },15,37,0);
 
         int page = 1;
         while(true){
